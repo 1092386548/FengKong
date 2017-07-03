@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>异步通知</title>
+	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+</head>
+<body>
+<h1>支付成功</h1>
+<button type="button" id="btn">点击返回</button>
+
+
+<script>
+	function getParams(){
+        var name,value;
+        var str=location.href;
+        var num=str.indexOf("?");
+        str=str.substr(num+1);
+        var arr=str.split("&");
+        for(var i=0;i < arr.length;i++){
+            num=arr[i].indexOf("=");
+            if(num>0){
+                name=arr[i].substring(0,num);
+                value=arr[i].substr(num+1);
+                this[name]=value;
+            }
+        }
+    }
+    var params = new getParams();
+
+    var h5Url = 'http://www.igmhz.com/fengkong-living-h5/#/';
+    var pcUrl = 'http://www.igmhz.com/fengkong-living-pc/';
+    document.getElementById('btn').onclick = function(){
+	    // h5
+		if(params.payPath == 1){
+			// 课程
+			if(params.courseId != 0){
+				window.location.href = h5Url + 'recorded_list/' + params.courseId;
+			}
+
+			// 视频(包括课程视频、录播视频、线上已结束视频、线下已结束视频(如果有视频))
+			if(params.videoId != 0){
+				window.location.href = h5Url + 'video/' + params.videoId;
+			}
+
+			// 即将开始 或 正在进行 的线上活动
+			if(params.activityId != 0){
+				$.ajax({
+					type:'POST',
+					url:'http://www.igmhz.com/fengkong-server/activity/getActivityById.do',
+					data: $.param({
+                        userId: params.userId,
+                        activityId: params.activityId,
+                        enrollType: 2    //1直播报名  2活动报名
+                    }),
+					dataType:'json',
+					success:function(data){
+						if (data.errorCode == 0) {
+							var data = data.result;
+							if(data.activityWay == 1 || data.activityWay ==2){
+								// 线下活动
+								window.location.href = h5Url + 'active_details' + params.activityId;
+							}else if(data.activityWay == 3){
+								// 线上活动
+								$.ajax({
+									type:'POST',
+									url:'http://www.igmhz.com/fengkong-server/activity/.do',
+									data: $.param({
+				                        
+				                    }),
+									dataType:'json',
+									success:function(data){
+										if (data.errorCode == 0) {
+											var data = data.result;
+											window.location.href = h5Url + 'salon/' + params.activityId + '/' + params.liveId;
+										}
+									}
+								});
+							}
+						}
+					}
+				});
+			}
+		}
+		// pc
+		else if(params.payPath == 2){
+			// 课程
+			if(params.courseId != 0){
+				window.location.href = pcUrl + 'recordedCourseDetail.html?courseId=' + params.courseId;
+			}
+
+			// 视频(包括课程视频、录播视频、线上已结束视频、线下已结束视频(如果有视频))
+			if(params.videoId != 0){
+				window.location.href = pcUrl + 'video.html?videoId=' + params.videoId;
+			}
+
+			// 即将开始 或 正在进行 的线上活动
+			if(params.activityId != 0){
+				$.ajax({
+					type:'POST',
+					url:'http://www.igmhz.com/fengkong-server/activity/getActivityById.do',
+					data: $.param({
+                        userId: params.userId,
+                        activityId: params.activityId,
+                        enrollType: 2    //1直播报名  2活动报名
+                    }),
+					dataType:'json',
+					success:function(data){
+						if (data.errorCode == 0) {
+							var data = data.result;
+							if(data.activityWay == 1 || data.activityWay ==2){
+								// 线下活动
+								window.location.href = pcUrl + 'activityDetail.html?activityId=' + params.activityId;
+							}else if(data.activityWay == 3){
+								// 线上活动
+								window.location.href = pcUrl + 'salon.html?activityId=' + params.activityId + '&liveId=' + params.liveId;
+							}
+						}
+					}
+				});
+			}
+		}
+	}
+</script>
+</body>
+</html>

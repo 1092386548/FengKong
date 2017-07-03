@@ -1,0 +1,66 @@
+<div style="background-color: #d8573f;">
+    <div class="row home_head themebgcolor">
+        <a ng-click="goBack()" class="margin-top10" style="margin-left:20px;"><img src="img/prepage.png" alt="" ></a>
+        <h3>资料编辑</h3>
+        <span style="color: white;margin-top:5px;font-size: 1.5em;" ng-click="keepinfo()">保存</span>
+    </div>
+</div>
+<ion-list>
+    <ion-item>
+        <div>
+            <a ng-click="setImage()" style="display:block;color:#000;">
+                <span>头像 <img style="width:30px;height:30px;border-radius:50%;vertical-align: -8px;" ng-src="{{user.userIcon || 'image/user-photo.png'}}"></span>
+                <img src="img/right.png" width="25px" height="25px" style="float: right;">
+            </a>
+        </div>
+    </ion-item>
+    <ion-item>
+        <div ng-click="setnickName()">
+            <span>昵称 <a>{{user.nickName || '您还没有昵称，点击添加昵称'}}</a></span>
+            <img src="img/right.png" width="25px" height="25px" style="float: right">
+        </div>
+    </ion-item>
+    <!-- <ion-item>
+        <div  ng-click="setbirthday()">
+            <span>出生年月
+            <a>{{user.birthday | date:'yyyy-MM-dd'}}</a></span>
+            <img src="img/right.png" width="25px" height="25px" style="float: right">
+        </div>
+    </ion-item> -->
+    <ion-item>
+        <div ng-click="setmobile()">
+            <span>手机  <a>{{user.userPhone}}</a></span>
+            <img src="img/right.png" width="25px" height="25px" style="float: right">
+        </div>
+    </ion-item>
+    <ion-item>
+        <div>
+            <a style="color:#000;">
+                <span>等级 <a>{{user.userLevel}}</a> </span>
+                <!--<img src="img/right.png" width="25px" height="25px" style="float: right">-->
+            </a>
+        </div>
+    </ion-item>
+    <ion-item>
+        <div ng-click='setGender()'>
+                <span>性别 <a>{{user.userSex}}</a></span>
+                <img src="img/right.png" width="25px" height="25px" style="float: right">
+        </div>
+    </ion-item>
+    <ion-item>
+        <div ng-click='setcompany()'>
+            <span>公司 <a>{{user.userAddress}}</a> </span>
+            <img src="img/right.png" width="25px" height="25px" style="float: right">
+        </div>
+    </ion-item>
+    <ion-item>
+        <div ng-click='setemail()'>
+            <span>邮箱 <a>{{user.userEmail}}</a> </span>
+            <img src="img/right.png" width="25px" height="25px" style="float: right">
+        </div>
+    </ion-item>
+
+    <!-- <div class="setnickname">
+        <button ng-click="goNickname()">完善信息</button>
+    </div> -->
+</ion-list>

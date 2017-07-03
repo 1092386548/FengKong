@@ -1,0 +1,102 @@
+<ion-header-bar align-title="center" class='home_head themebgcolor' >
+    <a ng-click="goBack()" class="margin-top10 margin-left10"><img src="img/prepage.png" alt="" ></a>
+    <h3>我的收藏</h3>
+
+</ion-header-bar>
+<ion-content>
+
+    <div class="tabs-striped tabs-top tabs-color-assertive" style="margin-top: -44px">
+        <div class="tabs"  >
+            <a class="tab-item tab-item2" ng-click="getMyCollection(1)" ng-class="{active1:typeId == 1}">课程</a>
+            <a class="tab-item tab-item2" ng-click="getMyCollection(2)" ng-class="{active1:typeId == 2}">视频</a>
+        </div>
+    </div>
+
+
+    <div id="content" style="position: absolute;top:100px;width: 100%;">
+        <!--课程start-->
+        <div id="progress" ng-if="typeId == 1">
+            <!--课程-->
+            <div>
+                <div class="row" style="margin-bottom: 10px;padding:10px;border-bottom:1px solid #ccc;" ng-repeat='collect in collectList'>
+                    <div class="col-50" style="height: 130px;">
+                        <a href="#/recorded_list/{{collect.courseId}}">
+                            <img src="{{collect.imageUrl}}" style="height: 100%;">
+                        </a>
+                        <!--<span style="background-color: #c8705b;position: absolute;top:-1px;left: 1px;width: 50%;text-align: center;">即将开始</span>-->
+                    </div>
+                    <div class="col-50" style="padding-left: 10px;">
+                        <!--<span style="border-radius:3px;background-color: #c95f47;width: 35%;font-size:8px;color:#fff;display:inline-block;text-align: center;">标签类型</span>-->
+                        <span>{{collect.courseName}}</span><br>
+                        <span style="display:inline-block;font-size: 12px;">
+                            讲师：
+                            <span>
+                                {{collect.teacherName}}
+                            </span>
+                        </span><br>
+                        <span style="display:inline-block;margin-top: 35px;font-size: 12px;">
+                            <span style="color: red" ng-if="collect.price > 0">{{collect.price / 100}}元</span>
+                            <span style="color: red" ng-if="collect.price == 0">免费</span>
+                        </span><br>
+                        <div style="display:inline-block;font-size: 12px;width: 100%; color:silver;margin-top: 5px;">
+                            <span>
+                                共{{collect.courseChapterNumber}}节
+                            </span>
+
+                            <div style="float: right;">
+                                <!--<img src="img/eye.png" width="15px" height="10px">-->
+                                <span style="vertical-align: middle;">{{collect.createdDate | date:'yyyy-MM-dd'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end-->
+        </div>
+
+           
+        <!--视频start-->
+        <div id="video" style="margin-top: -10px;" ng-if="typeId == 2">
+            <!--视频-->
+            <div>
+                <div class="row" style="margin-bottom: 10px;padding:10px;border-bottom:1px solid #ccc;" ng-repeat='collect in collectList'>
+                    <div class="col-50" style="height: 130px;">
+                        <a href="#/video/{{collect.videoId}}">
+                            <img src="{{collect.videoIcon}}" style="width:100%;height: 100%;">
+                            <!--<span style="background-color: #c8705b;position: absolute;top:-1px;left: 1px;width: 50%;text-align: center;">即将开始</span>-->
+                        </a>
+                    </div>
+                    <div class="col-50" style="padding-left: 10px;">
+                        <!--<span style="border-radius:3px;background-color: #c95f47;width: 35%;font-size:8px;color:#fff;display:inline-block;text-align: center;">标签类型</span>-->
+                        <span>{{collect.videoName}}</span><br>
+                        <span style="display:inline-block;font-size: 12px;">
+                            讲师：
+                            <span>
+                              {{collect.teacherName}}
+                            </span>
+                        </span><br>
+                        <span style="display:inline-block;font-size: 12px;">
+                        简介
+                            <span>
+                             ：{{collect.videoDescription}}
+                            </span>
+                        </span><br>
+                        <div>
+                            <span style="color: red" ng-if="collect.videoPrice == 0">免费</span>
+                            <span style="color: red" ng-if="collect.videoPrice > 0">{{collect.videoPrice}}元</span>
+                        </div>
+                        <div style="display:inline-block;font-size: 12px;color:silver;position: absolute;bottom: 30px;">
+                            <img src="img/eye.png" width="15px" height="10px">
+                            <span>
+                                {{collect.lookedPeople}}
+                            </span>
+
+                            <span style="margin-left: 45px" >{{collect.updatedDate | date:'yyyy-MM-dd'}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ion-content>

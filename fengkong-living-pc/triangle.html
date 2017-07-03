@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style lang="en">
+        ul li {
+            list-style: none;
+        }
+
+        s {
+            margin-left: 500px;
+            position: absolute;
+            border-color: red transparent transparent;
+            border-style: solid dashed dashed;
+            border-width: 10px;
+            width: 0;
+            height: 0;
+            font-size: 0;
+            line-height: 0;
+            -webkit-transition: transform 0.2s ease-in;
+            -webkit-transform-origin: 50% 30% 0;
+        }
+
+        ul li:hover s {
+            -webkit-transform: rotate(180deg);
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li>
+            <s>&nbsp;</s>
+        </li>
+    </ul>
+</body>
+
+</html>

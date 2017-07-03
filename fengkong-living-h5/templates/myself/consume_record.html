@@ -1,0 +1,30 @@
+<ion-header-bar align-title="center" class='home_head themebgcolor'>
+    <a ng-click="goBack()" class="margin-top10 margin-left10"><img src="img/prepage.png"></a>
+    <h3>消费记录</h3>
+</ion-header-bar>
+
+<ion-content>
+    <div ng-repeat="record in recordList">
+        <div class="row" style="margin-top:20px;margin-left: 10px;font-size: 17px;">
+            <div class="col-75" >
+                <!--<span ng-if="record.videoName==null">{{record.courseName}}</span>-->
+                <!--<span ng-if="record.courseName==null">{{record.videoName}}</span>-->
+                <span>{{record.recordState}}</span>
+            </div>
+            <div class="col-25" style="color:#c95f48">
+                <span>{{record.recordMoney}}</span>元
+            </div>
+        </div>
+        <div class="row" style="margin-top:5px;margin-left: 10px;font-size: 15px;">
+            <div class="col-75" style="color:silver">
+                <span>{{record.recordTime | date:'yyyy-MM-dd'}}</span>
+            </div>
+            <div class="col-25" style="color: #80c15e;">
+                <span>{{record.recordType}}</span>
+            </div>
+        </div>
+        <div style="background-color: #fbfafa">
+            &nbsp;
+        </div>
+    </div>
+</ion-content>

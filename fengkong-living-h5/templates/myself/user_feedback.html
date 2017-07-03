@@ -1,0 +1,25 @@
+<ion-header-bar align-title="center" class='home_head themebgcolor'>
+    <a href="#/my_setting" class="margin-top10 margin-left10"><img src="img/prepage.png"></a>
+    <h3>用户反馈</h3>
+    <!--<a class="margin-top10"><img src="img/search.png"></a>-->
+</ion-header-bar>
+
+<ion-content style="background-color: rgb(250,250,250);">
+    <div class="feedback-type"><span>选择反馈类型</span></div>
+    <div>
+        <ul class="feedback-change">
+          <li ng-click="progressType(1)"><span ng-class="{actived_font_color:type_id == 1}">问题反馈</span><label ng-if="type_id == 1">&#10003</label></li>
+          <li ng-click="progressType(2)"><span ng-class="{actived_font_color:type_id == 2}">功能建议</span><label ng-if="type_id == 2">&#10003</label></li>
+        </ul>
+    </div>
+
+    <textarea maxlength="200" ng-change="textChange()" ng-model="registerData.message" placeholder="请输入反馈内容" cols="21" rows="10" class="feedback-count" name="message"></textarea>
+    <div class="word">
+        <p class="word-number">还剩余<span>{{length}}</span>/200</p>
+    </div>
+    <input class="mobile" type="text" placeholder="请输入您的手机/邮箱地址" ng-model="registerData.userContact">
+</ion-content>
+
+<ion-footer-bar class='home_head themebgcolor' ng-click="keepinfo()">
+    <h3>提交</h3>
+</ion-footer-bar>

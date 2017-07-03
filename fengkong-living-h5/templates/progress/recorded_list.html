@@ -1,0 +1,129 @@
+<ion-header-bar align-title="center" class='home_head themebgcolor'>
+    <a ng-click="goBack()" class="margin-top10 margin-left10"><img src="img/prepage.png"></a>
+    <h3>{{courseInfo.courseName}}</h3>
+</ion-header-bar>
+
+<ion-content>
+    <div class="container">
+        <div class="row margin_left_-5 margin-top10 margin-bottom10">
+            <div class="col">{{courseInfo.courseName}}</div>
+            <div class="col" style="text-align:right;color:#d8573f;">￥{{courseInfo.coursePrice / 100}}</div>
+        </div>
+        <!--首页大图-->
+        <div style="position: relative;">
+            <img src="{{courseInfo.imgUrl}}" style="width:100%;height: 140px;">
+        </div>
+
+        <div class="row margin-top10 margin_left_-5">
+            <div class="col-33">
+                <img src="img/collection.png" style="width:25px;height: 25px;" ng-click="progress_collection()" ng-if="!collection_flag">
+                <img src="img/collection_color.png" style="width:25px;height: 25px;" ng-click="cancelCollect()" ng-if="collection_flag">
+                <span style="vertical-align: 5px;">收藏({{currentCourseCollectPeople}})</span>
+            </div>
+            <div class="col-33" style="text-align: center;">
+                <img src="img/zan.png" style="width:25px;height: 25px;" ng-click="zan()" ng-if="!zan_flag">
+                <img src="img/zan_color.png" style="width:25px;height: 25px;" ng-click="cancelZan()" ng-if="zan_flag">
+                <span style="vertical-align: 5px;">点赞({{currentCourseEarnedPeople}})</span>
+            </div>
+            <div class="col-33" style="text-align:right;">
+                <img src="img/share.png" style="width:25px;height: 25px;">
+                <span style="vertical-align: 5px;">分享</span>
+            </div>
+        </div>
+
+        <div class="margin-top10 progress_all_search_line" style="height: 3px;"></div>
+    </div>
+
+
+    <div>
+        <ul class="nav nav-tabs" style="text-align: center;">
+            <li class="progress_tab_change_selected active1">目录</li>
+            <li class="progress_tab_change_selected" ng-click="getCourseDetail()">详情</li>
+            <li class="progress_tab_change_selected">评论</li>
+        </ul>
+
+        <div id="progress_recorded_detail_content">
+            <!--目录-->
+            <div id="progress_recorded_related" class="container">
+                <div class="row" style="padding-top:10px;" ng-repeat="recordedCourseItem in recordedCourseList">
+                    <div class="col-50">
+                        <a href="#/video/{{recordedCourseItem.videoId}}" style="position: relative;display:inline-block;" ng-click="videoInfo(recordedCourseItem.videoName,recordedCourseItem.videoPrice,recordedCourseItem.videoIcon,courseInfo.courseName)">
+                            <img src="img/play-icon.png" class="play-icon">
+                            <img src="{{recordedCourseItem.videoIcon}}" width="100%" height="140px;">
+                        </a>
+                    </div>
+                    <div class="col-50" style="padding-left:10px;">
+                        <div>{{recordedCourseItem.videoName}}</div>
+                        <div>第{{$index+1}}节</div>
+                        <div class="progress_font10">讲师：{{recordedCourseItem.teacherName}}</div>
+                        <div class="progress_font10">简介：{{recordedCourseItem.teacherDescription}}</div>
+                        <div class="clearfix">
+                            <span class="progress_font10 margin-top10" style="float:left;color:#d8573f;">{{recordedCourseItem.videoPrice / 100}}元</span>
+                            <span class="progress_font10 margin-top10" style="float:right;"><img src="img/eye.png" style="width:20px;height: 15px;">&nbsp;&nbsp;&nbsp;{{recordedCourseItem.joinNumber}}</span>
+                        </div>
+                        <span class="progress_font10 progress_span_right margin-top10"></span>
+                    </div>
+                </div>
+                <div class="row margin-top10" style="border-top: 1px solid silver;width: 100%"></div>
+            </div>
+
+            <!--课程详情-->
+            <div id="progress_recorded_detail" class="container" style="display: none;padding-top:10px;">
+                <div class="margin_left_-5" style="text-align: left;">
+                    <div class="row">
+                        <div class="col-20">
+                            <img src="{{courseDetail.teacherIcon}}" style="width:80px;height:100px;">
+                        </div>
+                        <div class="col-80" style="padding-left:10px;">
+                            <div>讲师姓名：{{courseDetail.teacherName}}</div>
+                            <div style="margin-top:20px;">
+                                讲师简介：{{courseDetail.teacherDescription}}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding-top:10px;">
+                        <div>课程介绍：</div>
+                        <div style="margin-top:20px;">{{courseDetail.description}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!--课程评论-->
+            <div id="progress_recorded_comment" class="container" style="display: none;">
+                <div class="row margin-top10">
+                    <div class="col-90">
+                        <textarea style="width:100%;background-color: #fbf9f9;border-radius:5px;" ng-model="recordList.evaluation" placeholder="写下你的感受评价吧~"></textarea>
+                    </div>
+                    <div class="col-10" style="margin-top: 6px;">
+                        <span ng-click="evaluate()">评论</span>
+                    </div>
+                </div>
+                <!--讨论区-->
+                <div class="row margin-top10 progress_detail_line" style="padding-bottom: 15px;" ng-repeat="commentItem in commentList">
+                    <div class="col-25">
+                        <img src="{{commentItem.userIcon}}" width="50px" height="50px" style="border-radius: 30px;">
+                    </div>
+                    <div class="col-50">
+                        <span style="font-size: 16px;color:#c95f48;">{{commentItem.userName}}</span>
+                        <input disabled="true" value="内控达人" style="color:#fff;border-radius: 30px;border: 1px solid #c95e47;width: 27%;height: 3%;font-size: 10px;text-align: center;background-color: #a14c39;"
+                        />
+                        <div style="margin-top: 10px;">{{commentItem.commentContent}}</div>
+                    </div>
+                    <div class="col-25">
+                        <span class="progress_span_right progress_color_silver">{{commentItem.commentTime | date:'HH:mm'}}</span>
+                    </div>
+                </div>
+
+                <!--<div style="position:relative;">
+                    <span style="display: inline-block;position: absolute;right: -1px;top: 0px;color:silver;">
+                        展开&nbsp;&nbsp;&nbsp;<img src="img/bottom.png" style="width:15px;height: 15px;">
+                    </span>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</ion-content>
+
+<ion-footer-bar class="bar-assertive" ng-if="courseBuyStatus" ng-click="createCourseOrder()">
+    <h1 class="title">购买课程</h1>
+</ion-footer-bar>

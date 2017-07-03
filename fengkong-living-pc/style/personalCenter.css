@@ -1,0 +1,258 @@
+#content{
+	padding-bottom: 160px;
+}
+#content .user-center{
+	width: 204px;
+	height: 60px;
+	padding-left: 24px;
+	line-height: 60px;
+	background-color: #fff;
+}
+#content .title-list{
+	width: 204px;
+	height: 540px;
+	padding-left: 24px;
+	background-color: #fff;
+}
+#content .title-list .item{
+	height: 60px;
+	line-height: 60px;
+	border-bottom: 1px solid #f7f7f7;
+}
+#content .title-list .item.active{
+	color: #d8573f;
+}
+#content .title-list .item .icon{
+	width: 24px;
+	height: 24px;
+	margin-right: 10px;
+	vertical-align: -6px;
+}
+#content .title-list .item .arrow{
+	display: inline-block;
+	width: 8px;
+	height: 16px;
+	margin-left: 36px;
+	font-size: 20px;
+}
+
+#content .wrapper{
+	width: 970px;
+	/*height: 600px;*/
+	background-color: #fff;
+}
+#content .wrapper .title{
+	height: 56px;
+	line-height: 56px;
+	background: #fdfcfc;
+}
+#content .wrapper .user-content{
+	padding:20px 0 0 60px;
+}
+
+#content .wrapper .user-data .user-content .line{
+	height: 60px;
+}
+#content .wrapper .user-data .user-content .line .name{
+	display: inline-block;
+	width: 104px;
+}
+#content .wrapper .user-data .user-content .line input[type='text']{
+	width: 262px;
+	height: 30px;
+	background-color: #fdfcfc;
+	border: 1px solid #a8a8a8;
+}
+#content .wrapper .user-content .sub-info{
+	width: 126px;
+	height: 28px;
+	border-radius: 3px;
+	background-color: #d8573f;
+	color: #fff;
+	border:none;
+	outline: none;
+}
+#content .wrapper .user-content .ul_nav{
+	margin-bottom: 20px;
+	border-bottom: 1px solid #d6d6d6;
+}
+#content .wrapper .user-content .ul_nav li{
+	padding-bottom: 10px;
+	margin-right: 30px;
+	cursor: pointer;
+	text-align: center;
+}
+#content .wrapper .user-content .ul_nav li.active{
+	color: #d8573f;
+}
+#content .wrapper .user-content .ul_nav li.up_down{
+	padding: 0 14px;
+	background-image: url(../images/down.jpg);
+	background-repeat: no-repeat;
+	background-position: 80px 10px;
+}
+
+#content .wrapper .user-activity .user-content .ul_nav li{
+	height: 32px
+}
+#content .wrapper .user-activity .user-content .ul_nav li.up_down{
+	width: 120px;
+}
+#content .wrapper .user-activity .user-content .ul_nav li.class{
+	position: relative;
+}
+#content .wrapper .user-activity .user-content .ul_nav li.class .down{
+	position: absolute;
+	top: 33px;
+	left: 0;
+	width: 120px;
+	padding-left: 20px;
+	z-index: 1;
+	background-color: #fff;
+	box-shadow: -3px 0 5px #d6d6d6,
+				0 3px 5px #d6d6d6,
+				3px 0 5px #d6d6d6;
+	display: none;
+}
+#content .wrapper .user-activity .user-content .ul_nav li.class:hover .down{
+	display: block;
+}
+#content .wrapper .user-activity .user-content .ul_nav li.class .down .item{
+	position: relative;
+	height: 40px;
+	line-height: 40px;
+	text-align: left;
+	border-bottom: 1px solid #d6d6d6;
+}
+#content .wrapper .user-activity .user-content .ul_nav li.class .down .item.active{
+	color: #d8573f;
+}
+#content .wrapper .user-activity .user-content .ul_nav li.class .down .item.active:after{
+	content: '✔';
+	display: inline-block;
+	position: absolute;
+	right: 20px;
+}
+
+#content .wrapper .user-content .dt_l{
+	width: 430px;
+	margin-bottom: 36px;
+}
+#content .wrapper .user-content .dt_m,
+#content .wrapper .user-content .dt_r{
+	width: 150px;
+	margin-bottom: 36px;
+}
+#content .wrapper .user-content .courseItem_img{
+	position: relative;
+	width: 140px;
+	height: 100px;
+}
+#content .wrapper .user-content .courseItem_img img.video_course{
+	width: 100%;
+	height: 100%;
+}
+#content .wrapper .user-content .courseItem_img img.video_play{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 58px;
+	height: 58px;
+	margin-top: -29px;
+	margin-left: -29px;
+}
+#content .wrapper .user-content .courseItem_info{
+	width: 160px;
+	padding-left: 20px;
+	font-size: 14px;
+}
+#content .wrapper .user-content .courseItem_info .course_name{
+	font-size: 16px;
+	margin-bottom: 6px;
+}
+#content .wrapper .user-content .courseItem_info .course_price{
+	margin-bottom: 6px;
+}
+#content .wrapper .user-content .courseItem_info .course_teacher{
+	margin-bottom: 6px;
+}
+
+
+#content .wrapper .user-consume .user-content .ul_nav li{
+	width: 120px;
+	cursor: auto;
+}
+
+
+#content .wrapper .user-recharge .user-content .account_balance,
+#content .wrapper .user-recharge .user-content .account_balance_rmb
+{
+	width: 100px;
+}
+#content .wrapper .user-recharge .user-content .account_recharge{
+	width: 126px;
+	height: 28px;
+	line-height: 28px;
+	text-align: center;
+	color: #fff;
+	border-radius: 2px;
+}
+#content .wrapper .user-recharge .user-content .ul_nav_record{
+	margin-top: 80px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #d6d6d6;
+}
+#content .wrapper .user-recharge .user-content .ul_nav_record .more{
+	margin-right: 40px;
+}
+#content .wrapper .user-recharge .user-content .recharge_date{
+	padding: 10px 0;
+	margin-right: 100px;
+}
+#content .wrapper .user-recharge .user-content .recharge_num{
+	padding: 10px 0;
+}
+
+#content .wrapper .user-recharge .user-content .exchange .exchange_code{
+	width: 300px;
+	height: 34px;
+	padding: 5px 10px;
+	margin-right: 54px;
+	border-radius: 5px;
+	background-color: #f1f1f1;
+	border: none;
+	outline: none;
+}
+#content .wrapper .user-recharge .user-content .exchange .exchange_btn{
+	width: 126px;
+	height: 28px;
+	line-height: 28px;
+	text-align: center;
+	border-radius: 3px;
+	color: #fff;
+	border: none;
+	outline: none;
+}
+#content .wrapper .user-recharge .user-content .exchange .discount{
+	margin-top: 70px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #d6d6d6;
+}
+
+
+#content .wrapper .user-setting .user-content .password_name{
+	width: 100px;
+	margin-bottom: 32px;
+}
+#content .wrapper .user-setting .user-content .password_input{
+	width: 260px;
+	height: 30px;
+	background-color: #fdfcfc;
+	border: none;
+	outline: none;
+	border: 1px solid #a8a8a8;
+}
+#content .wrapper .user-setting .user-content .sub-info{
+	margin-top: 22px;
+	margin-bottom: 26px;
+}

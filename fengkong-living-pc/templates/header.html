@@ -1,0 +1,40 @@
+<div class="headerIndex" ng-controller="HeaderCtrl">
+	<div class="box clearfix">
+		<div class="logoImage pull-left">
+			<a href="index.html">
+				<img src="images/logo.png" alt="logo">
+				<span class="logoTitle">风控在线</span>
+			</a>
+		</div>
+		<ul class="pull-left clearfix navList">
+			<li class="pull-left"><a href="index.html" ng-class="{active:activeIndex == 1}">首页</a></li>
+			<li class="pull-left"><a href="recorded.html" ng-class="{active:activeIndex == 2}">课程录播</a></li>
+			<li class="pull-left"><a href="living.html" ng-class="{active:activeIndex == 3}">课程直播</a></li>
+			<li class="pull-left"><a href="activity.html" ng-class="{active:activeIndex == 4}">活动 <img src="images/down.png" style="vertical-align: 3px;"></a></li>
+		</ul>
+		<div class="pull-left search">
+			<input class="search_box" type="text"><span class="search_btn"><a href="search.html">搜索</a></span>
+		</div>
+		<div>
+			<ul class="pull-right clearfix login_group" ng-hide="loginStatus">
+				<li class="register pull-left" ng-click="openRegisterModal()">
+					<img src="images/register.png" alt="注册"><div>注册</div>
+				</li>
+				<li class="login pull-left" ng-click="openLoginModal()">
+					<img src="images/register.png" alt="登录"><div>登录</div>
+				</li>
+			</ul>
+
+			<div class="personal-center pull-right" ng-show="loginStatus">
+				<a href="personalCenter.html"><span class="title">个人中心 <img src="images/down.png"></span></a>
+				<div class="down" style="display:none;">
+					<a href="personalCenter.html?id=7" class="item">账户设置</a>
+					<a href="personalCenter.html?id=3" class="item">我的收藏</a>
+					<a href="personalCenter.html?id=6" class="item">充值兑换</a>
+					<a href="personalCenter.html?id=5" class="item">我的记录</a>
+					<a class="item" ng-click="loginOut()">退出登录</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

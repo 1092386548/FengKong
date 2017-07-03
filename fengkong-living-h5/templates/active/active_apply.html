@@ -1,0 +1,27 @@
+<ion-header-bar align-title="center" class='home_head themebgcolor'>
+    <a ng-click="goBack()" class="margin-top10 margin-left10"><img src="img/prepage.png"></a>
+    <h3>活动报名</h3>
+</ion-header-bar>
+
+<ion-content>
+    <form name="myForm" style="height:100%;">
+        <div style="margin-top: 10px;padding-left:10px;line-height:40px;font-size: 16px;border-bottom: 1px solid #DEDEDE;">
+            <span style="display:inline-block;width:80px;">参与人</span>
+            <input type="text" name="enrollName" placeholder="填写姓名" style="display:inline-block;width:240px;vertical-align:2px;" ng-required="true" ng-model="applyInfo.enrollName">
+            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="myForm.enrollName.$dirty && myForm.enrollName.$error.required">参与人不能为空</div>
+        </div>
+        <div style="margin-top: 10px;padding-left:10px;line-height:40px;font-size: 16px;border-bottom: 1px solid #DEDEDE;">
+            <span style="display:inline-block;width:80px;">联系方式</span>
+            <input type="text" name="contactWay" placeholder="填写手机号码" style="display:inline-block;width:240px;vertical-align:2px;" ng-required="true" ng-pattern="/^1[34578]\d{9}$/" ng-model="applyInfo.contactWay">
+            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="myForm.contactWay.$dirty && myForm.contactWay.$error.required">联系方式不能为空</div>
+            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="myForm.contactWay.$dirty && myForm.contactWay.$error.pattern">联系方式格式不正确</div>
+        </div>
+        <div style="margin-top: 10px;padding-left:10px;line-height:40px;font-size: 16px;border-bottom: 1px solid #DEDEDE;">
+            <span style="display:inline-block;width:80px;">公司名称</span>
+            <input type="text" name="companyName" placeholder="填写完整公司名称" style="display:inline-block;width:240px;vertical-align:2px;" ng-required="true" ng-model="applyInfo.companyName">
+            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="myForm.companyName.$dirty && myForm.companyName.$error.required">公司名称不能为空</div>
+        </div>
+
+        <button type="button" class='home_head themebgcolor' style="display:block;width:80%;height:40px;color:#fff;margin:0 auto;margin-top:20px;" ng-disabled="myForm.$invalid" ng-click="submitInfo()"><h3>提交</h3></button>
+    </form>
+</ion-content>

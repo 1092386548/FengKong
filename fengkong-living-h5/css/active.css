@@ -1,0 +1,27 @@
+.active_tab{
+    border-style:solid;border-right:2px solid  black;text-align: center;
+}
+.active_tab_end{
+    border-style:solid;text-align: center;
+}
+.triangle-left-top {
+    width: 0;
+    height: 0;
+    border-bottom: 80px solid transparent;
+    border-left-style: solid;
+    border-left-width: 80px;
+}
+.triangle-left-top1{
+    border-left-color: #c8705b;
+}
+.triangle-left-top2{
+    border-left-color: #c8705b;
+}
+.triangle-left-top3{
+    border-left-color: #000;
+}
+.triangle-right-left-font{
+  position: absolute;
+  top: 0;
+  left: 0;
+}

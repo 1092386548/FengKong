@@ -1,0 +1,185 @@
+<ion-header-bar align-title="center" class='home_head themebgcolor'>
+   
+    <h3 style="display: inline-block;padding-left: 35px;">风控在线</h3>
+    <a class="margin-top10"><img src="img/search.png"></a>
+</ion-header-bar>
+
+
+<ion-content class="has-tabs">
+    <div class="tabs-striped tabs-top tabs-color-default" style="margin-top: -44px">
+        <div class="tabs" style="text-align: center">
+            <span class="tab-change tab-item" ng-click="setActivityWay(0)" ng-class="{active1:activityWay == 0}">全部</span>
+            <span class="tab-change tab-item" ng-click="setActivityWay(1)" ng-class="{active1:activityWay == 1}">特训营</span>
+            <span class="tab-change tab-item" ng-click="setActivityWay(2)" ng-class="{active1:activityWay == 2}">公开课</span>
+            <span class="tab-change tab-item" ng-click="onlineSalon(3)" ng-class="{active1:activityWay == 3}">线上沙龙</span>
+        </div>
+    </div>
+
+    <div id="active_content" style="position: absolute;top:100px;width:100%;">
+        <!--全部-->
+        <div class="container" ng-if="activityWay == 0">
+            <!--推荐活动-->
+            <div class="row" style="font-size: 18px;">推荐活动</div>
+
+            <div class="row" ng-if="recommendedActivityList.length == 0">暂无推荐活动</div>
+
+            <div class="swiper-container" id="swiper-container-activity" style="height:200px;" ng-if="recommendedActivityList.length > 0">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" style="padding:0 5px;" ng-repeat="recommendedActivityItem in recommendedActivityList">
+                        <div style="position: relative;">
+                            <div>
+                                <!--属于线上沙龙即将直播或正在直播的活动进入线上沙龙详情页-->
+                                <a ng-if="recommendedActivityItem.activityWay == 3 && recommendedActivityItem.newActivityStatus != 3" href="#/salon/{{recommendedActivityItem.activityId}}/{{recommendedActivityItem.liveId}}">
+                                    <img src="{{recommendedActivityItem.activityIcon}}" style="display:block;width:100%;height:100%;">
+                                </a>
+                                <!--属于线上沙龙已结束的活动进入视频详情页-->
+                                <a ng-if="recommendedActivityItem.activityWay == 3 && recommendedActivityItem.newActivityStatus == 3" href="#/video/{{recommendedActivityItem.video.videoId}}">
+                                    <img src="{{recommendedActivityItem.activityIcon}}" style="display:block;width:100%;height:100%;">
+                                </a>
+                                <!--属于线下(特训营、公开课)的活动进入活动详情页(注:线下活动只有已结束的活动,不可能出现即将直播和正在直播)-->
+                                <a ng-if="recommendedActivityItem.activityWay == 1 || recommendedActivityItem.activityWay == 2" href="#/active_details/{{recommendedActivityItem.activityId}}">
+                                    <img src="{{recommendedActivityItem.activityIcon}}" style="display:block;width:100%;height:100%;">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="swiper-pagination swiper-pagination-activity"></div>
+            </div>
+
+
+            <!--近期活动-->
+            <div class="row" style="margin-top: 10px;font-size: 18px;">近期活动</div>
+            <div>
+                <!--近期活动之正在直播-->
+                <div class="col-50" style="padding:5px;float:left;min-width: 50%;" ng-repeat="recentActivityLivingItem in recentActivityLiving">
+                    <div style="position: relative;">
+                        <a ng-if="recentActivityLivingItem.activityWay == 1 || recentActivityLivingItem.activityWay == 2" href="#/active_details/{{recentActivityLivingItem.activityId}}">
+                            <img src="{{recentActivityLivingItem.activityIcon}}" style="display:block;width:100%;height:12rem;">
+                        </a>
+                        <a ng-if="recentActivityLivingItem.activityWay == 3" href="#/salon/{{recentActivityLivingItem.activityId}}/{{recentActivityLivingItem.liveId}}">
+                            <img src="{{recentActivityLivingItem.activityIcon}}" style="display:block;width:100%;height:12rem;">
+                        </a>
+
+
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #c8705b;color:#fff;font-size:12px;" ng-if="recentActivityLivingItem.newActivityStatus == 1">即将开始</span>
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #c8705b;color:#fff;font-size:12px;" ng-if="recentActivityLivingItem.newActivityStatus == 2">正在直播</span>
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #000;color:#fff;font-size:12px;" ng-if="recentActivityLivingItem.newActivityStatus == 3">已结束</span>
+                    </div>
+                    <div style="margin-top:2px;">{{recentActivityLivingItem.activityName}}</div>
+                    <div style="margin-top:2px;">地点 : {{recentActivityLivingItem.activityAddress}}</div>
+                    <div style="margin-top:2px;">价格 : <span style="color:red;">{{recentActivityLivingItem.activityPrice / 100}}元</span></div>
+                    <div class="clearfix" style="margin-top:2px;;font-size: 12px;color:#8f8f8f;">
+                        <span style="float:left;">{{recentActivityLivingItem.number}}人报名</span>
+                        <span style="float:right;">{{recentActivityLivingItem.activityStartTime | date:'yyyy-MM-dd'}}</span>
+                    </div>
+                </div>
+
+                <!--近期活动之即将直播-->
+                <div class="col-50" style="padding:5px;float:left;min-width: 50%;" ng-repeat="recentActivityBeforeLivingItem in recentActivityBeforeLiving">
+                    <div style="position: relative;">
+                        <a ng-if="recentActivityBeforeLivingItem.activityWay == 1 || recentActivityBeforeLivingItem.activityWay == 2" href="#/active_details/{{recentActivityBeforeLivingItem.activityId}}">
+                            <img src="{{recentActivityBeforeLivingItem.activityIcon}}" style="display:block;width:100%;height:12rem;">
+                        </a>
+                        <a ng-if="recentActivityBeforeLivingItem.activityWay == 3" href="#/salon/{{recentActivityBeforeLivingItem.activityId}}/{{recentActivityBeforeLivingItem.liveId}}">
+                            <img src="{{recentActivityBeforeLivingItem.activityIcon}}" style="display:block;width:100%;height:12rem;">
+                        </a>
+
+
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #c8705b;color:#fff;font-size:12px;" ng-if="recentActivityBeforeLivingItem.newActivityStatus == 1">即将开始</span>
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #c8705b;color:#fff;font-size:12px;" ng-if="recentActivityBeforeLivingItem.newActivityStatus == 2">正在直播</span>
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #000;color:#fff;font-size:12px;" ng-if="recentActivityBeforeLivingItem.newActivityStatus == 3">已结束</span>
+                    </div>
+                    <div style="margin-top:2px;">{{recentActivityBeforeLivingItem.activityName}}</div>
+                    <div style="margin-top:2px;">地点 : {{recentActivityBeforeLivingItem.activityAddress}}</div>
+                    <div style="margin-top:2px;">价格 : <span style="color:red;">{{recentActivityBeforeLivingItem.activityPrice / 100}}元</span></div>
+                    <div class="clearfix" style="margin-top:2px;;font-size: 12px;color:#8f8f8f;">
+                        <span style="float:left;">{{recentActivityBeforeLivingItem.number}}人报名{{recentActivityBeforeLivingItem.activityWay}}</span>
+                        <span style="float:right;">{{recentActivityBeforeLivingItem.activityStartTime | date:'yyyy-MM-dd'}}</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!--特训营-->
+        <div class="container" ng-if="activityWay == 1">
+            <div>
+                <span ng-if="activityList.length == 0">暂无特训营活动</span>
+
+                <div class="col-50" style="padding:5px;float:left;min-width: 50%;" ng-repeat="activityItem in activityList" ng-if="activityList.length > 0">
+                    <div style="position: relative;">
+                        <a href="#/active_details/{{activityItem.activityId}}">
+                            <img src="{{activityItem.activityIcon}}" style="display:block;width:100%;height: 10rem;">
+                        </a>
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #c8705b;color:#fff;font-size:12px;" ng-if="activityItem.newActivityStatus == 1">即将开始</span>
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #c8705b;color:#fff;font-size:12px;" ng-if="activityItem.newActivityStatus == 2">正在进行</span>
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #000;color:#fff;font-size:12px;" ng-if="activityItem.newActivityStatus == 3">已结束</span>
+                    </div>
+                    <div style="margin-top:2px;">{{activityItem.activityName}}</div>
+                    <div style="margin-top:2px;">地点 : {{activityItem.activityAddress}}</div>
+                    <div style="margin-top:2px;">价格 : <span style="color:red;">{{activityItem.activityPrice / 100}}元</span></div>
+                    <div class="clearfix" style="margin-top:2px;;font-size: 12px;color:#8f8f8f;">
+                        <span style="float:left;">{{activityItem.number}}人报名</span>
+                        <span style="float:right;">{{activityItem.activityStartTime | date:'yyyy-MM-dd'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--公开课-->
+        <div class="container" ng-if="activityWay == 2">
+            <div>
+                <span ng-if="activityList.length == 0">暂无公开课活动</span>
+
+                <div class="col-50" style="padding:5px;float:left;min-width: 50%;" ng-repeat="activityItem in activityList" ng-if="activityList.length > 0">
+                    <div style="position: relative;">
+                        <a href="#/active_details/{{activityItem.activityId}}">
+                            <img src="{{activityItem.activityIcon}}" style="display:block;width:100%;height: 10rem;">
+                        </a>
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #c8705b;color:#fff;font-size:12px;" ng-if="activityItem.newActivityStatus == 1">即将开始</span>
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #c8705b;color:#fff;font-size:12px;" ng-if="activityItem.newActivityStatus == 2">正在进行</span>
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #000;color:#fff;font-size:12px;" ng-if="activityItem.newActivityStatus == 3">已结束</span>
+                    </div>
+                    <div style="margin-top:2px;">{{activityItem.activityName}}</div>
+                    <div style="margin-top:2px;">地点 : {{activityItem.activityAddress}}</div>
+                    <div style="margin-top:2px;">价格 : <span style="color:red;">{{activityItem.activityPrice / 100}}元</span></div>
+                    <div class="clearfix" style="margin-top:2px;;font-size: 12px;color:#8f8f8f;">
+                        <span style="float:left;">{{activityItem.number}}人报名</span>
+                        <span style="float:right;">{{activityItem.activityStartTime | date:'yyyy-MM-dd'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--线上沙龙-->
+        <div class="container" ng-if="activityWay == 3">
+            <div>
+                <!--<span ng-if="notRecommendedOnlineSalonList.length == 0">暂无近期活动</span>-->
+
+                <div class="col-50" style="padding:5px;float:left;min-width: 50%;" ng-repeat="onlineSalonItem in onlineSalonList">
+                    <div style="position: relative;">
+                        <a href="#/salon/{{onlineSalonItem.activityId}}/{{onlineSalonItem.liveId}}">
+                            <img src="{{onlineSalonItem.activityIcon}}" style="display:block;width:100%;height: 10rem;">
+                        </a>
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #c8705b;color:#fff;font-size:12px;" ng-if="onlineSalonItem.newActivityStatus == 1">即将开始</span>
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #c8705b;color:#fff;font-size:12px;" ng-if="onlineSalonItem.newActivityStatus == 2">正在直播</span>
+                        <span style="position: absolute;top:0;left:0;width: 50%;text-align: center;background-color: #000;color:#fff;font-size:12px;" ng-if="onlineSalonItem.newActivityStatus == 3">已结束</span>
+                    </div>
+                    <div style="margin-top:2px;">{{onlineSalonItem.activityName}}</div>
+                    <div style="margin-top:2px;">地点 : {{onlineSalonItem.activityAddress}}</div>
+                    <div style="margin-top:2px;">价格 : <span style="color:red;">{{onlineSalonItem.activityPrice / 100}}元</span></div>
+                    <div class="clearfix" style="margin-top:2px;;font-size: 12px;color:#8f8f8f;">
+                        <span style="float:left;">{{onlineSalonItem.number}}人报名</span>
+                        <span style="float:right;">{{onlineSalonItem.activityStartTime | date:'yyyy-MM-dd'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</ion-content>

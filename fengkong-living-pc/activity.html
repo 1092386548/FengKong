@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>活动</title>
+	<!--<link rel="stylesheet" href="style/lib/normalize.css">-->
+	<link rel="stylesheet" href="style/lib/materialize.min.css">
+	<link rel="stylesheet" href="style/common.css">
+	<link rel="stylesheet" href="style/header_footer.css">
+	<link rel="stylesheet" href="style/login.css">
+	<link rel="stylesheet" href="style/activity.css">
+	<script src="js/lib/jquery-1.12.3.js"></script>
+	<script src="js/backTop.js"></script>
+	<script src="js/lib/materialize.min.js"></script>
+	<script src="js/lib/angular/angular.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/controller.js"></script>
+	<script src="js/service.js"></script>
+</head>
+<body ng-app="fkliving" ng-controller="ActivityCtrl">
+	<div ng-include="'templates/header.html'"></div>
+
+	<div id="content" class="box clearfix">
+		<div class="content_l pull-left">
+			<ul class="nav_title clearfix">
+				<li class="pull-left" ng-click="all(0)" ng-class="{active:activityWay == 0}">
+					<a class="waves-effect waves-light btn" ng-class="{'brown darken-4':activityWay == 0, 'grey darken-2':activityWay != 0}">全部</a>
+				</li>
+				<li class="pull-left" ng-click="setActivityWay(1)" ng-class="{active:activityWay == 1}">
+					<a class="waves-effect waves-light btn" ng-class="{'brown darken-4':activityWay == 1, 'grey darken-2':activityWay != 1}">特训营</a>
+				</li>
+				<li class="pull-left" ng-click="setActivityWay(2)" ng-class="{active:activityWay == 2}">
+					<a class="waves-effect waves-light btn" ng-class="{'brown darken-4':activityWay == 2, 'grey darken-2':activityWay != 2}">公开课</a>
+				</li>
+				<li class="pull-left" ng-click="onlineSalon(3)" ng-class="{active:activityWay == 3}">
+					<a class="waves-effect waves-light btn" ng-class="{'brown darken-4':activityWay == 3, 'grey darken-2':activityWay != 3}">线上沙龙</a>
+				</li>
+			</ul>
+
+
+			<!-- 全部 -->
+			<div class="courseList clearfix" ng-if="activityWay == 0">
+				<h3 class="recent-activity">近期活动</h3>
+				<!--近期活动之正在直播-->
+				<div class="courseItem pull-left" ng-repeat="activityItem in recentActivityLiving" ng-class="{'margin-r0': ($index + 1) % 3 == 0}">
+					<div class="courseItem_img">
+						<div class="tobegin" ng-if="activityItem.newActivityStatus == 1">即将开始</div>
+						<div class="living" ng-if="activityItem.newActivityStatus == 2">正在直播</div>
+						<div class="ended" ng-if="activityItem.newActivityStatus == 3">已结束</div>
+
+						<a ng-if="activityItem.activityWay == 1 || activityItem.activityWay == 2" href="activityDetail.html?activityId={{activityItem.activityId}}">
+							<img class="course" src="{{activityItem.activityIcon}}">
+						</a>
+						<a ng-if="activityItem.activityWay == 3" href="salon.html?activityId={{activityItem.activityId}}&liveId={{activityItem.liveId}}">
+							<img class="course" src="{{activityItem.activityIcon}}">
+						</a>
+
+						<!-- <a href="recordedCourseDetail.html"><img class="video_play" src="images/video_play.png"></a> -->
+					</div>
+					<div class="courseItem_detail">
+						<div class="courseItem_detail_title line singleLine-ellipsis">{{activityItem.activityName}}</div>
+						<div class="line">
+							<span class="color-main">{{activityItem.activityPrice / 100}}元</span>
+						</div>
+						<div class="line singleLine-ellipsis">地点：{{activityItem.activityAddress}}</div>
+						<div class="line clearfix">
+							<span class="pull-left">{{activityItem.activityStartTime | date:'yyyy-MM-dd'}}</span>
+							<!-- <span class="pull-right apply bgcolor-main"><a href="activityDetail.html">立即报名</a></span> -->
+							<span class="pull-right">{{activityItem.number}}人报名</span>
+						</div>
+					</div>
+				</div>
+				
+				<!--近期活动之即将直播-->
+				<div class="courseItem pull-left" ng-repeat="activityItem in recentActivityBeforeLiving" ng-class="{'margin-r0': ($index + 1) % 3 == 0}">
+					<div class="courseItem_img">
+						<div class="tobegin" ng-if="activityItem.newActivityStatus == 1">即将开始</div>
+						<div class="living" ng-if="activityItem.newActivityStatus == 2">正在直播</div>
+						<div class="ended" ng-if="activityItem.newActivityStatus == 3">已结束</div>
+
+						<a ng-if="activityItem.activityWay == 1 || activityItem.activityWay == 2" href="activityDetail.html?activityId={{activityItem.activityId}}">
+							<img class="course" src="{{activityItem.activityIcon}}">
+						</a>
+						<a ng-if="activityItem.activityWay == 3" href="salon.html?activityId={{activityItem.activityId}}&liveId={{activityItem.liveId}}">
+							<img class="course" src="{{activityItem.activityIcon}}">
+						</a>
+					</div>
+					<div class="courseItem_detail">
+						<div class="courseItem_detail_title line singleLine-ellipsis">{{activityItem.activityName}}</div>
+						<div class="line">
+							<span class="color-main">{{activityItem.activityPrice / 100}}元</span>
+						</div>
+						<div class="line singleLine-ellipsis">地点：{{activityItem.activityAddress}}</div>
+						<div class="line clearfix">
+							<span class="pull-left">{{activityItem.activityStartTime | date:'yyyy-MM-dd'}}</span>
+							<!-- <span class="pull-right apply bgcolor-main"><a href="activityDetail.html">立即报名</a></span> -->
+							<span class="pull-right">{{activityItem.number}}人报名</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 线下:特训营 公开课 -->
+			<div class="courseList clearfix" ng-if="activityWay == 1 || activityWay == 2">
+				<div class="courseItem pull-left" ng-repeat="activityItem in activityList" ng-class="{'margin-r0': ($index + 1) % 3 == 0}">
+					<div class="courseItem_img">
+						<div class="tobegin" ng-if="activityItem.newActivityStatus == 1">即将开始</div>
+						<div class="living" ng-if="activityItem.newActivityStatus == 2">正在直播</div>
+						<div class="ended" ng-if="activityItem.newActivityStatus == 3">已结束</div>
+
+						<a href="activityDetail.html?activityId={{activityItem.activityId}}">
+							<img class="course" src="{{activityItem.activityIcon}}">
+						</a>
+
+						<!-- <a href="recordedCourseDetail.html"><img class="video_play" src="images/video_play.png"></a> -->
+					</div>
+					<div class="courseItem_detail">
+						<div class="courseItem_detail_title line singleLine-ellipsis">{{activityItem.activityName}}</div>
+						<div class="line">
+							<span class="color-main">{{activityItem.activityPrice / 100}}元</span>
+						</div>
+						<div class="line singleLine-ellipsis">地点：{{activityItem.activityAddress}}</div>
+						<div class="line clearfix">
+							<span class="pull-left">{{activityItem.activityStartTime | date:'yyyy-MM-dd'}}</span>
+							<!-- <span class="pull-right apply bgcolor-main"><a href="activityDetail.html">立即报名</a></span> -->
+							<span class="pull-right">{{activityItem.number}}人报名</span>
+						</div>
+					</div>
+				</div>
+
+				
+				
+				<!-- <div class="courseItem pull-left margin-r0">
+					<div class="courseItem_img">
+						<div class="ended">已结束</div>
+						<img class="course" src="images/course.png">
+					</div>
+					<div class="courseItem_detail">
+						<div class="courseItem_detail_title line">活动标题标题标题标题标题标题</div>
+						<div class="line">
+							<span class="color-main">12元</span>
+						</div>
+						<div class="line">地点:上海市松江区九亭大街12号</div>
+						<div class="line clearfix">
+							<span class="pull-left">2017-04-27</span>
+							<span class="pull-right apply bgcolor-main"><a href="activityDetail.html">回看内容</a></span>
+						</div>
+					</div>
+				</div> -->
+
+			</div>
+
+			<!-- 线上沙龙 -->
+			<div class="courseList clearfix" ng-if="activityWay == 3">
+				<div class="courseItem pull-left" ng-repeat="onlineSalonItem in onlineSalonList" ng-class="{'margin-r0': ($index + 1) % 3 == 0}">
+					<div class="courseItem_img">
+						<div class="tobegin" ng-if="onlineSalonItem.newActivityStatus == 1">即将开始</div>
+						<div class="living" ng-if="onlineSalonItem.newActivityStatus == 2">正在直播</div>
+						<div class="ended" ng-if="onlineSalonItem.newActivityStatus == 3">已结束</div>
+
+						<a href="salon.html?activityId={{onlineSalonItem.activityId}}&liveId={{onlineSalonItem.liveId}}">
+							<img class="course" src="{{onlineSalonItem.activityIcon}}">
+						</a>
+
+					</div>
+					<div class="courseItem_detail">
+						<div class="courseItem_detail_title line singleLine-ellipsis">{{onlineSalonItem.activityName}}</div>
+						<div class="line">
+							<span class="color-main">{{onlineSalonItem.activityPrice / 100}}元</span>
+						</div>
+						<div class="line singleLine-ellipsis">地点：{{onlineSalonItem.activityAddress}}</div>
+						<div class="line clearfix">
+							<span class="pull-left">{{onlineSalonItem.activityStartTime | date:'yyyy-MM-dd'}}</span>
+							<!-- <span class="pull-right apply bgcolor-main"><a href="activityDetail.html">立即报名</a></span> -->
+							<span class="pull-right">{{onlineSalonItem.number}}人报名</a></span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- <div class="pagination">
+				<span style="font-size: 30px;vertical-align: -3px;"><</span>
+				<span>
+					<div class="num active">1</div>
+					<div class="num">2</div>
+					<div class="num">3</div>
+					<div class="num">4</div>
+					<div class="num">5</div>
+					...
+					<div class="num">20</div>
+				</span>
+				<span style="font-size: 30px;vertical-align: -3px;">></span>
+			</div> -->
+
+		</div>
+
+		<div class="content_r pull-right">
+			<div class="nav_title">推荐活动</div>
+			<div class="courseList">
+				<div class="courseItem" ng-repeat="recommendedActivityItem in recommendedActivityList">
+					<div class="courseItem_img pull-left">
+						<!--属于线上沙龙即将直播或正在直播的活动进入线上沙龙详情页-->
+                        <a ng-if="recommendedActivityItem.activityWay == 3 && recommendedActivityItem.newActivityStatus != 3" href="salon.html?activityId={{recommendedActivityItem.activityId}}&liveId={{recommendedActivityItem.liveId}}">
+                            <img src="{{recommendedActivityItem.activityIcon}}" style="display:block;width:100%;height:100%;">
+                        </a>
+                        <!--属于线上沙龙已结束的活动进入视频详情页-->
+                        <a ng-if="recommendedActivityItem.activityWay == 3 && recommendedActivityItem.newActivityStatus == 3" href="video.html?videoId={{recommendedActivityItem.videoId}}">
+                            <img src="{{recommendedActivityItem.activityIcon}}" style="display:block;width:100%;height:100%;">
+                        </a>
+                        <!--属于线下(特训营、公开课)的活动进入线下活动详情页-->
+                        <a ng-if="recommendedActivityItem.activityWay == 1 || recommendedActivityItem.activityWay == 2" href="activityDetail.html?activityId={{recommendedActivityItem.activityId}}">
+                            <img src="{{recommendedActivityItem.activityIcon}}" style="display:block;width:100%;height:100%;">
+                        </a>
+					</div>
+
+					<div class="courseItem_info pull-left">
+						<div class="course_name">{{recommendedActivityItem.activityName}}</div>
+						<div class="course_price color-main">
+							<span ng-if="recommendedActivityItem.activityPrice == 0">免费</span>
+							<span ng-if="recommendedActivityItem.activityPrice > 0">{{recommendedActivityItem.activityPrice}}</span>
+						</div>
+						<div class="course_address">{{recommendedActivityItem.activityAddress}}</div>
+						<div>{{recommendedActivityItem.activityStartTime | date:'yyyy-MM-dd'}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-include="'templates/footer.html'"></div>
+
+	<div login-register></div>
+
+	<div id="back-top"></div>
+</body>
+</html>

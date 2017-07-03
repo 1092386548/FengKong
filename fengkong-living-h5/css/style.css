@@ -1,0 +1,74 @@
+body,ul,ol,dl,dd,h1,h2,h3,h4,h5,h6,p,input,select,textarea,form{margin: 0px auto; padding: 0; }
+*{font-family:"微软雅黑" !important ;}
+img{border:none;}
+ul,ol{list-style:none;}
+input,select,textarea{outline:none;border:none;background:none;}
+textarea{resize:none;}
+button { padding:0;border:none; }
+a{text-decoration:none; }
+.pull-left { float:left; }
+.pull-right { float:right; }
+/*清浮动*/
+.clearfix:after{content:"";*display:block;*clear:both; }
+.clearfix{zoom:1;}
+
+
+::selection {background-color:#669900; color:#ffffff; text-shadow:none;}
+::-moz-selection {background-color:#669900; color:#ffffff;text-shadow:none;}
+
+a {blr:expression(this.onFocus=this.blur())} /*if IE*/
+a {outline:none; color: #000000;}/*if 火狐等现代浏览器浏览器*/ 
+html {font-size: 62.5%;}
+
+.margin-left10{margin-left: 10px;}
+.margin-right10{margin-right: 10px;}
+.margin-top10{margin-top: 10px !important;}
+.margin-top20{margin-top: 20px;}
+.margin-top150{margin-top: 150px;}
+.margin-top15{margin-top: 15px;}
+.margin-bottom10{margin-bottom: 10px !important;}
+.margin-top5{margin-top:5px;}
+.margin0{margin:0 auto;}
+
+.paddingtb5{padding-top: 5px;padding-bottom: 5px;}
+
+.tab-item { background-color:#fff; }
+.tab-ico1 { background:url(../img/tab-ico1.png) center no-repeat; background-size:20px;}
+.tab-ico11 { background:url(../img/tab-ico11.png) center no-repeat; background-size:20px;}
+.tab-ico2 { background:url(../img/tab-ico2.png) center no-repeat;background-size:20px; }
+.tab-ico21 { background:url(../img/tab-ico21.png) center no-repeat;background-size:20px; }
+.tab-ico3 { background:url(../img/tab-ico3.png) center no-repeat;background-size:20px; }
+.tab-ico31 { background:url(../img/tab-ico31.png) center no-repeat;background-size:20px; }
+.tab-ico4 { background:url(../img/tab-ico4.png) center no-repeat;background-size:20px; }
+.tab-ico41 { background:url(../img/tab-ico41.png) center no-repeat;background-size:20px; }
+.tab{ color: #7f7f7f; }
+/*.tab-ico11{
+	background: url('../img/tab-ico11.png') center no-repeat;
+	background-size: 100%;
+}*/
+
+/*选择优惠券多选框*/
+input[type="radio"]{
+	/*display:none;*/
+	opacity:0;
+}
+
+label i.selectedRadio {
+	font-size: 12px;
+	font-style: normal;
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	text-align: center;
+	line-height: 18px;
+	color: #fff;
+	vertical-align: middle;
+	margin: -2px 2px 1px 0px;
+	border: #d8573f 1px solid;
+	border-radius:3px;
+}
+
+input[type="radio"]:checked+ i {
+	background: #d8573f;
+}
+

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>个人中心</title>
+	<!--<link rel="stylesheet" href="style/lib/normalize.css">-->
+	<link rel="stylesheet" href="style/lib/materialize.min.css">
+	<link rel="stylesheet" href="style/common.css">
+	<link rel="stylesheet" href="style/header_footer.css">
+	<link rel="stylesheet" href="style/login.css">
+	<link rel="stylesheet" href="style/personalCenter.css">
+	<script src="js/lib/jquery-1.12.3.js"></script>
+	<script src="js/backTop.js"></script>
+	<script src="js/lib/materialize.min.js"></script>
+	<script src="js/lib/angular/angular.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/controller.js"></script>
+	<script src="js/service.js"></script>
+</head>
+<body ng-app="fkliving" ng-controller="PersonalCenterCtrl">
+
+	<div ng-include="'templates/header.html'"></div>
+
+	<div id="content" class="box clearfix">
+		<div class="pull-left">
+			<div class="user-center">个人中心</div>
+			<ul class="title-list">
+				<li class="item" ng-class="{active:item == 1}" ng-click="userData(1)">
+					<img class="icon" src="images/user-data.png"> 用户资料 <span class="arrow">></span>
+				</li>
+				<li class="item" ng-class="{active:item == 2}" ng-click="userActivity(2)">
+					<img class="icon" src="images/user-activity.png"> 我的活动 <span class="arrow">></span>
+				</li>
+				<li class="item" ng-class="{active:item == 3}" ng-click="userCollection(3)">
+					<img class="icon" src="images/user-collection.png"> 我的收藏 <span class="arrow">></span>
+				</li>
+				<li class="item" ng-class="{active:item == 4}" ng-click="userConsume(4)">
+					<img class="icon" src="images/user-consume.png"> 消费记录 <span class="arrow">></span>
+				</li>
+				<li class="item" ng-class="{active:item == 5}" ng-click="userHistory(5)">
+					<img class="icon" src="images/user-history.png"> 历史记录 <span class="arrow">></span>
+				</li>
+				<li class="item" ng-class="{active:item == 6}" ng-click="userRecharge(6)">
+					<img class="icon" src="images/user-recharge.png"> 充值兑换 <span class="arrow">></span>
+				</li>
+				<li class="item" ng-class="{active:item == 7}" ng-click="userSetting(7)">
+					<img class="icon" src="images/user-setting.png"> 账户设置 <span class="arrow">></span>
+				</li>
+			</ul>
+		</div>
+
+		<div class="wrapper pull-right">
+			<div class="user-data" ng-if="item == 1">
+				<h4 class="title">资料编辑</h4>
+				<div class="user-content">
+					<div class="line">
+						<span class="name">昵称</span>
+						<span><input type="text" ng-model="user.userName"></span>
+					</div>
+					<div class="line">
+						<span class="name">性别</span>
+						<span>
+							<input id="man" type="radio" name="sex" value="1" ng-model="user.sex"> <label for="man">男</label>&nbsp;&nbsp;&nbsp;&nbsp;
+							<input id="woman" type="radio" name="sex" value="2" ng-model="user.sex"> <label for="woman">女</label>
+						</span>
+					</div>
+					<!-- <div class="line">
+						<span class="name">出生日期</span>
+						<span><input type="text" style="width: 60px;"> 年 <input type="text" style="width: 40px;"> 月 <input type="text" style="width: 40px;"> 日</span>
+					</div> -->
+					<div class="line">
+						<span class="name">公司名称</span>
+						<span><input type="text" ng-model="user.userAddress"></span>
+					</div>
+					<div class="line">
+						<span class="name">手机号码</span>
+						<span><input type="text" ng-model="user.userPhone"></span>
+					</div>
+					<div class="line">
+						<span class="name">邮箱</span>
+						<span><input type="text" ng-model="user.userEmail"></span>
+					</div>
+					<button class="sub-info" ng-click="keepInfo()">保存</button>
+				</div>
+			</div>
+
+			<div class="user-activity" ng-if="item == 2">
+				<h4 class="title">我的活动</h4>
+				<div class="user-content">
+					<ul class="ul_nav clearfix">
+						<li class="pull-left active">全部</li>
+						<li class="up_down class pull-left">
+							<span>类别</span>
+							<div class="down">
+								<div class="item active">审计</div>
+								<div class="item">内控</div>
+								<div class="item">财务</div>
+								<div class="item">风控</div>
+								<div class="item">税务</div>
+							</div>
+						</li>
+						<li class="up_down online pull-left">线上</li>
+					</ul>
+
+					<dl class="clearfix">
+						<dt class="pull-left dt_l">
+							<div class="courseItem_img pull-left">
+								<img class="video_course" src="images/course.png">
+								<img class="video_play" src="images/video_play.png">
+							</div>
+							<div class="courseItem_info pull-left">
+								<div class="course_name">活动标题标题标题标题</div>
+								<div class="course_price"><span class="color-main">免费</span></div>
+								<div class="course_teacher">人数 <span class="color-939393">12</span></div>
+								<div class="color-939393">2017-05-03</div>
+							</div>
+						</dt>
+						<dt class="pull-left dt_m">风</dt>
+						<dt class="pull-left dt_r">线上</dt>
+					</dl>
+					<dl class="clearfix">
+						<dt class="pull-left dt_l">
+							<div class="courseItem_img pull-left">
+								<img class="video_course" src="images/course.png">
+							</div>
+							<div class="courseItem_info pull-left">
+								<div class="course_name">活动标题标题标题标题</div>
+								<div class="course_price"><span class="color-main">12元</span></div>
+								<div class="course_teacher">地点 <span class="color-939393">上海市松江区某某某地点地点</span></div>
+								<div class="color-939393">2017-05-03</div>
+							</div>
+						</dt>
+						<dt class="pull-left dt_m">审</dt>
+						<dt class="pull-left dt_r">线下</dt>
+					</dl>
+					<dl class="clearfix">
+						<dt class="pull-left dt_l">
+							<div class="courseItem_img pull-left">
+								<img class="video_course" src="images/course.png">
+							</div>
+							<div class="courseItem_info pull-left">
+								<div class="course_name">活动标题标题标题标题</div>
+								<div class="course_price"><span class="color-main">12元</span></div>
+								<div class="course_teacher">地点 <span class="color-939393">上海市松江区某某某地点地点</span></div>
+								<div class="color-939393">2017-05-03</div>
+							</div>
+						</dt>
+						<dt class="pull-left dt_m">审</dt>
+						<dt class="pull-left dt_r">线下</dt>
+					</dl>
+					<button class="sub-info">保存</button>
+				</div>
+			</div>
+
+			<div class="user-collection" ng-if="item == 3">
+				<h4 class="title">我的收藏</h4>
+				<div class="user-content">
+					<ul class="ul_nav clearfix">
+						<li class="pull-left" ng-click="getMyCollection(1)" ng-class="{active:collectionType == 1}">课程</li>
+						<li class="pull-left" ng-click="getMyCollection(2)" ng-class="{active:collectionType == 2}">视频</li>
+					</ul>
+
+					<div>
+						<div class="activity_course" ng-if="collectionType == 1">
+							<dl class="clearfix" ng-repeat="collectItem in collectList">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<!-- <img class="video_course" src="images/course.png"> -->
+										<a href="recordedCourseDetail.html?courseId={{collectItem.courseId}}">
+											<img class="video_course" src="{{collectItem.imageUrl}}">
+										</a>
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">{{collectItem.courseName}}</div>
+										<div class="course_teacher">讲师 : <span class="color-939393">{{collectItem.teacherName}}</span></div>
+										<div class="course_price">
+											<span class="color-main" ng-if="collectItem.price == 0">免费</span>
+											<span class="color-main" ng-if="collectItem.price > 0">￥ {{collectItem.price / 100}}</span>
+										</div>
+										<div class="clearfix">
+											<span class="pull-left color-939393">共{{collectItem.courseChapterNumber}}节</span>
+											<span class="pull-right"><img src="images/eye.png"> 60</span>
+										</div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">风</dt>
+								<dt class="pull-left dt_r">线上</dt>
+							</dl>
+
+							<button class="sub-info">编辑</button>
+						</div>
+
+
+						<div class="activity_video" ng-if="collectionType == 2">
+							<dl class="clearfix" ng-repeat="collectItem in collectList">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<img class="video_course" src="{{collectItem.videoIcon}}">
+										<a href="video.html?videoId={{collectItem.videoId}}"><img class="video_play" src="images/video_play.png"></a>
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">{{collectItem.videoName}}</div>
+										<div class="course_teacher">讲师 : <span class="color-939393">{{collectItem.teacherName}}</span></div>
+										<div class="course_price">
+											<span class="color-main" ng-if="collectItem.videoPrice == 0">免费</span>
+											<span class="color-main" ng-if="collectItem.videoPrice > 0">￥ {{collectItem.videoPrice / 100}}</span>
+										</div>
+										<div>
+											<span class="pull-left color-939393">01:12:00</span>
+											<span class="pull-right"><img src="images/eye.png"> {{collectItem.lookedPeople}}</span>
+										</div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">风</dt>
+								<dt class="pull-left dt_r">线上</dt>
+							</dl>
+
+							<button class="sub-info">编辑</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="user-consume" ng-if="item == 4">
+				<h4 class="title">消费记录</h4>
+				<div class="user-content">
+					<ul class="ul_nav clearfix">
+						<li class="pull-left">消费项目</li>
+						<li class="pull-left">消费金额</li>
+						<li class="pull-left">状态</li>
+						<li class="pull-left">时间</li>
+					</ul>
+
+					<ul class="ul_nav clearfix border-none">
+						<li class="pull-left">某某课程名称</li>
+						<li class="pull-left"><span class="color-main">￥ 12</span></li>
+						<li class="pull-left">已付款</li>
+						<li class="pull-left">2017-05-03</li>
+					</ul>
+					<ul class="ul_nav clearfix border-none">
+						<li class="pull-left">某某课程名称</li>
+						<li class="pull-left"><span class="color-main">￥ 12</span></li>
+						<li class="pull-left">已取消</li>
+						<li class="pull-left">2017-05-03</li>
+					</ul>
+					<ul class="ul_nav clearfix border-none">
+						<li class="pull-left">某某课程名称</li>
+						<li class="pull-left"><span class="color-main">￥ 12</span></li>
+						<li class="pull-left">已付款</li>
+						<li class="pull-left">2017-05-03</li>
+					</ul>
+					<ul class="ul_nav clearfix border-none">
+						<li class="pull-left">某某课程名称</li>
+						<li class="pull-left"><span class="color-main">￥ 12</span></li>
+						<li class="pull-left">已付款</li>
+						<li class="pull-left">2017-05-03</li>
+					</ul>
+					<ul class="ul_nav clearfix border-none">
+						<li class="pull-left">某某课程名称</li>
+						<li class="pull-left"><span class="color-main">￥ 12</span></li>
+						<li class="pull-left">已付款</li>
+						<li class="pull-left">2017-05-03</li>
+					</ul>
+					<ul class="ul_nav clearfix border-none">
+						<li class="pull-left">某某课程名称</li>
+						<li class="pull-left"><span class="color-main">￥ 12</span></li>
+						<li class="pull-left">已付款</li>
+						<li class="pull-left">2017-05-03</li>
+					</ul>
+					<ul class="ul_nav clearfix border-none">
+						<li class="pull-left">某某课程名称</li>
+						<li class="pull-left"><span class="color-main">￥ 12</span></li>
+						<li class="pull-left">已付款</li>
+						<li class="pull-left">2017-05-03</li>
+					</ul>
+
+					<button class="sub-info">编辑</button>
+				</div>
+			</div>
+
+			<div class="user-history" ng-if="item == 5">
+				<h4 class="title">历史记录</h4>
+				<div class="user-content">
+					<ul class="ul_nav clearfix">
+						<li class="pull-left active">全部</li>
+						<li class="pull-left">课程</li>
+						<li class="pull-left">视频</li>
+						<li class="pull-left">活动</li>
+					</ul>
+
+					<div>
+						<div class="history_all">
+							<dl class="clearfix">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<img class="video_course" src="images/course.png">
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">课程标题标题标题标题</div>
+										<div class="course_teacher">讲师 : <span class="color-939393">某某某</span></div>
+										<div class="course_price"><span class="color-main">免费</span></div>
+										<div>
+											<span class="pull-left color-939393">共12节</span>
+											<span class="pull-right"><img src="images/eye.png"> 60</span>
+										</div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">审</dt>
+							</dl>
+							<dl class="clearfix">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<img class="video_course" src="images/course.png">
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">视频标题标题标题标题</div>
+										<div class="course_teacher">讲师 : <span class="color-939393">某某某</span></div>
+										<div class="course_price"><span class="color-main">免费</span></div>
+										<div>
+											<span class="pull-left color-939393">01:12:00</span>
+											<span class="pull-right"><img src="images/eye.png"> 60</span>
+										</div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">风</dt>
+							</dl>
+							<dl class="clearfix">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<img class="video_course" src="images/course.png">
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">活动标题标题标题标题</div>
+										<div class="course_teacher">讲师 : <span class="color-939393">某某某</span></div>
+										<div class="course_price"><span class="color-main">免费</span></div>
+										<div>
+											<span class="pull-left color-939393">共12节</span>
+											<span class="pull-right"><img src="images/eye.png"> 60</span>
+										</div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">审</dt>
+							</dl>
+
+							<button class="sub-info">清空记录</button>
+						</div>
+
+						<div class="history_course hide">
+							<dl class="clearfix">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<img class="video_course" src="images/course.png">
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">课程标题标题标题标题</div>
+										<div class="course_teacher">讲师 : <span class="color-939393">某某某</span></div>
+										<div class="course_price"><span class="color-main">免费</span></div>
+										<div>
+											<span class="pull-left color-939393">共12节</span>
+											<span class="pull-right"><img src="images/eye.png"> 60</span>
+										</div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">审</dt>
+							</dl>
+							<dl class="clearfix">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<img class="video_course" src="images/course.png">
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">课程标题标题标题标题</div>
+										<div class="course_teacher">讲师 : <span class="color-939393">某某某</span></div>
+										<div class="course_price"><span class="color-main">免费</span></div>
+										<div>
+											<span class="pull-left color-939393">共12节</span>
+											<span class="pull-right"><img src="images/eye.png"> 60</span>
+										</div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">风</dt>
+							</dl>
+							<dl class="clearfix">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<img class="video_course" src="images/course.png">
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">课程标题标题标题标题</div>
+										<div class="course_teacher">讲师 : <span class="color-939393">某某某</span></div>
+										<div class="course_price"><span class="color-main">免费</span></div>
+										<div>
+											<span class="pull-left color-939393">共12节</span>
+											<span class="pull-right"><img src="images/eye.png"> 60</span>
+										</div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">审</dt>
+							</dl>
+
+							<button class="sub-info">清空记录</button>
+						</div>
+
+						<div class="history_video hide">
+							<dl class="clearfix">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<img class="video_course" src="images/course.png">
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">视频标题标题标题标题</div>
+										<div class="course_teacher">讲师 : <span class="color-939393">某某某</span></div>
+										<div class="course_price"><span class="color-main">免费</span></div>
+										<div>
+											<span class="pull-left color-939393">01:12:00</span>
+											<span class="pull-right"><img src="images/eye.png"> 60</span>
+										</div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">风</dt>
+								<dt class="pull-left dt_r">线上</dt>
+							</dl>
+							<dl class="clearfix">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<img class="video_course" src="images/course.png">
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">视频标题标题标题标题</div>
+										<div class="course_teacher">讲师 : <span class="color-939393">某某某</span></div>
+										<div class="course_price"><span class="color-main">免费</span></div>
+										<div>
+											<span class="pull-left color-939393">01:12:00</span>
+											<span class="pull-right"><img src="images/eye.png"> 60</span>
+										</div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">审</dt>
+								<dt class="pull-left dt_r">线下</dt>
+							</dl>
+							<dl class="clearfix">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<img class="video_course" src="images/course.png">
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">视频标题标题标题标题</div>
+										<div class="course_teacher">讲师 : <span class="color-939393">某某某</span></div>
+										<div class="course_price"><span class="color-main">免费</span></div>
+										<div>
+											<span class="pull-left color-939393">01:12:00</span>
+											<span class="pull-right"><img src="images/eye.png"> 60</span>
+										</div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">审</dt>
+								<dt class="pull-left dt_r">线上</dt>
+							</dl>
+
+							<button class="sub-info">清空记录</button>
+						</div>
+
+						<div class="history_activity hide">
+							<dl class="clearfix">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<img class="video_course" src="images/course.png">
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">活动标题标题标题标题</div>
+										<div class="course_price"><span class="color-main">免费</span></div>
+										<div class="course_teacher">人数 <span class="color-939393">12</span></div>
+										<div><span class="pull-left color-939393">2017-05-03</span></div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">风</dt>
+								<dt class="pull-left dt_r">线上</dt>
+							</dl>
+							<dl class="clearfix">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<img class="video_course" src="images/course.png">
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">活动标题标题标题标题</div>
+										<div class="course_price"><span class="color-main">免费</span></div>
+										<div class="course_teacher">人数 <span class="color-939393">12</span></div>
+										<div><span class="pull-left color-939393">2017-05-03</span></div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">审</dt>
+								<dt class="pull-left dt_r">线下</dt>
+							</dl>
+							<dl class="clearfix">
+								<dt class="pull-left dt_l">
+									<div class="courseItem_img pull-left">
+										<img class="video_course" src="images/course.png">
+									</div>
+									<div class="courseItem_info pull-left">
+										<div class="course_name">活动标题标题标题标题</div>
+										<div class="course_price"><span class="color-main">免费</span></div>
+										<div class="course_teacher">人数 <span class="color-939393">12</span></div>
+										<div><span class="pull-left color-939393">2017-05-03</span></div>
+									</div>
+								</dt>
+								<dt class="pull-left dt_m">审</dt>
+								<dt class="pull-left dt_r">线上</dt>
+							</dl>
+
+							<button class="sub-info">清空记录</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="user-recharge" ng-show="item == 6">
+				<h4 class="title">充值兑换</h4>
+				<div class="user-content">
+					<ul class="ul_nav clearfix">
+						<li class="pull-left active">充值</li>
+						<li class="pull-left">兑换</li>
+					</ul>
+
+					<div>
+						<div class="recharge">
+							<dl class="clearfix">
+								<dd class="pull-left account_balance">账户余额</dd>
+								<dd class="pull-left account_balance_rmb"><span class="color-main">￥ {{userBalance}}</span></dd>
+								<dd class="pull-left account_recharge bgcolor-main">立即充值</dd>
+							</dl>
+
+							<ul class="ul_nav_record clearfix">
+								<li class="pull-left">充值记录</li>
+								<!-- <li class="pull-right more">更多 >></li> -->
+							</ul>
+							<dl class="clearfix" ng-repeat="consumptionItem in consumptionList">
+								<dd class="pull-left recharge_date">{{consumptionItem.recordTime | date:'yyyy-MM-dd'}}</dd>
+								<dd class="pull-left recharge_num color-main">+ {{consumptionItem.recordMoney * 100}}元</dd>
+							</dl>
+						</div>
+
+						<div class="exchange" style="display: none;">
+							<ul class="clearfix">
+								<li class="pull-left"><input class="exchange_code" type="text" placeholder="请输入兑换码"></li>
+								<li class="pull-left"><button class="exchange_btn bgcolor-main">立即兑换</button></li>
+							</ul>
+
+							<ul class="discount">
+								<li style="text-align: left;">优惠券</li>
+							</ul>
+						</div>						
+					</div>
+				</div>
+			</div>
+
+			<div class="user-setting" ng-if="item == 7">
+				<h4 class="title">账户设置</h4>
+				<div class="user-content">
+					<ul class="ul_nav">
+						<li style="text-align: left;">修改密码</li>
+					</ul>
+
+					<ul>
+						<li class="clearfix">
+							<div class="pull-left password_name">旧密码</div>
+							<div class="pull-left"><input class="password_input" type="password" ng-model="registerData.oldPassword"></div>
+						</li>
+						<li class="clearfix">
+							<div class="pull-left password_name">新密码</div>
+							<div class="pull-left"><input class="password_input" type="password" ng-model="registerData.password"></div>
+						</li>
+						<li class="clearfix">
+							<div class="pull-left password_name">确认密码</div>
+							<div class="pull-left"><input class="password_input" type="password" ng-model="registerData.rpassword"></div>
+						</li>
+					</ul>
+
+					<button class="sub-info" ng-click="pswBtn()">保存</button>
+
+					<ul class="ul_nav">
+						<li style="text-align: left;">账户绑定</li>
+					</ul>
+					<div>
+						<img src="images/wx.png" alt="">
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<div ng-include="'templates/footer.html'"></div>
+
+	<div login-register></div>
+
+	<div id="back-top"></div>
+
+
+	<script>
+		$(function(){
+			var activityClassItem = $('#content').find('.wrapper').find('.user-activity').find('.class').find('.item');
+			activityClassItem.on('click',function(){
+				$(this).addClass('active').siblings().removeClass('active');
+			})
+
+			var collectionLi = $('#content').find('.wrapper').find('.user-collection').find('.ul_nav').find('li');
+			collectionLi.on('click',function(){
+				$(this).addClass('active').siblings().removeClass('active').parent().next().children('div').eq($(this).index()).show().siblings().hide();
+			})
+
+			var historyLi = $('#content').find('.wrapper').find('.user-history').find('.ul_nav').find('li');
+			historyLi.on('click',function(){
+				$(this).addClass('active').siblings().removeClass('active').parent().next().children('div').eq($(this).index()).show().siblings().hide();
+			})
+
+			var rechargeLi = $('#content').find('.wrapper').find('.user-recharge').find('.ul_nav').find('li');
+
+			rechargeLi.on('click',function(){
+				$(this).addClass('active').siblings().removeClass('active').parent().next().children('div').eq($(this).index()).show().siblings().hide();
+			})
+		})
+	</script>
+</body>
+</html>

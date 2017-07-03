@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>recordedCourseDetail</title>
+	<!--<link rel="stylesheet" href="style/lib/normalize.css">-->
+	<link rel="stylesheet" href="style/lib/materialize.min.css">
+	<link rel="stylesheet" href="style/common.css">
+	<link rel="stylesheet" href="style/header_footer.css">
+	<link rel="stylesheet" href="style/login.css">
+	<link rel="stylesheet" href="style/recordedCourseDetail.css">
+	<script src="js/lib/jquery-1.12.3.js"></script>
+	<script src="js/backTop.js"></script>
+	<script src="js/lib/materialize.min.js"></script>
+	<script src="js/lib/angular/angular.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/controller.js"></script>
+	<script src="js/service.js"></script>
+</head>
+
+<body ng-app="fkliving" ng-controller="RecordedCourseDetailCtrl">
+	<div ng-include="'templates/header.html'"></div>
+
+	<div id="content" class="box">
+		<div class="course_title">{{courseInfo.courseName}}</div>
+		<div class="course_video clearfix">
+			<div class="course_video_l pull-left">
+				<img src="{{courseInfo.imgUrl}}" style="width: 100%;height: 100%;">
+			</div>
+			<div class="course_video_r pull-right">
+				<div class="clearfix">
+					<div class="pull-left" style="width: 120px;">课节: 12</div>
+					<div class="pull-left" style="width: 150px;">购买人数: 30</div>
+					<div class="pull-left" style="width: 120px;">评论: {{commentList.length}}</div>
+				</div>
+				<div class="introduction clearfix">
+					<div class="title_l pull-left" style="width: 100px;">课程简介:</div>
+					<div class="content_r pull-left" style="width: 290px;line-height: 1.5;">
+						<!-- 从投诉到风控巧妙化解客户不满和快速止损课程，旨在帮助学员面对客户的投诉，售后专家应采用有效的处理方式，力求在最短的时间内解客户的处境和同理心转换，化解客户的不满和愤怒方式，力求在最短的时间内解客户的处境和同理心转换，化解客户的不满和愤怒。 -->
+						{{courseInfo.description}}
+					</div>
+				</div>
+				<div class="teacher clearfix">
+					<div class="title_l pull-left" style="width: 100px;">课程讲师:</div>
+					<div class="content_r pull-left" style="width: 290px;line-height: 1.5;">
+						某某某
+					</div>
+				</div>
+
+				<!--<div class="comment">
+					<div class="clearfix">
+						<span class="pull-left">精彩评论:</span>
+						<span class="pull-right">更多 >></span>
+					</div>
+
+					<div class="comment_content clearfix">
+						<div class="user_name pull-left">用户123:</div>
+						<div class="user_comment pull-left">评论评论评论评论评论评论评论评论评论评论评论评论评论</div>
+					</div>
+					<div class="comment_content clearfix">
+						<div class="user_name pull-left">用户张三李四王五赵六:</div>
+						<div class="user_comment pull-left">评论评论评论评论评论评论评论评论评论评论评论评论评论</div>
+					</div>
+				</div>-->
+
+				<div class="course_price clearfix">
+					<div class="pull-left" style="line-height:50px;">
+						价格: <span class="color-main">￥{{courseInfo.coursePrice / 100}}</span>
+					</div>
+					<div class="pull-right">
+						<span class="btn_buy bgcolor-main" ng-if="courseBuyStatus" ng-click="createCourseOrder()">购买课程</span>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<ul class="nav_ul clearfix">
+			<li class="pull-left">
+				<span><img src="images/dianzan1.png" ng-if="!zan_flag" ng-click="zan()"></span>
+				<span><img src="images/dianzan2.png" ng-if="zan_flag" ng-click="cancelZan()"></span>
+				<span>喜欢</span>
+				<span>({{currentCourseEarnedPeople}})</span>
+			</li>
+			<li class="pull-left">
+				<span><img src="images/collection1.png" ng-if="!collection_flag" ng-click="courseCollection()"></span>
+				<span><img src="images/collection2.png" ng-if="collection_flag" ng-click="cancelCollect()"></span>
+				<span>收藏</span>
+				<span>({{currentCourseCollectPeople}})</span>
+			</li>
+			<li class="pull-left">
+				<span><img src="images/share.png"></span>
+				<span>分享</span>
+				<span>(12)</span>
+			</li>
+			<li class="pull-right" style="text-align: right;">
+				查看所有课节 >>
+			</li>
+		</ul>
+
+		<div class="course_summary clearfix">
+			<div class="course_summary_l pull-left">
+				<ul class="course_summary_list clearfix">
+					<li class="pull-left color-main">课程安排</li>
+					<li class="pull-left" ng-click="getCourseDetail()">课程详情</li>
+					<li class="pull-left">评论</li>
+				</ul>
+				<div class="courseItem_wrapper">
+					<div class="arrangement">
+						<div class="courseItem clearfix" ng-repeat="recordedCourseItem in recordedCourseList">
+							<div class="courseItem_img pull-left">
+								<img src="{{recordedCourseItem.videoIcon}}">
+								<a href="video.html?videoId={{recordedCourseItem.videoId}}"><img class="video_play" src="images/video_play.png"></a>
+							</div>
+							<div class="courseItem_info pull-left">
+								<div class="clearfix">
+									<span class="course_name">{{recordedCourseItem.videoName}}</span>
+									<span class="course_num">第{{$index+1}}节</span>
+								</div>
+								<div class="course_teacher">讲师 {{recordedCourseItem.teacherName}}</div>
+								<div class="color-main">￥{{recordedCourseItem.videoPrice / 100}}</div>
+								<div>时长 : 01:12:30</div>
+							</div>
+						</div>
+					</div>
+
+					<div style="display: none;">
+						<div>讲师姓名：{{courseDetail.teacherName}}</div>
+						<div>讲师简介：{{courseDetail.teacherDescription}}</div>
+						<div>课程介绍：{{courseDetail.description}}</div>
+					</div>
+
+					<div class="user_comment" style="display: none;">
+						<div class="edit_comment">
+							<textarea ng-model="recordList.evaluation"></textarea>
+							<span class="btn_comment bgcolor-main" ng-click="evaluate()">评论</span>
+						</div>
+
+						<div class="commentItem clearfix" ng-repeat="commentItem in commentList">
+							<div class="commentItem_l pull-left">
+								<img src="images/user_comment.png">
+							</div>
+							<div class="commentItem_r pull-left">
+								<div>{{commentItem.userName}} &nbsp;&nbsp;&nbsp;&nbsp; <span class="flag bgcolor-main">内控达人</span></div>
+								<div style="margin: 14px 0 8px 0;">{{commentItem.commentContent}}</div>
+								<div>{{commentItem.commentTime | date:'yyyy-MM-dd'}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="course_summary_r pull-left">
+				<div class="title">热门课程</div>
+				<div class="courseList">
+					<div class="courseItem">
+						<div class="courseItem_img pull-left">
+							<img src="images/course.png" alt="">
+						</div>
+						<div class="courseItem_info pull-left">
+							<div class="course_name">课程名称名称名称名称</div>
+							<div class="course_teacher">讲师:某某某</div>
+							<div class="course_price">￥ <span class="color-main">免费</span></div>
+							<div>
+								<div class="pull-left">共12节</div>
+								<div class="pull-right">
+									<img src="images/eye.png">
+									<span class="color-main">60</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="courseItem">
+						<div class="courseItem_img pull-left">
+							<img src="images/course.png" alt="">
+						</div>
+						<div class="courseItem_info pull-left">
+							<div class="course_name">课程名称名称名称名称</div>
+
+							<div class="course_teacher">讲师:某某某</div>
+							<div class="course_price">￥ <span class="color-main">免费</span></div>
+							<div>
+								<div class="pull-left">共12节</div>
+								<div class="pull-right">
+									<img src="images/eye.png">
+									<span class="color-main">60</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="courseItem">
+						<div class="courseItem_img pull-left">
+							<img src="images/course.png" alt="">
+						</div>
+						<div class="courseItem_info pull-left">
+							<div class="course_name">课程名称名称名称名称</div>
+							<div class="course_teacher">讲师:某某某</div>
+							<div class="course_price">￥ <span class="color-main">免费</span></div>
+							<div>
+								<div class="pull-left">共12节</div>
+								<div class="pull-right">
+									<img src="images/eye.png">
+									<span class="color-main">60</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="courseItem">
+						<div class="courseItem_img pull-left">
+							<img src="images/course.png" alt="">
+						</div>
+						<div class="courseItem_info pull-left">
+							<div class="course_name">课程名称名称名称名称</div>
+							<div class="course_teacher">讲师:某某某</div>
+							<div class="course_price">￥ <span class="color-main">免费</span></div>
+							<div>
+								<div class="pull-left">共12节</div>
+								<div class="pull-right">
+									<img src="images/eye.png">
+									<span class="color-main">60</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+	<div ng-include="'templates/footer.html'"></div>
+
+	<div login-register></div>
+
+	<div id="back-top"></div>
+
+	<script>
+		var li = $('#content').find('.course_summary_l').find('.course_summary_list').find('li');
+		li.on('click', function () {			
+			$(this).addClass('color-main').siblings().removeClass('color-main').parent().next().children('div').eq($(this).index()).show().siblings().hide();
+		})
+	</script>
+
+</body>
+
+</html>

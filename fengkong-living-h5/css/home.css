@@ -1,0 +1,166 @@
+.bar{
+    border:none;
+}
+.play-icon{
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 50%;
+    left: 50%;
+    margin-top: -25px;
+    margin-left: -25px;
+    background: url(../img/play-icon.png) no-repeat;
+    background-size: cover;
+}
+
+
+
+
+.home_head{height: 50px; }
+.home_search{border-radius: 6px;background-color: #fff;height: 60%;margin-top: 10px;margin-right: 10px;}
+.home_search1{background-color:#f6f4f4;height: 70%;margin-left: 10px;}
+.home_search1+a{background-color:#fff;color: #777;margin-top:10px;margin-left: 10px; }
+.home_inputS{width: 100%;padding-bottom: 4px !important;}
+
+.logoR{margin-top: 3px;}
+.home_head img{width: 70%;}
+.home_head .comment{margin-top: 11px;margin-left: 5px;}
+.home_banner{height: 200px;}
+.home_banner img{width: 100%;}
+/* .swiper-container{top:5px;} */
+.tab_circle{width:42px;height:42px;line-height: 42px;margin: 0 auto;text-align:center;border-radius: 50%;border: 1px solid #d8573f;color: #d8573f;}
+.tab_circle span{font-size: 2.5rem;}
+.a1{background-color:#d8573f;color:#fff;}
+.direct-seeding{margin-right: 5px;width: 3px;height: 18px;margin-right: 10px;}
+
+h4{color:#494949;}
+.videoP{position: relative; background-color: #000; width: 100%;height: 120px; }
+.play1{position: absolute; width: 48px;top:35px;left: 70px;}
+.search-main .btn-group { background-color:#ffffff;height:40px; }
+.search-main .btn-group button { height:30px;line-height:30px;background-color:#ffffff;margin-top:5px; }
+.b1{border-bottom: 2px solid #d8573f;color:#d8573f;}
+.home_head h3{color: #fff;line-height:40px; }
+.progress_name{color:#494949; font-size: 12px;}
+.progress_name a{color:#494949;}
+.progress_name p { margin-right: 20px; }
+.progress_name p a{color: #9b9b9b;}
+.progress_name button{border-radius:4px;background-color: #d8573f;color: #fff;width: 40%; }
+
+.loginbutton{font-size: 20px;}
+.loginbutton button{background-color: #fff;border:1px solid #d8573f;color:#d8573f;}
+.login_lef{border-radius: 5px 0 0 5px; }
+.login_rig{border-radius: 0 5px 5px 0; }
+.logincolor{background-color: #d8573f !important;color: #fff !important;}
+.login_sub{margin-top:20%;border-radius: 5px;}
+.login_forget{margin-top:45%;}
+
+
+.ion-chevron-left{font-size: 20px;}
+
+
+.item1{border:0px;}
+.user_comments{border-top: 1px solid #ccc;padding: 10px 0 10px 0;margin-top:5px;}
+.user_comments img{border-radius: 50%;width: 35px;height: 35px;}
+.user_comments h6{padding-left: 20px; width: 300px;min-height: 8px; word-wrap:break-word;color: #9a9a9a;}
+.user_comments p{color: #9a9a9a;}
+.record_navigation_all {}
+.tab-change{}
+/*active_details.html*/
+.tab_change_selected{
+    width: 33%;
+    float: left;
+}
+.tab_change_selected a{
+    color:black;
+}
+.active1{
+    border-bottom:2px solid red;
+    color:red;
+
+}
+
+/* 定义模态对话框外面的覆盖层样式 */
+#modal-overlay {
+    visibility: hidden;
+    position: absolute;   /* 使用绝对定位或固定定位  */
+    left: 0px;
+    top: 0px;
+    width:100%;
+    height:100%;
+    text-align:center;
+    z-index: 1000;
+    background-color: #333;
+    background: rgba(0, 0, 0, 0.5);
+
+}
+/* 模态框样式 */
+.modal-data{
+    width:300px;
+    margin: 100px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    padding:15px;
+    text-align:center;
+    opacity: 1;
+}
+/*三角*/
+.triangle-right {
+    width: 0;
+    height: 0;
+    border-bottom: 60px solid transparent;
+    opacity:0.6;
+    position: absolute;
+    top: 0;
+    left: 0px;
+}
+.triangle-right_red{
+    border-left: 60px solid #b25c4a;
+}
+.triangle-right_yellow{
+    border-left: 60px solid #c9b85e;
+}
+
+.triangle-right-left-font{
+    color:white;position: absolute;top: 14px;left: 0px;font-size: 12px;
+}
+/*.home_play{width:30px;height: 30px;position: absolute;top: 30%;left: 40%;}*/
+.home_more{float: right;margin-right: -10px;color:#919191}
+.home_search_price_style{color:#c95f48;display: inline-block;float: right;}
+/*.home_row{float:left;width:46%;}*/
+.home_row{
+    float:left;
+    width: calc((100% - 10px)/2);
+}
+.dropdown-menu li {
+    border-bottom: 1px solid #b4b4b4;
+}
+.dropdown-menu li:last-child{
+    border-bottom: none;
+}
+.dropdown-menu li label{
+    color : #c95d46;
+    padding-left: 87%;
+    font-size: 18px;
+}
+.actived_font_color{
+    color:red;
+}
+.progress_background_color{
+    opacity: 0.5;
+    background: silver;
+    width: 100%;
+    height: 500%;
+    position: absolute;
+    left:0;
+    top:0;
+    display: none
+}
+
+/*setting*/
+.logout { display:inline-block;width:90%;margin-left:5%;margin-right:5%;line-height:45px;height:45px;text-align:center;background-color:#ff2548;color:#fff;border-radius:5px;margin-top:10px;margin-bottom:10px; }
+
+.setnickname button { width: 90%;margin-left: 5%;line-height: 36px;height: 36px;background-color: #d8573f;color: #ffffff;border-radius: 5px;margin-top: 20px; }
+
+.swiper-container-progress{
+    height: 140px;
+}

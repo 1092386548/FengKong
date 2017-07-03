@@ -1,0 +1,109 @@
+<ion-content rj-close-back-drop>
+    <div style="background-color: #d8573f;">
+        <div class="row home_head themebgcolor">
+            <h3 style="padding-left: 70px;">风控在线</h3>
+            <a href="#/private_message" class="margin-top10" style="margin-right:-20px;"><img src="img/message.png" style="height: 25px;width: 25px;margin-right: 20px;margin-bottom: 5px;"></a>
+        </div>
+        <div class="row margin-top10 margin-bottom10">
+            <div class="col-20">
+                <img width="60px" height="60px" style="border-radius:30px;margin-left: 30%;" ng-src="{{userInfo.userIcon || 'img/avatar.png'}}">
+            </div>
+            <div class="col-60" style="margin-left: 20px">
+                <div>
+                    <span style="color:#fff;font-size:16px;vertical-align:3px;margin-right:5px;" ng-bind="userInfo.userName || '用户'"></span>
+                    <img src="img/man.png" width="16px" height="16px" ng-if="userInfo.userSex == '男'">
+                    <img src="img/women.png" width="16px" height="16px" ng-if="userInfo.userSex == '女'">
+                </div>
+
+                <div class="margin-top10">
+                    <input disabled="true" value="内控达人" style="color:#fff;border-radius: 30px;border: 1px solid #c95e47;width: 50%;text-align: center;background-color: #a14c39;"/>
+                </div>
+            </div>
+            <div class="col-20" style="margin-top: 12px;margin-left: -16px;">
+                <a href="#/edit_profile" style="color:#fff;">资料编辑 ></a>
+            </div>
+        </div>
+        <div class="row" style="background-color: #a14c39;height: 60px;width: 110%">
+            <div class="col-25 col-offset-25 margin-top10">
+                <a href="#/over"  style="color:#000;">
+                    <img src="img/over-white.png" width="25px" height="25px"><br/>
+                    <div style="margin-left: -20px;color:white">余额：<span>{{userBalance}}</span></div>
+                </a>
+            </div>
+            <div class="col-25 col-offset-20 margin-top10">
+                <a href="#/my_coupon"  style="color:#000;">
+                    <img src="img/coupon.png" width="25px" height="25px">
+                    <div style="margin-left: -20px;color:white">优惠券：<span>{{couponNumber}}</span></div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <ion-list >
+        <ion-item>
+            <div>
+                <a href="#/my_active" style="display:block;color:#000;">
+                    <img src="img/myact.png" width="20px" height="20px">&nbsp;
+                    <span class="my-totle">我的活动</span>
+                    <img src="img/right.png" width="25px" height="25px" style="float: right">
+
+                </a>
+            </div>
+        </ion-item>
+        <ion-item>
+            <div>
+                <a href="#/my_history"  style="display:block;color:#000;">
+                    <img src="img/prerec.png" width="20px" height="20px">&nbsp;
+                    <span class="my-totle" >历史记录</span>
+                    <img src="img/right.png" width="25px" height="25px" style="float: right">
+
+                </a>
+            </div>
+        </ion-item>
+        <ion-item>
+            <div>
+                <a href="#/my_collection" style="display:block;color:#000;">
+                    <img src="img/mycol.png " width="20px" height="20px">&nbsp;
+                    <span class="my-totle">我的收藏</span>
+                    <img src="img/right.png" width="25px" height="25px" style="float: right">
+
+                </a>
+            </div>
+        </ion-item>
+         <ion-item >
+            <div ng-click="showPopup()">
+                <a style="display:block;color:#000;">
+                    <img src="img/RedeemCode.png " width="20px" height="20px">&nbsp;
+                    <span class="my-totle" >兑换码</span>
+                    <img src="img/right.png" width="25px" height="25px" style="float: right">
+
+                </a>
+            </div>
+        </ion-item>
+    </ion-list>
+    <div style="background-color: #fbfafa">
+    &nbsp;
+    </div>
+    <ion-list >
+        <ion-item>
+            <div>
+                <a href="#/my_setting" style="display:block;color:#000;">
+                    <img src="img/myset.png " width="20px" height="20px">&nbsp;
+                    <span class="my-totle" >账户设置</span>
+                    <img src="img/right.png" width="25px" height="25px" style="float: right">
+
+                </a>
+            </div>
+        </ion-item>
+        <ion-item>
+            <div>
+                <a href="#/consume_record" style="display:block;color:#000;">
+                    <img src="img/myrec.png " width="20px" height="20px">&nbsp;
+                    <span class="my-totle" >消费记录</span>
+                    <img src="img/right.png" width="25px" height="25px" style="float: right">
+
+                </a>
+            </div>
+        </ion-item>
+    </ion-list>
+</ion-content>

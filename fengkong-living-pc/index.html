@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>首页</title>
+	<!--<link rel="stylesheet" href="style/lib/normalize.css">-->
+	<link rel="stylesheet" href="style/lib/materialize.min.css">
+	<link rel="stylesheet" href="style/common.css">
+	<link rel="stylesheet" href="style/header_footer.css">
+	<link rel="stylesheet" href="style/index.css">
+	<link rel="stylesheet" href="style/login.css">
+	<!-- <link rel="stylesheet" href="style/lib/swiper.min.css"> -->
+	<link rel="stylesheet" href="style/lib/idangerous.swiper.css">
+	<script src="js/lib/jquery-1.12.3.js"></script>
+	<!-- <script src="js/lib/swiper.min.js"></script> -->
+	<script src="js/lib/idangerous.swiper.min.js"></script>
+	<script src="js/lib/jquery.easing.min.js"></script>
+	<script src="js/backTop.js"></script>
+	<script src="js/lib/materialize.min.js"></script>
+
+	<script src="js/lib/angular/angular.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/controller.js"></script>
+	<script src="js/service.js"></script>
+</head>
+<body ng-app="fkliving" ng-controller="IndexCtrl">
+	<div ng-include="'templates/header.html'"></div>
+
+	<div class="swiper-container">
+		<div class="swiper-wrapper">
+			<div class="swiper-slide" ng-repeat="banner in bannerList">
+				<a href="{{banner.jumpUrl}}">
+					<img ng-src="{{banner.imageUrl}}">
+				</a>
+			</div>
+		</div>
+		<div class="swiper-pagination swiper-pagination-h"></div>
+	</div>
+
+	<div id="liveContent" class="box">
+		<ul class="nav_list nav_ul clearfix">
+			<li class="pull-left" ng-click="setType(1)">内控</li>
+			<li class="pull-left" ng-click="setType(2)">审计</li>
+			<li class="pull-left" ng-click="setType(3)">财务</li>
+			<li class="pull-left" ng-click="setType(4)">税务</li>
+			<li class="pull-left" ng-click="setType(5)">风控</li>
+		</ul>
+
+		<div class="wrapper">
+			<div class="internal_control">
+				<div class="hottest clearfix">
+					<div class="hottest_title">
+						<!-- <div class="pull-left">最热直播</div> -->
+						<div class="pull-left">近期直播</div>
+						<div class="pull-right" style="color: #6a6a6a;font-size: 16px;cursor: pointer;"><a href="activity.html?more=1">更多>></a></div>
+					</div>
+
+					<span ng-if="liveList.length == 0">暂无近期直播</span>
+						
+					<div class="courseItem pull-left" ng-repeat="live in liveList" ng-class="{'margin-r0':$index == 3}">
+						<div class="courseItem_img">
+							<div class="living" ng-if="live.newLiveStatus == 0">即将开始</div>
+							<div class="tobegin" ng-if="live.newLiveStatus == 1">正在直播</div>
+							<div class="ended" ng-if="live.newLiveStatus == 2">已结束</div>
+
+							<a href="salon.html?activityId={{live.activity.activityId}}&liveId={{live.liveId}}"><img class="course" src="{{live.videoImage}}"></a>
+							<!-- <img class="video_play" src="images/video_play.png" ng-if="live.newLiveStatus != 0"> -->
+						</div>
+						<div class="courseItem_detail">
+							<div class="courseItem_detail_title line singleLine-ellipsis">{{live.videoName}}</div>
+							<div class="line clearfix">
+								<span class="pull-left">讲师:</span>
+								<span class="pull-right color-main">17元</span>
+							</div>
+							<div class="line singleLine-ellipsis">
+								简介:{{live.videoIntroduction}}
+							</div>
+							<div class="line clearfix">
+								<span class="pull-left"><span class="color-main">1234</span>人已报名</span>
+
+								<!-- <span class="pull-right apply bgcolor-main" ng-if="live.newLiveStatus == 0">立即报名</span>
+								<span class="pull-right apply bgcolor-main" ng-if="live.newLiveStatus == 1">正在直播</span>
+								<span class="pull-right apply bgcolor-main" ng-if="live.newLiveStatus == 2">精彩回看</span> -->
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+
+				<div class="recommend clearfix">
+					<div class="recommend_title">
+						<div class="pull-left">线下培训</div>
+						<div class="pull-right" style="color: #6a6a6a;font-size: 16px;cursor: pointer;"><a href="activity.html">更多>></a></div>
+					</div>
+
+					<span ng-if="activityList.length == 0">暂无线下培训</span>
+
+					<div class="courseItem pull-left" ng-repeat="activity in activityList" ng-class="{'margin-r0':$index == 3}">
+						<div class="courseItem_img">
+							<a href="activityDetail.html?activityId={{activity.activityId}}">
+								<img class="course" src="{{activity.activityIcon}}">
+							</a>
+						</div>
+						<div class="courseItem_detail">
+							<div class="courseItem_detail_title line singleLine-ellipsis">{{activity.activityName}}</div>
+							<div class="clearfix line">
+								<span class="pull-left">地点:{{activity.activityAddress}}</span>
+								<span class="pull-right color-main">{{activity.activityPrice}}元</span>
+							</div>
+							<!-- <div class="line singleLine-ellipsis">
+								简介:{{activity.activityDescription}}
+							</div> -->
+							<div class="line">
+								<span class="pull-left">{{activity.activityStartTime | date:'yyyy-MM-dd'}}</span>
+								<span class="pull-right">{{activity.activityJoinNumber}}人报名</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="recommend clearfix">
+					<div class="recommend_title">
+						<div class="pull-left">推荐课程</div>
+						<div class="pull-right" style="color: #6a6a6a;font-size: 16px;cursor: pointer;"><a href="recorded.html">更多>></a></div>
+					</div>
+
+					<span ng-if="courseList.length == 0">暂无推荐课程</span>
+
+					<div class="courseItem pull-left" ng-repeat="course in courseList" ng-class="{'margin-r0':$index == 3}">
+						<div class="courseItem_img">
+							<a href="recordedCourseDetail.html?courseId={{course.courseId}}">
+								<img class="course" src="{{course.imageUrl}}">
+							</a>
+						</div>
+						<div class="courseItem_detail">
+							<div class="courseItem_detail_title line singleLine-ellipsis">{{course.courseName}}</div>
+							<div class="clearfix line">
+								<span class="pull-left">讲师:某某某</span>
+								<span class="pull-right color-main">{{course.price}}元</span>
+							</div>
+							<div class="line singleLine-ellipsis">
+								简介:{{course.description}}
+							</div>
+							<div class="line">
+								<span class="pull-left">共{{course.courseChapterNumber}}节</span>
+								<span class="pull-right"><img src="images/eye.png"> {{course.courseEarnedNumber}}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- <div class="event clearfix">
+					<div class="hotest_event pull-left">
+						<div class="hotest_event_img">
+							<div class="living"><img src="images/hotest_event_title_img.png" style="margin: 5px 10px 0 10px;"> <span style="vertical-align: 6px;">最热活动</span></div>
+							<img class="course" src="images/course.png">
+						</div>
+					</div>
+				
+					<div class="event_content pull-right">
+						<ul class="event_item_title clearfix">
+							<li class="pull-left active">特训营</li>
+							<li class="pull-left">公开课</li>
+							<li class="pull-left">线上沙龙</li>
+						</ul>
+				
+						<div>
+							<div class="special_training">
+								<ul class="event_item_list clearfix">
+									<li class="pull-left" ng-repeat="activity in campList" ng-class="{'margin-r0':$index == 2}">
+										<img src="{{activity.activityIcon}}">
+									</li>
+								</ul>
+							</div>
+				
+							<div class="public_course" style="display: none;">
+								<ul class="event_item_list clearfix">
+									<li class="pull-left" ng-repeat="activity in openClassList" ng-class="{'margin-r0':$index == 2}">
+										<img src="{{activity.activityIcon}}">
+									</li>
+								</ul>
+							</div>
+				
+							<div class="online_salon" style="display: none;">
+								<ul class="event_item_list clearfix">
+									<li class="pull-left" ng-repeat="activity in onlineSalonList" ng-class="{'margin-r0':$index == 2}">
+										<img src="{{activity.activityIcon}}">
+									</li>
+								</ul>
+							</div>
+				
+						</div>
+					</div>
+				</div> -->
+			</div>
+		</div>
+	</div>
+
+
+	<div ng-include="'templates/footer.html'"></div>
+
+	
+	<div login-register></div>
+
+	<div id="back-top"></div>
+
+
+<!--<script>
+	window.onload = function(){
+    	var register = $('.headerIndex').find('.register');
+    	var login = $('.headerIndex').find('.login');
+
+    	var loginRegister = $('#loginRegister');
+    	var close = loginRegister.find('.close');
+    	var registerContent = loginRegister.find('.register');
+    	var loginContent = loginRegister.find('.login');
+
+    	var mask = $('#mask');
+
+    	register.on('click',function(){
+    		mask.show();
+    		loginRegister.show();
+    	})
+    	login.on('click',function(){
+    		mask.show();
+    		loginRegister.show();
+    		registerContent.hide();
+    		loginContent.show();
+    	})
+
+    	close.on('click',function(){
+    		mask.hide();
+    		registerContent.show();
+    		loginContent.hide();
+    		loginRegister.hide();
+    	})
+
+    	var navListLi = $('#liveContent').find('.nav_list').find('li');
+    	navListLi.on('click',function(){
+    		$(this).addClass("active").siblings().removeClass("active").parent().next().children('div').eq($(this).index()).show().siblings().hide();
+    	})
+
+    	var li = loginRegister.find('.title').children('li');
+    	li.on('click',function(){
+    		$(this).addClass("active").siblings().removeClass("active").parent().next().children('div').eq($(this).index()).show().siblings().hide();
+    	})
+
+    	var eventContentLi = $('#liveContent').find('.event').find('.event_content').find('.event_item_title').find('li');
+    	eventContentLi.on('click',function(){
+    		$(this).addClass('active').siblings().removeClass('active').parent().next().children('div').eq($(this).index()).show().siblings().hide();
+    	})
+	}
+
+	var eventContentLi = $('#liveContent').find('.event').find('.event_content').find('.event_item_title').find('li');
+	eventContentLi.on('click',function(){
+		$(this).addClass('active').siblings().removeClass('active').parent().next().children('div').eq($(this).index()).show().siblings().hide();
+	})
+</script>-->
+</body>
+</html>

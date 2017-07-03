@@ -1,0 +1,44 @@
+.myself_over_btn{display:inline-block;margin-top:10px;border-radius: 5px;border:1px solid white;width: 54%;font-size: 16px;padding: 4px;}
+.myself_active_start{background-color: #c8705b;position: absolute;top:0;left: 5px;width: 50%;height: 20px;text-align: center;color:white;}
+.myself_active_living{background-color: #c8705b;position: absolute;top:0;left: 0;width: 100px;height: 20px;text-align: center;color:white;}
+.myself_active_end{background-color: #000;position: absolute;top:0;left: 5px;width: 50%;text-align: center;color:white;}
+.myself_active_progress_banner{top:0;left:0;}
+/*我的优惠券*/
+.themebgcolor>h3{color: white;font-size: 2.4rem;}
+.themebgcolor>a{margin-top: 0px;}
+.popup {
+    border-radius: 8px;
+    background-color: #eee;
+}
+.popup-body>input{background-color: white;width: 80%;height: 30px;padding: 5px;
+}
+.popup-buttons{background-color: #eee;border-top: 1px solid #ccc;padding: 0;min-height: 45px;border-radius: 8px;}
+.button-default{color: red; background-color: #eee;}
+.button-default:nth-child(1){border-right: 1px solid #ccc;border-bottom-left-radius: 8px;}
+.coupon{
+  color: white;
+  font-size: 18px;
+}
+.platform-android .action-sheet .action-sheet-title, .platform-android .action-sheet .button{text-align: center;}
+ 
+ /* 我的 */
+ .my-totle{vertical-align: 4px;}
+ /* 用户反馈 */
+ .feedback-type{width: 100%;margin-top: 15px;color: grey;padding-left: 20px;font-size: 1rem;padding-bottom: 10px;}
+ .feedback-change label{color: red;float: right;margin-right: 20px;}
+ .feedback-change span{margin-left: 20px;}
+ .feedback-change li:nth-child(1){border-bottom: 1px solid #eee;}
+ .feedback-change li{height: 50px;padding-top: 13px;font-size: 1.6rem;background-color: white;}
+.feedback-count{width: 100%;background-color: white;margin-top: 10px;padding: 15px;}
+.word{width: 100%;background-color: white;height: 25px;}
+.word-number{float: right;margin-right: 20px;margin-top: 3px; background-color: white;margin-bottom: 5px;}
+.mobile{width: 100%;padding: 15px !important;background-color: white;height: 50px !important;margin-top: 10px;}
+
+/* 余额充值 */
+.amount{padding: 15px 0 0 28px; }
+.money{display: inline-block;width: 100%;height: 45px;line-height: 45px;text-align: center;background-color: rgb(242,242,242);border:1px solid #ddd;}
+.rechange{background-color: rgb(216,87,63);color: #fff;}
+
+.pay-type{margin-top: 15px;padding-left: 10px;}
+.pay-type img{width: 30px;height: 30px;border-radius: 5px;margin-right: 10px;}
+.checked1,.checked2{float: right;margin-right: 20px;width: 25px;height: 25px;}

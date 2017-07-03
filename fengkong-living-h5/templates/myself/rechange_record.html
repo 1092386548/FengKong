@@ -1,0 +1,24 @@
+<ion-header-bar align-title="center" class='home_head themebgcolor' >
+    <a ng-click="goBack()" class="margin-top10 margin-left10"><img src="img/prepage.png"></a>
+    <h3>充值记录</h3>
+</ion-header-bar>
+<ion-content>
+    <div style="border-bottom:1px solid #ccc;" ng-repeat="consumptionItem in consumptionList">
+        <div class="row" style="margin-top:10px;margin-left: 10px;font-size: 17px;">
+            <div class="col-75" >
+                <span>充值成功</span>
+            </div>
+            <div class="col-25" style="color:#c95f48">
+                <span>+{{consumptionItem.recordMoney * 100}}</span>元
+            </div>
+        </div>
+        <div class="row" style="margin-bottom:5px;margin-left: 10px;font-size: 15px;">
+            <div class="col-75" style="color:silver">
+                <span>{{consumptionItem.recordTime | date:'yyyyMMdd'}}</span>
+            </div>
+            <div class="col-25" style="color: #80c15e;">
+                <span>{{consumptionItem.recordType}}支付</span>
+            </div>
+        </div>
+    </div>
+</ion-content>

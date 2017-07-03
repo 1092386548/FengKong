@@ -1,0 +1,119 @@
+<ion-header-bar align-title="center" class='home_head themebgcolor'>
+    <a ng-click="goBack()" class="margin-top10 margin-left10"><img src="img/prepage.png"></a>
+    <h3>风控在线-直播已结束</h3>
+    <a class="margin-top10"><img src="img/share_white.png" style="width:20px;height: 20px;"></a>
+</ion-header-bar>
+
+
+<ion-content>
+    <div class="container">
+        <div class="row margin_left_-5 margin-top10 margin-bottom10">
+            <span>{{videoName}}</span>
+        </div>
+        <div style="position: relative;">
+            <!--<img src="img/play-icon.png" style="position:absolute;top:35%;left: 45%;width: 50px;height: 50px;z-index: 100;">-->
+            <video id="my-video" class="video-js" x-webkit-airplay="allow" webkit-playsinline controls poster="//nos.netease.com/vod163/poster.png" preload="auto" data-setup="{}" style="width: 100%;"></video>
+        </div>
+        <!--end-->
+        <div class="row margin-top10 margin_left_-5">
+            <div class="col-33" >
+                <img src="img/collection.png" style="width:25px;height: 25px;" ng-click="progress_collection()" ng-if="!collection_flag">
+                <img src="img/collection_color.png" style="width:25px;height: 25px;" ng-if="collection_flag">
+                <span style="vertical-align: 5px;">收藏</span>
+            </div>
+            <div class="col-33" style="text-align: center;">
+                <img src="img/zan.png" style="width:25px;height: 25px;" ng-click="zan()" ng-if="!zan_flag">
+                <img src="img/zan_color.png" style="width:25px;height: 25px;" ng-if="zan_flag">
+                <span style="vertical-align: 5px;">点赞</span>
+            </div>
+            <div class="col-33">
+                <img src="img/share.png" style="width:25px;height: 25px;margin-left:33%">
+                <span style="vertical-align: 5px;">分享</span>
+            </div>
+
+
+        </div>
+        <div class="margin-top10 progress_all_search_line" style="height: 3px;"></div>
+
+    </div>
+    <div>
+        <ul class="nav nav-tabs" style="text-align: center;color:black">
+            <li class="progress_tab_change_selected active1">评论</li>
+            <li class="progress_tab_change_selected">详情</li>
+            <li class="progress_tab_change_selected">相关</li>
+        </ul>
+        <div id="progress_recorded_detail_content">
+            <!--评论-->
+            <div id="progress_recorded_comment" class="container">
+                <div class="row margin-top10">
+                    <div class="col-90">
+                        <!--<input type="text" placeholder="写下你的评价感受吧" style="background-color: #fbf9f9;width:80%;border-radius:5px;">-->
+                        <textarea placeholder="写下你的感受评价吧~" style="background-color: #fbf9f9;width:80%;border-radius:5px;" ng-model="videoComment.evaluation"></textarea>
+                    </div>
+                    <div class="col-10" style="margin-top: 6px;">
+                        <span ng-click="evaluate()">评论</span>
+                    </div>
+                </div>
+
+                <!--讨论区-->
+                <div class="row margin-top10 progress_detail_line" style="padding-bottom: 15px;" ng-repeat="commentItem in commentList">
+                    <div class="col-20">
+                        <img src="{{commentItem.userIcon}}" width="50px" height="50px" style="border-radius: 30px;">
+                    </div>
+                    <div class="col-70" >
+                        <span style="font-size: 16px;color:#c95f48;">{{commentItem.userName}}</span>
+                        <input disabled="true" value="内控达人" style="color:#fff;border-radius: 30px;border: 1px solid #c95e47;width: 27%;height: 3%;font-size: 10px;text-align: center;background-color: #a14c39;"/>
+                        <span style="display: inline-block;margin-top: 10px;">{{commentItem.commentContent}}</span>
+                    </div>
+                    <div class="col-10">
+                        <span class="progress_span_right progress_color_silver">{{commentItem.commentTime | date:'HH:mm'}}</span><br>
+                    </div>
+                </div>
+
+                <div style="position:relative;">
+                    <span style="display: inline-block;position: absolute;right: -1px;top: 0px;color:silver;">
+                        展开&nbsp;&nbsp;&nbsp;<img src="img/bottom.png" style="width:15px;height: 15px;">
+                    </span>
+                </div>
+            </div>
+
+            <!--详情start-->
+            <div id="progress_recorded_detail" class="container" style="display: none">
+                <div class="row">
+                    <div class="col-33" style="margin-top: 10px;margin-left: 10px;">
+                        <img src="{{videoDetail.teacherIcon}}" width="90px" height="90px">
+                    </div>
+                    <div class="col-66" style="margin-top: 10px;">
+                        <div style="margin-bottom: 33px;display: inline-block;">讲师姓名：{{videoDetail.teacherName}}</div>
+                        <div>讲师简介:{{videoDetail.teacherDeascript}}</div>
+                    </div>
+                </div>
+
+                <div class="margin_left_-5 margin-top10" style="text-align: left;">
+                    <div>录播介绍:</div>
+                    <div>{{videoDetail.videodeDescription}}</div>
+                </div>
+            </div>
+
+            <!--相关start-->
+            <div id="progress_recorded_related" class="container" style="display: none">
+                <div class="row" style="border-bottom: 1px solid silver;width: 110%;padding-bottom: 15px;" ng-repeat="videoRelevantItem in videoRelevantList">
+                    <div class="col-33"  style="margin-top: 10px;margin-left: 10px;position:relative;">
+                        <img src="{{videoRelevantItem.videoIcon}}" width="90px" height="90px">
+                        <img src="img/play-icon.png" style="position: absolute;width:40px;height:40px;top:25%;left:25%;">
+                    </div>
+                    <div class="col-66" style="margin-top: 10px;">
+                        <span style="margin-bottom: 20px;display: inline-block;font-size: 16px;">录播名称:{{videoRelevantItem.videoName}}</span><br>
+                        录播简介:<span>{{videoRelevantItem.videoDescription}}</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</ion-content>
+
+<ion-footer-bar class="bar-assertive" ng-if="videoPayStatus == 0" ng-click="createVideoOrder()">
+  <h1 class="title">立即购买</h1>
+</ion-footer-bar>

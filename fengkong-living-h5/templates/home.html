@@ -1,0 +1,124 @@
+<ion-header-bar align-title="center" class="home_head themebgcolor">
+    <a><img class="logoR" src="img/R-3.png" style="width: 70%"></a>
+    <a href="#/tab/home_search" style="width: 90%;">
+        <label class="item-input-wrapper home_search " >
+            <i class="icon ion-ios-search placeholder-icon"></i>
+            <input type="search" placeholder="请输入搜索内容" class="home_inputS">
+        </label>
+    </a>
+    <a><img src="img/comment.png" class="comment"></a>
+</ion-header-bar>
+
+<ion-content>
+    <div class="home_banner">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" ng-repeat="banner in bannerList">
+                    <a href="{{banner.jumpUrl}}">
+                        <img ng-src="{{banner.imageUrl}}">
+                    </a>
+                </div>
+            </div>
+            <div class="swiper-pagination swiper-pagination-white"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="tab_circle" ng-click="homeBtn(1)">
+                    <span>控</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="tab_circle" ng-click="homeBtn(2)">
+                    <span>审</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="tab_circle" ng-click="homeBtn(3)">
+                    <span>财</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="tab_circle" ng-click="homeBtn(4)">
+                    <span>税</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="tab_circle" ng-click="homeBtn(5)">
+                    <span>风</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="background: #fbfafa;width: 200%;height: 10px;"></div>
+
+    <div class="container">
+        <div>
+            <!--近期直播-->
+            <div class="row margin-top10">
+                <div class="col-33 margin-left10"><span style="border-left:3px solid #e7402e;padding-left:4px;font-size:16px;">近期直播</span></div>
+                <div class="col-33 col-offset-33" style="text-align:right;padding-right:10px;">               
+                    <a style="color:#919191;vertical-align: 4px;" ng-click="onlineSalon()">更多></a>
+                </div>
+            </div>
+            <div class="row margin-top10">
+                <h4 ng-if="liveList.length == 0">暂无近期直播</h4>
+
+                <div class="col-50" style="position: relative;padding: 0 5px;" ng-repeat="live in liveList">
+                    <!--<a ng-click="isPayStatusLive(2,0,live.liveId,0,0,live.newLiveStatus,live.livePrice)">-->
+                    <a href="#/salon/{{live.activity.activityId}}/{{live.liveId}}">
+                        <img src="img/play-icon.png" class="play-icon" ng-if="live.newLiveStatus != 0">
+                        <img src="{{live.videoImage}}" width="100%" height="20%;">
+                    </a>
+                    <div class="myself_active_start" ng-if="live.newLiveStatus == 0">即将直播</div>
+                    <div class="myself_active_start" ng-if="live.newLiveStatus == 1">正在直播</div>
+                    <!--<div class="myself_active_end" ng-if="live.newLiveStatus == 2">已结束</div>-->
+                </div>
+            </div>
+
+            <!--线下培训-->
+            <div class="row margin-top10">
+                <div class="col-33 margin-left10"><span style="border-left:3px solid #e7402e;padding-left:4px;font-size:16px;">线下培训</span></div>
+                <div class="col-33 col-offset-33" style="text-align:right;padding-right:10px;">
+                    <span><a ui-sref="tabs.active" style="color:#919191;vertical-align: 4px;">更多></a></span>
+                </div>
+            </div>
+            <div class="row margin-top10" style="margin-left: -5px;">
+                <h4 ng-if="activityList.length == 0">暂无线下培训</h4>
+
+                <div class="col-50" style="position: relative;padding: 0 5px;" ng-repeat="activity in activityList">
+                    <!--<a ng-click="isPayStatusActivity(4,0,0,0,activity.activityId)">-->
+                    <a href="#/active_details/{{activity.activityId}}">
+                        <img src="{{activity.activityIcon}}" width="100%" height="20%;">
+                    </a>
+
+                    <span class="myself_active_start progress_font10" ng-if="activity.activityStatus == 1">报名中</span>
+                    <span class="myself_active_end progress_font10" style="background-color: #2f2f2f" ng-if="activity.activityStatus == 3">已结束</span>
+                </div>
+            </div>
+
+            <!--推荐课程-->
+            <div class="row margin-top10">
+                <div class="col-33 margin-left10"><span style="border-left:3px solid #e7402e;padding-left:4px;font-size:16px;">推荐课程</span></div>
+                <div class="col-33 col-offset-33" style="text-align:right;padding-right:10px;">
+                    <a style="color:#919191;vertical-align: 4px;" ng-click="homeBtn(0)">更多></a>
+                </div>
+            </div>
+            <div class="row margin-top10">
+                <h4 ng-if="courseList.length == 0">暂无推荐课程</h4>
+
+                <div class="col-50" style="position: relative;padding: 0 5px;" ng-repeat="course in courseList">
+                    <!--<a ng-click="isPayStatusCourse(3,0,0,course.courseId,0)">-->
+                    <a href="#/recorded_list/{{course.courseId}}">
+                        <img src="{{course.imageUrl}}" width="100%" height="20%;">
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</ion-content>

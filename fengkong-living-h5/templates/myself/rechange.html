@@ -1,0 +1,74 @@
+
+<ion-header-bar align-title="center" class='home_head themebgcolor'>
+    <a ng-click="goBack()" class="margin-top10 margin-left10"><img src="img/prepage.png"></a>
+    <h3 >余额充值</h3>
+    <!-- <a class="margin-top10"><img src="img/search.png"></a> -->
+</ion-header-bar>
+
+<ion-content >
+    <div class="amount"><span>充值金额</span></div>
+    <div class="clearfix">
+        <div class="col-50 money" style="padding:0 5px;" ng-repeat="rechargeItem in rechargeList" ng-click="selectAmount($event,rechargeItem.productPrice)">
+            充￥{{rechargeItem.productPrice / 100}}
+        </div>
+    </div>
+
+    <hr style="background-color: grey;">
+
+    <ul>
+        <li class="pay-type alipay" ng-click="selectPayType(1)">
+            <label for="ali" class="clearfix">
+                <div style="float:left;">
+                    <img src="img/Alipay.png"><span>支付宝</span>
+                </div>
+                <input type="radio" name="radio" id="ali" style="float:right;width:20px;height:20px">
+                <i class="selectedRadio" style="float:right;">√</i>
+            </label>
+        </li>
+        <li class="pay-type weixin" ng-click="selectPayType(2)">
+            <label for="weixin" class="clearfix">
+                <div style="float:left;">
+                    <img src="img/weixin.png"><span>微信</span>
+                </div>
+                <input type="radio" name="radio" id="weixin" style="float:right;width:20px;height:20px">
+                <i class="selectedRadio" style="float:right;">√</i>
+            </label>
+        </li>
+    </ul>
+
+    <!--<a href="#/confirm_pay">-->
+        <button style="margin-top: 200px;background-color: rgb(216,87,63);" class="button button-full button-assertive myself_rechange_btn" ng-click="openChargeModal()">充值</button>
+    <!--</a>-->
+
+
+    <script id="modal.html" type="text/ng-template">
+        <div class="modal" style="background-color: rgba(0,0,0,.5);">
+            <div style="width: 300px;margin: 100px auto;border-radius: 10px;padding: 15px;background-color: #fff;text-align: center;">
+                <div style="border-bottom: 1px solid silver;padding-bottom: 10px;font-size: 16px;">支付方式</div>
+
+                <div style="border-bottom: 1px solid silver;padding-top:20px;padding-bottom: 20px;font-size: 16px;" ng-click="go()">
+                    <a href=""><img style="display: inline-block;float:left;margin-left: 20px" src="img/over.png" width="25px" height="25px">
+                    <span style="margin-left: -100px;color:black">余额支付</span>
+                    <img style="display: inline-block;float:right;" src="img/right.png" width="25px" height="25px">
+                    </a>
+                </div>
+
+                <div style="padding-top:20px;padding-bottom: 20px;font-size: 16px;border-bottom: 1px solid silver;">
+                    <a href=""><img style="display: inline-block;float:left;margin-left: 20px" src="img/wechat.png" width="25px" height="25px">
+                    <span style="margin-left: -100px;color:black">微信支付</span>
+                    <img style="display: inline-block;float:right;" src="img/right.png" width="25px" height="25px">
+                    </a>
+                </div>
+                
+                <div id="payCoupon" style="padding-top:20px;padding-bottom: 20px;font-size: 16px;border-bottom: 1px solid silver;" ng-click="payCoupon()">
+                    <a href=""><img style="display: inline-block;float:left;margin-left: 20px" src="img/wechat.png" width="25px" height="25px">
+                    <span style="margin-left: -100px;color:black">使用入场券</span>
+                    <img style="display: inline-block;float:right;" src="img/right.png" width="25px" height="25px">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+</ion-content>

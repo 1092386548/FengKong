@@ -1,0 +1,202 @@
+
+<ion-header-bar align-title="center" class='themebgcolor'>
+    <a ng-click="goBack()" style="position:absolute;top:50%;left:10px;margin-top:-13px;"><img src="img/prepage.png"></a>
+    <h3>风控在线</h3>
+    <!--<a class="margin-top10"><img src="img/search.png"></a>-->
+</ion-header-bar>
+
+
+<ion-content>
+    <div style="position:relative;">
+        <img src="{{activityInfo.activityIcon}}" style="width:100%;max-height:12rem;">
+
+        <div ng-if="activityInfo.newActivityStatus == 1">
+            <div class="triangle-right triangle-left-top triangle-left-top1"></div>
+            <div class="triangle-right-left-font" style="transform-origin: 40px;transform: rotate(-45deg);">即将开始</div>
+        </div>
+
+        <div ng-if="activityInfo.newActivityStatus == 2">
+            <div class="triangle-right triangle-left-top triangle-left-top2"></div>
+            <div class="triangle-right-left-font" style="transform-origin: 40px;transform: rotate(-45deg);">正在进行</div>
+        </div>
+
+        <div ng-if="activityInfo.newActivityStatus == 3">
+            <div class="triangle-right triangle-left-top triangle-left-top3"></div>
+            <div class="triangle-right-left-font" style="transform-origin: 40px;transform: rotate(-45deg);">已结束</div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:5px;margin-left:3px;">
+        <div class="col-60">{{activityInfo.activityName}}</div>
+        <div class="col-40" style="text-align: right;">
+         <span>{{activityInfo.number}}人报名</span>
+            
+        </div>
+    </div>
+
+    <div class="row" style="margin-left: 0px;margin-top:5px;color:silver">
+        <div class="col-60" >
+            <img src="img/address.png">
+            <span style="vertical-align: 2px;">{{activityInfo.activityAddress}}</span>
+        </div>
+        <div class="col-40" style="text-align: right;">
+            <span>{{activityInfo.activityStartTime | date:'yyyy-MM-dd'}}</span>
+        </div>
+    </div>
+
+    <div style="background-color: #fbf9f9;margin-top: 10px">
+        &nbsp;
+    </div>
+
+    <div>
+        <ul class="nav nav-tabs clearfix" style="text-align: center;color:#000;margin-bottom: 2px;">
+            <li class="tab_change_selected" ng-if="activityInfo.newActivityStatus == 1 || activityInfo.newActivityStatus == 2" ng-class="{active1:index == 1}" ng-click="setIndex(1)">详情</li>
+            <li class="tab_change_selected" ng-if="activityInfo.newActivityStatus == 3" ng-class="{active1:index == 2}" ng-click="setIndex(2)">回顾</li>
+            <li class="tab_change_selected" ng-class="{active1:index == 3}" ng-click="setIndex(3)">讲师</li>
+            <li class="tab_change_selected" ng-class="{active1:index == 4}" ng-click="setIndex(4)">相关</li>
+        </ul>
+        <div id="content">
+            <!--详情-->
+            <div id="detail" ng-if="index == 1"></div>
+
+            <!--回顾-->
+            <div id="detail" ng-if="index == 2"></div>
+
+            <!--讲师-->
+            <div id="lector" class="container" ng-if="index == 3">
+                <div class="row">
+                    <div class="col-33"  style="margin-top: 10px;margin-left: 10px;">
+                        <img src="{{activityTeacherInfo.teacherIcon}}" width="90px" height="90px">
+                    </div>
+                    <div class="col-66" style="margin-top: 10px;">
+                        <div style="margin-bottom: 33px;display: inline-block;">讲师姓名 : {{activityTeacherInfo.teacherName}}</div>
+                        <div>讲师简介 : {{activityTeacherInfo.teacherDescription}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!--相关-->
+            <div id="related" class="container" ng-if="index == 4">
+                <div ng-if="activityRelatedList.length == 0">暂无相关活动</div>
+
+                <div class="row" style="border-bottom: 1px solid silver;padding-bottom: 15px;" ng-if="activityRelatedList.length > 0" ng-repeat="activityRelatedItem in activityRelatedList">
+                    <div class="col-33" style="margin-top: 10px;margin-left: 10px;">
+
+
+
+
+                        <a href="#/active_details/{{activityRelatedItem.activityId}}">
+                            <img src="{{activityRelatedItem.activityIcon}}" width="90px" height="90px">
+                        </a>
+
+
+
+                        
+                    </div>
+                    <div class="col-66" style="margin-top: 10px;">
+                        <div style="margin-bottom: 20px;display: inline-block;font-size: 16px;">活动名称：{{activityRelatedItem.activityName}}</div>
+                        <div class='row' style="font-size:12px;">
+                            <div class="col-20">活动简介:</div>
+                            <div class="col-80">
+                                开始时间<span>{{activityRelatedItem.activityStartTime | date:'yyyy-MM-dd'}}</span><br>
+                                结束时间<span>{{activityRelatedItem.activityEndTime | date:'yyyy-MM-dd'}}</span><br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ion-content>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--即将开始 未报名-->
+<a href="#/active_apply/{{activityId}}">
+    <ion-footer-bar class='themebgcolor' style="color:#fff;text-align: center;line-height:34px;font-size:16px;" ng-if="activityInfo.newActivityStatus == 1 && !beforeLivingEnrollStatus">
+        <div class="col-50" style="border-right: 1px solid #fff;">
+            <img src="img/price.png" style="width:20px;vertical-align: -3px;">
+            <span>{{activityInfo.activityPrice / 100}}</span>
+        </div>
+        <div class="col-50">我要报名</div>
+    </ion-footer-bar>
+</a>
+<!--即将开始 已报名但未支付-->
+<a href="#/confirm_order_activity/{{activityId}}">
+    <ion-footer-bar class='themebgcolor' style="color:#fff;text-align: center;line-height:34px;font-size:16px;" ng-if="activityInfo.newActivityStatus == 1 && beforeLivingEnrollStatus && !beforeLivingPayStatus">
+        <div class="col-50" style="border-right: 1px solid #fff;">
+            <img src="img/price.png" style="width:20px;vertical-align: -3px;">
+            <span>{{activityInfo.activityPrice / 100}}</span>
+        </div>
+        <div class="col-50">去支付</div>
+    </ion-footer-bar>
+</a>
+<!--即将开始 已报名且已支付-->
+<ion-footer-bar class='themebgcolor' style="color:#fff;text-align: center;line-height:34px;font-size:16px;" ng-if="activityInfo.newActivityStatus == 1 && beforeLivingEnrollStatus && beforeLivingPayStatus">
+    <h3>已支付</h3>
+</ion-footer-bar>
+
+
+
+
+<!--正在进行 未报名-->
+<a href="#/active_apply/{{activityId}}">
+    <ion-footer-bar class='themebgcolor' style="color:#fff;text-align: center;line-height:34px;font-size:16px;" ng-if="activityInfo.newActivityStatus == 2 && !livingEnrollStatus">
+        <div class="col-50" style="border-right: 1px solid #fff;">
+            <img src="img/price.png" style="width:20px;vertical-align: -3px;">
+            <span>{{activityInfo.activityPrice / 100}}</span>
+        </div>
+        <div class="col-50">我要报名</div>
+    </ion-footer-bar>
+</a>
+<!--正在进行 已报名但未支付-->
+<a href="#/confirm_order_activity/{{activityId}}">
+    <ion-footer-bar class='themebgcolor' style="color:#fff;text-align: center;line-height:34px;font-size:16px;" ng-if="activityInfo.newActivityStatus == 2 && livingEnrollStatus && !livingPayStatus">
+        <div class="col-50" style="border-right: 1px solid #fff;">
+            <img src="img/price.png" style="width:20px;vertical-align: -3px;">
+            <span>{{activityInfo.activityPrice / 100}}</span>
+        </div>
+        <div class="col-50">去支付</div>
+    </ion-footer-bar>
+</a>
+<!--正在进行 已报名且已支付(线下已支付的正在进行的活动不跳转，因为没有对应的正在直播)-->
+<!--<a href="#/living_detail/{{liveId}}/{{activityId}}">-->
+    <ion-footer-bar class='themebgcolor' style="color:#fff;text-align: center;line-height:34px;font-size:16px;" ng-if="activityInfo.newActivityStatus == 2 && livingEnrollStatus && livingPayStatus">
+        <h3>已支付</h3>
+    </ion-footer-bar>
+<!--</a>-->
+
+
+
+
+<!--已结束 未支付(应该进入线下已结束活动确认订单页，可模仿视频的确认订单页)-->
+<!--<a href="#/confirm_order_offlineActivity/{{activityId}}">
+    <ion-footer-bar class='themebgcolor' style="color:#fff;text-align: center;line-height:34px;font-size:16px;" ng-if="activityInfo.newActivityStatus == 3 && !afterLivingPayStatus">
+        <div class="col-50" style="border-right: 1px solid #fff;">
+            <img src="img/price.png" style="width:20px;vertical-align: -3px;">
+            <span>{{activityInfo.activityPrice / 100}}</span>
+        </div>
+        <div class="col-50">去支付</div>
+    </ion-footer-bar>
+</a>-->
+<!--已结束(有视频进入视频详情页后判断支付状态)-->
+<a href="#/video/{{activityInfo.video.videoId}}">
+    <ion-footer-bar class='themebgcolor' style="color:#fff;text-align: center;line-height:34px;font-size:16px;" ng-if="activityInfo.newActivityStatus == 3 && activityInfo.video.videoId != null">
+        <h3>回顾内容</h3>
+    </ion-footer-bar>
+</a>
+<!--已结束(没有视频)-->
+<ion-footer-bar class='themebgcolor' style="color:#fff;text-align: center;line-height:34px;font-size:16px;" ng-if="activityInfo.newActivityStatus == 3 && activityInfo.video.videoId == null">
+    <h3>已结束</h3>
+</ion-footer-bar>

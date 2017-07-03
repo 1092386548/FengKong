@@ -1,0 +1,1 @@
+var fkliving = angular.module('fkliving',['fkliving.controller']);

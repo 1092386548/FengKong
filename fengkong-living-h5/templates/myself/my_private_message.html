@@ -1,0 +1,22 @@
+
+<ion-header-bar align-title="center" class='home_head themebgcolor'>
+    <a ng-click="goBack()" class="margin-top10 margin-left10"><img src="img/prepage.png"></a>
+    <h3>我的私信</h3>
+</ion-header-bar>
+
+<ion-content>
+<ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+   <div class="row" ng-repeat='me in messageList'>
+       <div class="col-25 margin-top10" style="margin-left: 20px">
+           <img src="img/private_message.png" width="50px" height="50px">
+       </div>
+       <div class="col-75 margin-top10">
+            <div class="row">
+                <span style="font-size: 18px">系统消息</span>
+                <span style="color:silver;margin-left: 39%;">20170303</span>
+            </div>
+            <div class="row" style="color:silver;margin-top: 2px;" ng-bind="me.content">消息内容消息内容</div>
+       </div>
+   </div>
+   <ion-infinite-scroll immediate-check="false" on-infinite="loadMore()" distance="1%"  ng-if="!noMorePage"></ion-infinite-scroll>
+</ion-content>

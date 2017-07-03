@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>直播</title>
+	<!--<link rel="stylesheet" href="style/lib/normalize.css">-->
+	<link rel="stylesheet" href="style/lib/materialize.min.css">
+	<link rel="stylesheet" href="style/common.css">
+	<link rel="stylesheet" href="style/header_footer.css">
+	<link rel="stylesheet" href="style/login.css">
+	<link rel="stylesheet" href="style/living.css">
+	<link rel="stylesheet" href="style/lib/idangerous.swiper.css">
+	<script src="js/lib/jquery-1.12.3.js"></script>
+	<script src="js/lib/idangerous.swiper.min.js"></script>
+	<script src="js/backTop.js"></script>
+	<script src="js/lib/materialize.min.js"></script>
+
+	<script src="js/lib/angular/angular.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/controller.js"></script>
+	<script src="js/service.js"></script>
+</head>
+<body ng-app="fkliving" ng-controller="LivingCtrl">
+	<div ng-include="'templates/header.html'"></div>
+
+	<div id="content" class="box clearfix">
+		<div>
+			<div class="living-list" ng-if="livingList.length > 0">
+				<span class="living-title">直播列表</span>
+
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide" ng-repeat="live in livingList">
+							<a href="livingDetail.html?activityId={{live.activity.activityId}}&liveId={{live.liveId}}" style="width: 100%;height: 100%;">
+								<!-- <img src="{{live.videoImage}}"> -->
+								<div class="slideBg" style="width: 100%;height: 100%;background-image: url({{live.videoImage}});background-repeat: no-repeat;background-size: cover;background-position: 50% 50%;"></div>
+							</a>
+						</div>
+					</div>
+					<div class="swiper-pagination swiper-pagination-h"></div>
+				</div>
+
+			</div>
+
+
+			<div class="recent-living">
+				<span class="recent-title">近期直播</span>
+
+				<div class="courseList clearfix">
+					<div class="courseItem pull-left" ng-repeat="live in beforeLivingList">
+						<div class="courseItem_img">
+							<a href="salon.html?activityId={{live.activity.activityId}}&liveId={{live.liveId}}">
+								<img class="course" src="{{live.videoImage}}">
+							</a>
+
+							<div class="tobegin">即将直播</div>
+						</div>
+						<div class="courseItem_detail">
+							<div class="courseItem_detail_title line">{{live.videoName}}</div>
+							<div class="line clearfix">
+								<span class="pull-left">讲师: {{live.teacherName}}</span>
+								<!-- <span class="pull-right color-main"><img src="images/heart.png"> <span class="color-main" style="vertical-align: 2px;">12</span></span> -->
+								<span class="pull-right color-main"><span class="color-main" style="vertical-align: 2px;">{{live.livePrice / 100}}元</span></span>
+							</div>
+							<div class="line clearfix">
+								<span class="pull-left">{{live.number}}人已报名</span>
+
+
+								<a href="salon.html?activityId={{live.activity.activityId}}&liveId={{live.liveId}}"><span class="apply bgcolor-main pull-right">立即报名</span></a>
+								
+							</div>
+						</div>
+					</div>
+
+					<div class="courseItem pull-left" ng-repeat="live in afterLivingList">
+						<div class="courseItem_img">
+							<img class="course" src="{{live.videoImage}}">
+							<div class="ended">已结束</div>
+							<a href="video.html?videoId={{live.videoId}}">
+								<img class="video_play" src="images/video_play.png">
+							</a>
+						</div>
+						<div class="courseItem_detail">
+							<div class="courseItem_detail_title line">{{live.videoName}}</div>
+							<div class="line clearfix">
+								<span class="pull-left">讲师: {{live.teacherName}}</span>
+								<!-- <span class="pull-right color-main"><img src="images/heart.png"> <span class="color-main" style="vertical-align: 2px;">12</span></span> -->
+								<span class="pull-right color-main"><span class="color-main" style="vertical-align: 2px;">{{live.livePrice / 100}}元</span></span>
+							</div>
+							<div class="line clearfix">
+								<span class="pull-left">{{live.number}}人已报名</span>
+								<a href="video.html?videoId={{live.videoId}}"><span class="apply bgcolor-main pull-right">回看</span></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			
+
+			<!-- <div class="pagination">
+				<span style="font-size: 30px;vertical-align: -3px;"><</span>
+				<span>
+					<div class="num active">1</div>
+					<div class="num">2</div>
+					<div class="num">3</div>
+					<div class="num">4</div>
+					<div class="num">5</div>
+					...
+					<div class="num">20</div>
+				</span>
+				<span style="font-size: 30px;vertical-align: -3px;">></span>
+			</div> -->
+		</div>
+	</div>
+
+
+	<div ng-include="'templates/footer.html'"></div>
+
+	<div login-register></div>
+
+	<div id="back-top"></div>
+
+
+
+	<!-- 即将直播报名 -->
+	<div id="beforeLivingApply" class="modal">
+		<div class="modal-content">
+			<form name="beforeLivingApplyForm">
+		        <div >
+		            <span style="display:inline-block;width:80px;">参与人</span>
+		            <input type="text" name="enrollName" placeholder="填写姓名" style="display:inline-block;width:240px;vertical-align:2px;" ng-required="true" ng-model="beforeLivingApplyInfo.enrollName">
+		            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="beforeLivingApplyForm.enrollName.$dirty && beforeLivingApplyForm.enrollName.$error.required">参与人不能为空</div>
+		        </div>
+		        <div>
+		            <span style="display:inline-block;width:80px;">联系方式</span>
+		            <input type="text" name="contactWay" placeholder="填写手机号码" style="display:inline-block;width:240px;vertical-align:2px;" ng-required="true" ng-pattern="/^1[34578]\d{9}$/" ng-model="beforeLivingApplyInfo.contactWay">
+		            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="beforeLivingApplyForm.contactWay.$dirty && beforeLivingApplyForm.contactWay.$error.required">联系方式不能为空</div>
+		            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="beforeLivingApplyForm.contactWay.$dirty && beforeLivingApplyForm.contactWay.$error.pattern">联系方式格式不正确</div>
+		        </div>
+		        <div>
+		            <span style="display:inline-block;width:80px;">公司名称</span>
+		            <input type="text" name="companyName" placeholder="填写完整公司名称" style="display:inline-block;width:240px;vertical-align:2px;" ng-required="true" ng-model="beforeLivingApplyInfo.companyName">
+		            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="beforeLivingApplyForm.companyName.$dirty && beforeLivingApplyForm.companyName.$error.required">公司名称不能为空</div>
+		        </div>
+
+		        <button type="button" ng-disabled="beforeLivingApplyForm.$invalid" ng-click="beforeLivingApplySubmit()">提交</button>
+		    </form>
+		</div>
+	</div>
+	<!-- 即将直播确认订单 -->
+	<div id="beforeLivingConfirmOrder" class="modal">
+		<div class="modal-content">
+	        <div>
+	            <span style="display:inline-block;width:80px;">参与人</span>
+	            <span>{{beforeLivingConfirmOrderInfo.joiner}}</span>
+	        </div>
+	        <div>
+	            <span style="display:inline-block;width:80px;">联系方式</span>
+	            <span>{{beforeLivingConfirmOrderInfo.mobile}}</span>
+	        </div>
+	        <div>
+	            <span style="display:inline-block;width:80px;">公司名称</span>
+	            <span>{{beforeLivingConfirmOrderInfo.company}}</span>
+	        </div>
+
+	        <button type="button" ng-click="beforeLivingConfirmOrderSubmit()">确认</button>
+		</div>
+	</div>
+	<!-- 即将直播选择支付方式 -->
+	<div id="beforeLivingSelectPayType" class="modal">
+		<div class="modal-content">
+	        <div>支付方式</div>
+	        <div ng-click="balancePay()">余额支付</div>
+	        <div ng-click="wechatPay()">微信支付</div>
+	        <div ng-click="aliPay()">支付宝支付</div>
+	        <div ng-click="couponPay()">体验券支付</div>
+	        <!-- <button type="button" ng-click="beforeLivingSelectPayTypeSubmit()">提交</button> -->
+		</div>
+	</div>
+	
+
+
+</body>
+</html>

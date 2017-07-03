@@ -1,0 +1,72 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js"></script>
+    <script>
+        var appid = '2017060207403523';
+        var secret = '46350ffea63bb388c4249e8c7914eadd';
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+        var code = getUrlParam('code');
+        // alert(code);
+        $.ajax({
+            type: 'GET',
+            // url: 'https://api.weixin.qq.com/sns/oauth2/access_token',
+            // data: { "appid":appid,"code":code,"secret":secret,"grant_type":"authorization_code" },
+            url: 'http://www.igmhz.com/fengkong-server/wechat/getAccessToken.do',
+            data: { "code": code },
+            success: function (data) {
+                // alert('成功');
+                // alert(JSON.stringify(data));
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://www.tone-tv.com/fenxiao-server/wechat/getUserInfo.do',
+                    data: { accessToken: data.result.access_token, openID: data.result.openid, expiresIn: data.result.expires_in },
+                    success: function (data) {
+                        // alert(22222);
+                        // alert(JSON.stringify(data));
+                        $.ajax({
+                            type: 'POST',
+                            url: 'http://www.igmhz.com/fengkong-server/user/thirdPartyLogin.do',
+                            data: { snsId: data.result.openid, nickName: data.result.nickname, icon: data.result.headimgurl },
+                            success: function (data) {
+                                if (data.errorCode == 0) {
+                                    // alert("11111");
+                                    // alert(JSON.stringify(data.result));
+                                    localStorage.user = JSON.stringify(data.result);
+                                    localStorage.userId = data.result.userId;
+                                    localStorage.userName = data.result.userName;
+                                    localStorage.snsName = data.result.snsName;
+                                    localStorage.password = data.result.password;
+                                    //改微信跳转路径
+                                    // window.location.href = "http://www.tone-tv.com/qiangdiao-site/"
+                                    // alert(localStorage.absUrl);
+                                    window.location.href = localStorage.absUrl
+                                    //window.history.go(-3);
+                                } else {
+                                    alert(data.errorMessage)
+                                }
+                            }
+                        })
+                    }
+                })
+
+
+            },
+            // error:function(data){
+            //     alert('失败');
+            // }
+        });
+    </script>
+</head>
+
+<body>
+    <div></div>
+</body>
+
+</html>

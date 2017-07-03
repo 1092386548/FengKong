@@ -1,0 +1,90 @@
+<ion-header-bar align-title="center" class='home_head themebgcolor'>
+    <a ng-click="goBack()" class="margin-top10 margin-left10"><img src="img/prepage.png"></a>
+    <h3>即将直播</h3>
+    <!--<a class="margin-top10"><img src="img/search.png"></a>-->
+</ion-header-bar>
+
+
+<ion-content>
+    <div class="home_banner" style="margin-top: 6px;">
+        <img src="{{upcomingLivingInfo.videoImage}}" style="width:100%;max-height:16rem;">
+    </div>
+    <div class="row" style="margin-top:5px;margin-left:3px;">
+        <div class="col-60">
+            <span>活动活动互动</span>
+        </div>
+        <div class="col-40" style="text-align: right;padding-right: 10px;">
+            <span>123报名</span>
+        </div>
+    </div>
+    <div class="row" style="margin-left: 0px;margin-top:5px;color:silver">
+        <div class="col-60" >
+            <img src="img/address.png" width="15px" height="15px">
+            <span>上海市浦东新区</span>
+        </div>
+        <div class="col-40" style="text-align: right;">
+            <span>{{upcomingLivingInfo.liveStartTime | date:'yyyy-MM-dd'}}</span>
+        </div>
+
+
+    </div>
+    <div style="background-color: #fbf9f9;margin-top: 10px">
+        &nbsp;
+    </div>
+    <div>
+        <ul class="nav nav-tabs clearfix" style="text-align: center;color:black">
+            <li class="tab_change_selected active1" >
+                详情
+            </li>
+            <li class="tab_change_selected" >
+                讲师
+            </li>
+            <li class="tab_change_selected" >
+                相关
+            </li>
+        </ul>
+        <div id="content" >
+            <!--详情start-->
+            <div id="detail">
+               hello
+            </div>
+
+            <!--讲师start-->
+            <div id="lector" class="container" style="display: none">
+                <div class="row">
+                    <div class="col-33"  style="margin-top: 10px;margin-left: 10px;">
+                        <img src="img/1.png" width="90px" height="90px">
+                    </div>
+                    <div class="col-66" style="margin-top: 10px;">
+                        <span style="margin-bottom: 33px;display: inline-block;">讲师姓名<b>测试</b></span><br>
+                        讲师简介:<span>讲师简介讲师简介讲师简介讲师简介讲师简介</span>
+                    </div>
+                </div>
+
+            </div>
+           
+            <!--相关start-->
+            <div id="related" class="container" style="display: none">
+                <div class="row" style="border-bottom: 1px solid silver;width: 110%;padding-bottom: 15px;">
+                    <div class="col-33"  style="margin-top: 10px;margin-left: 10px;">
+                        <img src="img/1.png" width="90px" height="90px">
+                    </div>
+                    <div class="col-66" style="margin-top: 10px;">
+                        <span style="margin-bottom: 33px;display: inline-block;font-size: 16px;">讲师姓名:<b>测试</b></span><br>
+                        讲师简介:<span>讲师简介讲师简介讲师简介讲师简介讲师简介</span>
+                    </div>
+                </div>
+                <div class="row" style="border-bottom: 1px solid silver;width: 110%;padding-bottom: 15px;">
+                    <div class="col-33"  style="margin-top: 10px;margin-left: 10px;">
+                        <img src="img/1.png" width="90px" height="90px">
+                    </div>
+                    <div class="col-66" style="margin-top: 10px;">
+                        <span style="margin-bottom: 33px;display: inline-block;font-size: 16px;">讲师姓名:<b>测试</b></span><br>
+                        讲师简介:<span>讲师简介讲师简介讲师简介讲师简介讲师简介</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</ion-content>

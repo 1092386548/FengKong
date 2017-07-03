@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>微信支付</title>
+	<!--<link rel="stylesheet" href="style/lib/normalize.css">-->
+	<link rel="stylesheet" href="style/lib/materialize.min.css">
+	<link rel="stylesheet" href="style/common.css">
+	<link rel="stylesheet" href="style/header_footer.css">
+	<link rel="stylesheet" href="style/login.css">
+	<link rel="stylesheet" href="style/pay.css">
+	<script src="js/lib/jquery-1.12.3.js"></script>
+	<script src="js/backTop.js"></script>
+	<script src="js/lib/materialize.min.js"></script>
+	<script src="js/qrcode.min.js"></script>
+
+	<script src="js/lib/angular/angular.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/controller.js"></script>
+	<script src="js/service.js"></script>
+</head>
+<body ng-app="fkliving" ng-controller="WechatPayCtrl">
+	<div ng-include="'templates/header.html'"></div>
+
+
+	<div class="box">
+		<div>商户订单号：{{orderInfo.orderCode}}</div>
+        <div>订单名称：{{orderInfo.description}}</div>
+        <div>付款金额：<span style="color: #f00;">{{orderInfo.orderTurnover}}元</span></div>
+        <div>商品描述：{{orderInfo.description}}</div>
+        <button type="button" ng-click="wechatPaySubmit()">提交</button>
+
+        <div id="qrcode"></div>
+	</div>
+
+
+	<div ng-include="'templates/footer.html'"></div>
+
+	<div login-register></div>
+
+	<div id="back-top"></div>
+</body>
+</html>

@@ -1,0 +1,230 @@
+#content .course_title{
+	height: 52px;
+	line-height: 52px;
+}
+#content .course_video{
+	height: 510px;
+	background-color: #ddd;
+}
+#content .course_video .course_video_l{
+	width: 760px;
+	height: 510px;
+}
+#content .course_video .course_video_r{
+	position: relative;
+	width: 440px;
+	height: 510px;
+	padding: 20px 20px 0 30px;
+	background-color: #ccc;
+}
+#content .course_video .course_video_r .introduction{
+	margin-top: 16px;
+}
+#content .course_video .course_video_r .teacher{
+	margin-top: 16px;
+}
+#content .course_video .course_video_r .comment{
+	margin-top: 30px;
+}
+#content .course_video .course_video_r .comment .comment_content{
+	margin-top: 16px;
+	padding-left: 10px;
+}
+#content .course_video .course_video_r .comment .comment_content .user_name{
+	width: 90px;
+	max-width: 90px;
+}
+#content .course_video .course_video_r .comment .comment_content .user_comment{
+	width: 290px;
+}
+
+#content .course_video .course_video_r .course_price{
+	position: absolute;
+	bottom: 20px;
+	left: 0;
+	width: 100%;
+	padding: 0 20px 0 30px;
+}
+#content .course_video .course_video_r .course_price .btn_buy{
+	display: inline-block;
+	width: 200px;
+	height: 50px;
+	margin-left: 10px;
+	line-height: 44px;
+	text-align: center;
+	color: #fff;
+	font-size: 18px;
+	border-radius: 5px;
+	vertical-align: 16px;
+	cursor: pointer;
+}
+
+
+#content .nav_ul{
+	margin-top: 16px;
+	padding: 0 30px;
+	border:1px solid #d7d7d7;
+	background-color: #fff;
+}
+#content .nav_ul li{
+	width: 264px;
+	height: 60px;
+	line-height: 60px;
+}
+#content .nav_ul li span{
+	display: inline-block;
+	margin-right: 20px;
+}
+#content .nav_ul li img{
+	vertical-align: -8px;
+}
+
+#content .course_summary{
+	// height: 494px;
+	margin-top: 24px;
+	background-color: #fff;
+}
+
+#content .course_summary .course_summary_l{
+	width: 760px;
+	border-right: 1px solid #e3e3e3;
+}
+#content .course_summary .course_summary_l ul li{
+	width: 130px;
+	height: 58px;
+	line-height: 58px;
+	padding-left: 20px;
+}
+#content .course_summary .course_summary_l ul li{
+	cursor: pointer;
+}
+#content .course_summary .course_summary_l ul li:hover{
+	color: #E7402E;
+}
+#content .course_summary .course_summary_l .courseItem_wrapper{
+	/*height: 240px;*/
+	min-height: 240px;
+	border-top: 1px solid #e3e3e3;
+	border-bottom: 1px solid #e3e3e3;
+	padding: 20px;
+	line-height: 1.5;
+}
+#content .course_summary .course_summary_l .courseItem_wrapper .arrangement{
+	height: 440px;
+}
+#content .course_summary .course_summary_l .courseItem_wrapper .arrangement .courseItem{
+	margin-bottom: 40px;
+}
+#content .course_summary .course_summary_l .courseItem_wrapper .arrangement .courseItem .courseItem_img{
+	position: relative;
+	width: 140px;
+	height: 100px;
+}
+#content .course_summary .course_summary_l .courseItem_wrapper .arrangement .courseItem .courseItem_img img{
+	width: 100%;
+	height: 100%;
+}
+#content .course_summary .course_summary_l .courseItem_wrapper .arrangement .courseItem .courseItem_img .video_play{
+	position: absolute;
+	width: 50px;
+	height: 50px;
+    top: 50%;
+    left: 50%;
+    margin-top: -25px;
+    margin-left: -25px;
+}
+#content .course_summary .course_summary_l .courseItem_wrapper .arrangement .courseItem .courseItem_info{
+	padding-left: 20px;
+	font-size: 14px;
+}
+#content .course_summary .course_summary_l .courseItem_wrapper .arrangement .courseItem .courseItem_info .course_name{
+	margin-right: 30px;
+	font-size: 16px;
+}
+#content .course_summary .course_summary_l .courseItem_wrapper .arrangement .courseItem .courseItem_info .course_teacher{
+	margin: 6px 0;
+}
+
+#content .course_summary .course_summary_l .courseItem_wrapper .user_comment .commentItem{
+	margin-bottom: 20px;
+}
+#content .course_summary .course_summary_l .courseItem_wrapper .user_comment .commentItem .commentItem_l{
+	width: 74px;
+	height: 74px;
+	border-radius: 50%;
+	overflow: hidden;
+}
+#content .course_summary .course_summary_l .courseItem_wrapper .user_comment .commentItem .commentItem_r{
+	width: 644px;
+	padding-left: 16px;
+}
+#content .course_summary .course_summary_l .courseItem_wrapper .user_comment .commentItem .commentItem_r .flag{
+	display: inline-block;
+	height: 24px;
+	padding: 0 10px;
+	border-radius: 12px;
+	color: #fff;
+}
+
+
+#content .course_summary .course_summary_l .edit_comment{
+	margin-bottom: 36px;
+}
+#content .course_summary .course_summary_l .edit_comment textarea{
+	width: 580px;
+	height: 120px;
+	background-color: #ddd;
+	border-radius: 10px;
+	outline: none;
+}
+#content .course_summary .course_summary_l .edit_comment .btn_comment{
+	display: inline-block;
+	width: 114px;
+	height: 44px;
+	margin-left: 10px;
+	line-height: 44px;
+	text-align: center;
+	color: #fff;
+	font-size: 18px;
+	border-radius: 5px;
+	vertical-align: 16px;
+	cursor: pointer;
+}
+
+#content .course_summary .course_summary_r{
+	width: 440px;
+	padding-left: 40px;
+}
+#content .course_summary .course_summary_r .title{
+	height: 58px;
+	line-height: 58px;
+	border-bottom: 1px solid #e3e3e3;
+}
+#content .course_summary .course_summary_r .courseList{
+	padding-top: 10px;
+}
+#content .course_summary .course_summary_r .courseList .courseItem{
+	height: 100px;
+	margin-bottom: 42px;
+}
+#content .course_summary .course_summary_r .courseList .courseItem .courseItem_img{
+	width: 140px;
+	height: 100px;
+}
+#content .course_summary .course_summary_r .courseList .courseItem .courseItem_img img{
+	width: 100%;
+	height: 100%;
+}
+#content .course_summary .course_summary_r .courseList .courseItem .courseItem_info{
+	padding-left: 20px;
+	font-size: 14px;
+}
+#content .course_summary .course_summary_r .courseList .courseItem .courseItem_info .course_name{
+	font-size: 16px;
+}
+#content .course_summary .course_summary_r .courseList .courseItem .courseItem_info .course_teacher{
+	margin: 6px 0;
+}
+#content .course_summary .course_summary_r .courseList .courseItem .courseItem_info .course_price{
+	margin-bottom: 6px;
+}

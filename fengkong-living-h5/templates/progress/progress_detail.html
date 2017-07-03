@@ -1,0 +1,84 @@
+
+<ion-header-bar align-title="center" class='home_head themebgcolor' >
+    <a ng-click="goBack()" class="margin-top10 margin-left10"><img src="img/prepage.png" alt="" ></a>
+    <h3 >风控在线</h3>
+    <a class="margin-top10"><img src="img/share_white.png" style="width:20px;height: 20px;" ></a>
+</ion-header-bar>
+
+
+<ion-content>
+    <div class="container">
+        <div class="row margin_left_-5 margin-top10 margin-bottom10" >
+            <span>直播标题</span>
+        </div>
+        <!--首页大图-->
+        <div style="position: relative;">
+            <!-- <a href="#/progress_detail">
+                <img src="img/play(1).png" style="position:absolute;top:35%;left: 45%;width: 50px;height: 50px;" alt="">
+                <img src="img/1.png" style="width:100%;height: 140px;">
+                <img src="img/full.png" style="position:absolute;bottom:0px;right:0px;width: 30px;height: 30px;" alt="">
+            </a>
+             -->
+<!--             <video id="my-video" class="video-js" x-webkit-airplay="allow" webkit-playsinline controls poster="//nos.netease.com/vod163/poster.png" preload="auto" width="640" height="360" data-setup="{}">
+    <source src="//flvbb8f2e48.live.126.net/live/5a31388e859249a1b24710ed3ea97cc9.flv?netease=flvbb8f2e48.live.126.net" type="video/mp4"> 
+</video>-->
+    <video id="my-video" class="video-js" x-webkit-airplay="allow" webkit-playsinline controls poster="//nos.netease.com/vod163/poster.png" preload="auto" width="640" height="360" data-setup="{}">
+        <source src="//flvbb8f2e48.live.126.net/live/5a31388e859249a1b24710ed3ea97cc9.flv?netease=flvbb8f2e48.live.126.net" type="video/mp4">
+    </video>
+
+
+
+        </div>
+        <!--end-->
+        <div class="row margin-top10">
+            <div class="col-75">
+                <input type="text" placeholder="写下你的评价感受吧">
+            </div>
+            <div class="col-25" style="margin-top: 6px;">
+                <a href=""><span>评论</span></a>&nbsp;&nbsp;
+                <img src="img/zan.png" style="width:25px;height: 25px;" ng-click="zan(1)" ng-if="!zan_flag">
+                <img src="img/zan_color.png" style="width:25px;height: 25px;" ng-click="zan(0)" ng-if="zan_flag">
+            </div>
+        </div>
+        <div class="margin-top10 progress_all_search_line" style="height: 3px;"></div>
+
+    </div>
+    <div class="container">
+        <div class="row margin-top10 progress_detail_line" >
+            <span style="margin-left: 10px;margin-right: 10px;">300人正在观看</span>
+            <div >
+                <img src="img/1.png" width="25px" height="25px" style="border-radius: 30px;margin-right: 5px;">
+                <img src="img/1.png" width="25px" height="25px" style="border-radius: 30px;margin-right: 5px;">
+                <img src="img/1.png" width="25px" height="25px" style="border-radius: 30px;margin-right: 5px;">
+            </div>
+        </div>
+        <div class="row margin-top10 progress_detail_line" >
+            <span style="margin-left: 10px;margin-right: 10px;font-size: 16px;">讨论区</span>
+            <span class="progress_color_silver progress_font10" style="margin-top: 5px;">200条</span>
+        </div>
+        <!--讨论区-->
+        <div class="row margin-top10 progress_detail_line" style="padding-bottom: 15px;">
+            <div class="col-20">
+                <img src="img/1.png" width="50px" height="50px" style="border-radius: 30px;">
+            </div>
+            <div class="col-70" >
+                <span style="font-size: 16px;color:#c95f48;">用户莫莫莫</span>
+                <input disabled="true" value="内控达人" style="color:#fff;border-radius: 30px;border: 1px solid #c95e47;width: 27%;height: 3%;font-size: 10px;text-align: center;background-color: #a14c39;"/>
+                <span style="display: inline-block;margin-top: 10px;">评论评论评论评论评论评论评论评论评论</span>
+            </div>
+            <div class="col-10">
+                <span class="progress_span_right progress_color_silver" > 21:00</span><br>
+            </div>
+        </div>
+        <!--end-->
+        <div style="position:relative;">
+            <span style="display: inline-block;position: absolute;right: -1px;top: 0px;color:silver;">
+                展开&nbsp;&nbsp;&nbsp;<img src="img/bottom.png" style="width:15px;height: 15px;">
+            </span>
+
+        </div>
+    </div>
+
+
+
+</ion-content>

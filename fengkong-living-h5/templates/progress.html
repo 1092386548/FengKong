@@ -1,0 +1,353 @@
+<ion-header-bar align-title="center">
+    <div class="header_tab">
+        <span class="header_tab_change header_tab_left" ng-click="selectLivingRecorded(1)" ng-class="{header_select:selectedLivingRecorded == 1}">直播</span>
+        <span class="header_tab_change header_tab_right" ng-click="selectLivingRecorded(2)" ng-class="{header_select:selectedLivingRecorded == 2}">录播</span>
+    </div>
+    <a class="margin-top10" href="#/tab/home_search"><img src="img/search_black.png" style="width: 20px;height: 20px;"></a>
+</ion-header-bar>
+
+
+<ion-content style="padding: 0 1rem !important;">
+    <ion-refresher on-refresh="doRefresh()"
+                 pulling-text="下拉刷新"
+                 refreshing-text="正在刷新..."
+                 refreshing-icon="ion-loading-c">
+    </ion-refresher>
+
+    
+    <div id="progress_all_content">
+
+        <!--直播-->
+        <div id="progress_content" class="container" ng-if="selectedLivingRecorded == 1">
+            <!--正在直播-->
+            <div style="text-align:center;height:60px;line-height:60px;" ng-if="livingList.length == 0">暂无正在直播</div>
+
+            <div class="swiper-container swiper-container-progress" ng-if="livingList.length > 0">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" ng-repeat="live in livingList">
+                        <a href="#/salon/{{live.activity.activityId}}/{{live.liveId}}">
+                            <div class="play-icon"></div>
+                            <img src="{{live.videoImage}}" style="width:100%;height: 100%;">
+                            <span class="myself_active_living myself_active_progress_banner">正在直播</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+
+            <div class="margin-top10">
+                <span class="progerss_text_left"></span>
+                <span>近期直播</span>
+            </div>
+
+            <!--即将直播-->
+            <div class="row margin-top10" style="margin-right:0px;margin-left: 0;float: left;" ng-repeat="live in beforeLivingList">
+                <div class="col-50">
+                    <div style="position: relative;padding:0 5px;">
+                        <a href="#/salon/{{live.activity.activityId}}/{{live.liveId}}">
+                            <img src="{{live.videoImage}}" style="width:100%;height: 100px;">
+                        </a>
+
+                        <span class="myself_active_start">即将直播</span>
+                    </div>
+                </div>
+                <div class="col-50" style="position: relative;height:100px;">
+                    <div>名称：{{live.videoName}}</div>
+
+                    <div style="margin-top:20px;">
+                        <span class="progress_font10">讲师：{{live.teacherName}}</span>
+                        <span class="home_search_price_style">{{live.livePrice / 100}}元</span>
+                    </div>
+                    <!--<span class="progress_font10">简介：</span><span class="progress_font10 progress_color_silver">{{live.videoIntroduction}}</span><br>-->
+                    <!--<span class="progress_font10">开始时间</span><span class="progress_font10 progress_color_silver">{{live.liveStartTime | date:'yyyy-MM-dd'}}</span><br>-->
+
+                    <div style="position:absolute;bottom:0;width:100%;" class="clearfix">
+                        <div style="float:left;">
+                            <span class="progress_font10 progress_color_silver">{{live.number}}人已报名</span>
+                        </div>
+                        <div style="float:right;">
+                            <span class="progress_font10 progeress_signup_button">
+                                <a class="progress_color_white" href="#/salon/{{live.activity.activityId}}/{{live.liveId}}">立即报名</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--直播已结束-->
+            <div class="row margin-top10" style="margin-right:0px;margin-left: 0;float: left;" ng-repeat="live in afterLivingList">
+                <div class="col-50">
+                    <div style="position: relative;padding:0 5px;">
+                        <a href="#/video/{{live.videoId}}">
+                            <div class="play-icon" ng-if="live.newLiveStatus != 0"></div>
+                            <img src="{{live.videoImage}}" style="width:100%;height: 100px;">
+                        </a>
+
+                        <span class="myself_active_end">已结束</span>
+                    </div>
+                </div>
+                <div class="col-50" style="position: relative;height:100px;">
+                    <div>名称：{{live.videoName}}</div>
+
+                    <div style="margin-top:20px;">
+                        <span class="progress_font10">讲师：{{live.teacherName}}</span>
+                        <span class="home_search_price_style">{{live.livePrice / 100}}元</span>
+                    </div>
+                    <!--<span class="progress_font10">简介：</span><span class="progress_font10 progress_color_silver">{{live.videoIntroduction}}</span><br>-->
+                    <!--<span class="progress_font10">开始时间</span><span class="progress_font10 progress_color_silver">{{live.liveStartTime | date:'yyyy-MM-dd'}}</span><br>-->
+
+                    <div style="position:absolute;bottom:0;width:100%;" class="clearfix">
+                        <div style="float:left;">
+                            <span class="progress_font10 progress_color_silver">{{live.number}}人已报名</span>
+                        </div>
+                        <div style="float:right;">
+                            <a href="#/video/{{live.videoId}}">
+                                <span class="progress_font10 progeress_review_button">回看</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 录播 -->
+        <div id="recorded" ng-if="selectedLivingRecorded == 2">
+            <div class="row">
+                <div class="col-33 progress_record_navigation_all" style="margin-left: -7px;text-align: center;padding-top: 2%;padding-bottom: 2%;">
+                    <select ng-model="formData.courseVideoId" ng-options="value.id as value.name for value in courseVideos" ng-change="getCourseVideoId(formData.courseVideoId)"></select>
+                </div>
+
+                <div class="col-33 progress_record_navigation_all" style="text-align: center;padding-top: 2%">
+                    <!--<span class="recorded-nav-title progress-record-title progress-record-m" ng-click="sortByType($event)">类别</span>
+                    <ul class="down-list hide">
+                        <li class="down-item" ng-click="getTypeId(1)" ng-class="{active:typeId == 1}">内控</li>
+                        <li class="down-item" ng-click="getTypeId(2)" ng-class="{active:typeId == 2}">审计</li>
+                        <li class="down-item" ng-click="getTypeId(3)" ng-class="{active:typeId == 3}">财务</li>
+                        <li class="down-item" ng-click="getTypeId(4)" ng-class="{active:typeId == 4}">税务</li>
+                        <li class="down-item" ng-click="getTypeId(5)" ng-class="{active:typeId == 5}">风控</li>
+                    </ul>-->
+
+                    <select ng-model="typeData.typeId" ng-options="value.id as value.name for value in typeOpts" ng-change="getTypesId(typeData.typeId)"></select>
+                </div>
+
+                <div class="col-33 progress_record_navigation_all" style="text-align: center;padding-top: 2%">
+                    <!--<span class="recorded-nav-title progress-record-title progress-record-r" ng-click="sortByPrice($event)">价格</span>
+                    <ul class="down-list hide">
+                        <li class="down-item" ng-click="getPriceId(1)" ng-class="{active:priceId == 1}">收费</li>
+                        <li class="down-item" ng-click="getPriceId(0)" ng-class="{active:priceId == 0}">免费</li>
+                    </ul>-->
+
+                    <select ng-model="priceData.priceId" ng-options="value.id as value.name for value in priceOpts" ng-change="getPricesId(priceData.priceId)"></select>
+                </div>
+            </div>
+
+            <div id="progress_recorded_content" style="position: relative">
+                <div class="progress-wrapper">
+
+                    <!-- 课程全部 -->
+                    <div id="progress_progress" ng-if="formData.courseVideoId == 1 && !filterStatus">
+                        <!--推荐课程-->
+                        <div class="container">
+                            <div class="margin-top10">
+                                <span class="progerss_text_left"></span>
+                                <span>推荐课程</span>
+                            </div>
+                            <div class="row margin-top10 margin-left_-5 clearfix">
+
+                                <h4 ng-if="isRecommendCourseList.length == 0">暂无推荐课程</h4>
+
+                                <div class="home_row" ng-repeat="isRecommendCourse in isRecommendCourseList" ng-class="{'margin-left10':$index % 2 == 1}">
+                                    <a href="#/recorded_list/{{isRecommendCourse.courseId}}">
+                                        <img src="{{isRecommendCourse.imageUrl}}" class="progress_recommend_image"><br>
+                                        <div>
+                                            <span>{{isRecommendCourse.courseName}}</span>   
+                                        </div>
+                                        <div class="clearfix">
+                                        <span class="progress_font10" style="float: left;">讲师：{{isRecommendCourse.teacherName}}</span> 
+                                        <div style="float: right;">
+                                            <span style="color: red;" ng-if="isRecommendCourse.price == 0">免费</span>
+                                            <span style="color: red;" ng-if="isRecommendCourse.price != 0">{{isRecommendCourse.price / 100}}元</span>
+                                        </div>
+                                        </div>
+                                        <span class="progress_font10 progress_color_silver">共{{isRecommendCourse.courseChapterNumber}}节</span>
+                                        <span class="progress_font10 progress_color_silver progress_span_right"><img src="img/eye.png" class="eye-looked">&nbsp;&nbsp;&nbsp;{{isRecommendCourse.looked}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="progress_all_search_line" style="height: 4px;padding-top: 0px;padding-bottom: 0px;">
+                            </div>
+                        </div>
+
+                        <div style="width: 100%;height: 20px;background-color: #ccc;"></div>
+
+                        <!--不是推荐的课程-->
+                        <div class="margin-top10 clearfix">
+
+                            <div class="home_row" ng-repeat="notRecommendCourse in notRecommendCourseList" ng-class="{'margin-left10':$index % 2 == 1}">
+                                <a href="#/recorded_list/{{notRecommendCourse.courseId}}">
+                                    <img src="{{notRecommendCourse.imageUrl}}" class="progress_recommend_image"><br>
+                                    <div>
+                                        <span>{{notRecommendCourse.courseName}}</span>
+                                    </div>
+                                    <div class="clearfix">
+                                        <span class="progress_font10" style="float: left;">讲师：{{notRecommendCourse.teacherName}}</span> 
+                                        <div style="float: right;">
+                                            <span style="color: red;" ng-if="notRecommendCourse.price == 0">免费</span>
+                                            <span style="color: red;" ng-if="notRecommendCourse.price != 0">{{notRecommendCourse.price / 100}}元</span>
+                                        </div>
+                                    </div>
+                                    <span class="progress_font10 progress_color_silver">共{{notRecommendCourse.courseChapterNumber}}节</span>
+                                    <span class="progress_font10 progress_color_silver progress_span_right"><img src="img/eye.png" class="eye-looked">&nbsp;&nbsp;&nbsp;{{notRecommendCourse.looked}}</span>
+                                </a>
+                                <div class="progress_all_search_video_list_line progress_line240" ng-if="index%2 != 0"></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <!-- 视频全部 -->
+                    <div id="progress_video" ng-if="formData.courseVideoId == 2 && !filterStatus">
+                        <!--推荐视频-->
+                        <div class="container">
+                            <div class="margin-top10">
+                                <span class="progerss_text_left"></span>
+                                <span>推荐视频</span>
+                            </div>
+                            <div class="row margin-top10 margin-left_-5">
+
+                                <span ng-if="isRecommendVideoList.length == 0">暂无推荐视频</span>
+
+                                <div class="col-50" ng-repeat="(index,isRecommendVideo) in isRecommendVideoList" ng-class="{'margin-left10':index%2 == 1}">
+                                    <a href="#/video/{{isRecommendVideo.videoId}}">
+                                        <img src="{{isRecommendVideo.videoIcon}}" class="progress_recommend_image">
+                                        <div>
+                                            <span>视频名：{{isRecommendVideo.videoName}}</span>
+                                        </div>
+                                        <div class="clearfix">
+                                            <span class="progress_font10" style="float: left;">讲师：{{isRecommendVideo.teacherName}}</span>
+                                            <div style="float: right;">
+                                                <span style="color: red;" ng-if="isRecommendVideo.videoPrice == 0">免费</span>
+                                                <span style="color: red;" ng-if="isRecommendVideo.videoPrice != 0">{{isRecommendVideo.videoPrice / 100}}元</span>
+                                            </div>
+                                        </div>
+                                        <span class="progress_font10 progress_color_silver">共{{isRecommendVideo.courseChapterNumber}}节</span>
+                                        <span class="progress_font10 progress_color_silver progress_span_right"><img src="img/eye.png" class="eye-looked">&nbsp;&nbsp;&nbsp;{{isRecommendVideo.looked}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="progress_all_search_line" style="height: 4px;padding-top: 0px;padding-bottom: 0px;">
+                            </div>
+                        </div>
+
+                        <div style="width: 100%;height: 20px;background-color: #ccc;"></div>
+
+                        <!--不是推荐的视频-->
+                        <div class="margin-top10">
+                            <div class="col-50" style="float:left;padding:0 5px;min-width: 50%;" ng-repeat="notRecommendVideo in notRecommendVideoList">
+                                <a href="#/video/{{notRecommendVideo.videoId}}">
+                                    <img src="{{notRecommendVideo.videoIcon}}" class="progress_recommend_image">
+                                    <div>
+                                        <span>视频名：{{notRecommendVideo.videoName}}</span>
+                                    </div>
+
+                                    <div>
+                                        <span class="progress_font10">讲师：{{notRecommendVideo.teacherName}}</span> 
+                                    </div>
+                                    <div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                        简介：{{notRecommendVideo.videoDescription}}
+                                    </div>
+                                    <div class="clearfix">
+                                        <span class="progress_font10 progress_color_silver progress_span_right" style="float: left;"><img src="img/eye.png" class="eye-looked">&nbsp;&nbsp;&nbsp;{{notRecommendVideo.looked}}</span>
+                                        <div style="float: right;">
+                                            <span style="color: red;" ng-if="notRecommendVideo.videoPrice == 0">免费</span>
+                                            <span style="color: red;" ng-if="notRecommendVideo.videoPrice != 0">{{notRecommendVideo.videoPrice / 100}}元</span>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!--<div class="progress_all_search_video_list_line progress_line240" ng-if="index%2 != 0"></div>-->
+                            </div>
+                        </div>
+                    </div>
+
+
+                    
+
+                    <!-- 类别 价格 -->
+                    <div id="type_price">
+                        
+                        <!--筛选课程-->
+                        <div ng-if="formData.courseVideoId == 1 && filterStatus">
+                            <div class="margin-top10 clearfix">
+
+                                <div ng-if="filtedCourses.length == 0">暂时没有课程（筛选课程）</div>
+
+                                <div class="col-50" style="float:left;padding:0 5px;min-width:50%;" ng-repeat="notRecommendCourseFilterByPriceItem in filtedCourses">
+                                    <a href="#/recorded_list/{{notRecommendCourseFilterByPriceItem.courseId}}">
+                                        <img src="{{notRecommendCourseFilterByPriceItem.imageUrl}}" class="progress_recommend_image"><br>
+                                        <div>
+                                            <span>{{notRecommendCourseFilterByPriceItem.courseName}}</span>
+                                        </div>
+                                        <div class="clearfix">
+                                            <span class="progress_font10" style="float: left;">讲师：{{notRecommendCourseFilterByPriceItem.teacherName}}</span> 
+                                            <div style="float: right;">
+                                                <span style="color: red;" ng-if="notRecommendCourseFilterByPriceItem.price == 0">免费</span>
+                                                <span style="color: red;" ng-if="notRecommendCourseFilterByPriceItem.price != 0">{{notRecommendCourseFilterByPriceItem.price / 100}}元</span>
+                                            </div>
+                                        </div>
+                                        <span class="progress_font10 progress_color_silver">共{{notRecommendCourseFilterByPriceItem.courseChapterNumber}}节</span>
+                                        <span class="progress_font10 progress_color_silver progress_span_right"><img src="img/eye.png" class="eye-looked">&nbsp;&nbsp;&nbsp;{{notRecommendCourseFilterByPriceItem.looked}}</span>
+                                    </a>
+                                    <div class="progress_all_search_video_list_line progress_line240" ng-if="index%2 != 0"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+
+                        <!-- 筛选视频 -->
+                        <div ng-if="formData.courseVideoId == 2 && filterStatus">
+                            <div class="container">
+                                <div class="margin-top10">
+                                    <span class="progerss_text_left"></span>
+                                    <span>推荐视频（筛选视频）</span>
+                                </div>
+                                <div class="margin-top10">
+
+                                    <div ng-if="filtedVideos.length == 0">暂时没有视频（筛选视频）</div>
+
+                                    <div class="col-50" class="col-50" style="float:left;padding:0 5px;min-width:50%;" ng-repeat="(index,isRecommendVideo) in filtedVideos">
+                                        <a href="#/video/{{isRecommendVideo.videoId}}">
+                                            <img src="{{isRecommendVideo.videoIcon}}" class="progress_recommend_image">
+                                            <div>
+                                                <span>{{isRecommendVideo.courseName}}</span>
+                                            </div>
+                                            <div class="clearfix">
+                                                <span class="progress_font10" style="float: left;">讲师：{{isRecommendVideo.teacherName}}</span>
+                                                <div style="float: right;">
+                                                    <span style="color: red;" ng-if="isRecommendVideo.videoPrice == 0">免费</span>
+                                                    <span style="color: red;" ng-if="isRecommendVideo.videoPrice != 0">{{isRecommendVideo.videoPrice / 100}}元</span>
+                                                </div>
+                                            </div>
+                                            <span class="progress_font10 progress_color_silver">共{{isRecommendVideo.courseChapterNumber}}节</span>
+                                            <span class="progress_font10 progress_color_silver progress_span_right"><img src="img/eye.png" class="eye-looked">&nbsp;&nbsp;&nbsp;{{isRecommendVideo.looked}}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="progress_all_search_line" style="height: 4px;padding-top: 0px;padding-bottom: 0px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</ion-content>
