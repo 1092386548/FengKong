@@ -1,19 +1,25 @@
-<ion-header-bar align-title="center" class='home_head themebgcolor'>
-    <a ng-click="goBack()" class="margin-top10 margin-left10"><img src="img/prepage.png"></a>
-    <h3>确认订单</h3>
+<ion-header-bar align-title="center" class='themebgcolor'>
+    <a ng-click="goBack()" class="header_bar_a"><img src="img/prepage.png"></a>
+    <h3 class="header_bar_title">确认订单</h3>
 </ion-header-bar>
 
-<ion-content>
+<ion-content style="top:34px;">
+    <div class="weixin-tip">
+		<p>
+			<img src="img/wxlink.png" style="width:100%;height:auto;" alt="微信打开"/>
+		</p>
+    </div>
+
     <div>
-        <div style="margin-top: 10px;height: 40px;font-size: 18px;border-bottom: 1px solid #DEDEDE;">
+        <div style="margin-top: 10px;height: 40px;font-size: 16px;border-bottom: 1px solid #DEDEDE;">
             <span style="margin-left: 10px">视频名称：</span>
             <span>{{videoName}}</span>
         </div>
-        <div style="margin-top: 10px;height: 40px;font-size: 18px;border-bottom: 1px solid #DEDEDE;" ng-if="hasCourse">
+        <div style="margin-top: 10px;height: 40px;font-size: 16px;border-bottom: 1px solid #DEDEDE;" ng-if="hasCourse">
             <span style="margin-left: 10px">所属课程：</span>
             <span>{{courseName}}</span>
         </div>
-        <div style="margin-top: 10px;height: 40px;font-size: 15px;">
+        <div style="margin-top: 10px;height: 40px;font-size: 16px;">
             <span style="display:inline-block;float: right;margin-right: 10px;">金额:  <b style="color:#bf5b44">{{videoPrice / 100}}元</b></span>
         </div>
     </div>
@@ -55,7 +61,7 @@
     </script>
 </ion-content>
 
-<ion-footer-bar class='home_head themebgcolor' style="color:#fff;text-align: center" ng-click="pay()">
-    <h3>立即支付</h3>
+<ion-footer-bar class='themebgcolor' style="color:#fff;text-align: center" ng-click="pay()">
+    <h3 class="header_bar_title">立即支付</h3>
 </ion-footer-bar>
 

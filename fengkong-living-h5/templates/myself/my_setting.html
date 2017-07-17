@@ -1,34 +1,24 @@
 <div style="background-color: #d8573f;">
     <div class="row home_head themebgcolor">
-        <a ng-click="goBack()" class="margin-top10" style="margin-left:20px;"><img src="img/prepage.png" alt="" ></a>
+        <a ng-click="goBack()" class="margin-top10" style="margin-left:20px;"><img src="img/prepage.png" alt=""></a>
         <h3>账户设置</h3>
     </div>
 </div>
 <ion-list >
     <ion-item>
         <div>
-            <a href="#/modify_password" style="display:block;color:#000;">
+            <!--<a href="#/modify_password" style="display:block;color:#000;">-->
+            <a href="#/edit_password" style="display:block;color:#000;">
                 <span>修改密码</span>
                 <img src="img/right.png" width="25px" height="25px" style="float: right">
-
             </a>
         </div>
     </ion-item>
-    <!-- <ion-item>
-        <div>
-            <a style="display:block;color:#000;">
-                <span>邀请码</span>
-                <img src="img/right.png" width="25px" height="25px" style="float: right">
-
-            </a>
-        </div>
-    </ion-item> -->
     <ion-item>
         <div>
             <a style="display:block;color:#000;" href="#/user_feedback">
                 <span>用户反馈</span>
                 <img src="img/right.png" width="25px" height="25px" style="float: right">
-
             </a>
         </div>
     </ion-item>
@@ -37,11 +27,10 @@
             <a style="display:block;color:#000;" href="#/account_bind">
                 <span>账户绑定</span>
                 <img src="img/right.png" width="25px" height="25px" style="float: right">
-
             </a>
         </div>
     </ion-item>
     <ion-item>
-    <a class="logout" ng-click="loginOut()">退出登录</a>
+        <a class="logout" ng-click="loginOut()">退出登录</a>
     </ion-item>
 </ion-list>

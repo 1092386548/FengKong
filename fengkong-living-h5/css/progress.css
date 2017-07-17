@@ -86,3 +86,9 @@
 .myself_active_navigation_all .down-list .down-item{
 	padding: 0 5px;
 }
+
+
+
+/*微信以外浏览器打开*/
+.weixin-tip{display: none; position: fixed; left:0; top:0; bottom:0; height: 100%; width: 100%; z-index: 100;background: rgba(0,0,0,0.8); filter:alpha(opacity=80);}
+.weixin-tip p{text-align: center;padding:0 5%;}

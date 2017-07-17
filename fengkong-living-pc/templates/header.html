@@ -13,7 +13,7 @@
 			<li class="pull-left"><a href="activity.html" ng-class="{active:activeIndex == 4}">活动 <img src="images/down.png" style="vertical-align: 3px;"></a></li>
 		</ul>
 		<div class="pull-left search">
-			<input class="search_box" type="text"><span class="search_btn"><a href="search.html">搜索</a></span>
+			<input class="search_box" type="text" ng-model="searchName"><span class="search_btn"><a ng-href="search.html?key={{searchName}}">搜索</a></span>
 		</div>
 		<div>
 			<ul class="pull-right clearfix login_group" ng-hide="loginStatus">

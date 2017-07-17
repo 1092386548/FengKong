@@ -1,46 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
 	<title>搜索</title>
-	<link rel="stylesheet" href="style/lib/normalize.css">
+	<!--<link rel="stylesheet" href="style/lib/normalize.css">-->
+	<link rel="stylesheet" href="style/lib/materialize.min.css">
 	<link rel="stylesheet" href="style/common.css">
 	<link rel="stylesheet" href="style/header_footer.css">
 	<link rel="stylesheet" href="style/search.css">
-	<script src="js/lib/jquery-1.12.3.js"></script>
+	<script src="js/lib/jquery.min.js"></script>
+	<script src="js/backTop.js"></script>
+	<script src="js/lib/materialize.min.js"></script>
 
 	<script src="js/lib/angular/angular.min.js"></script>
 	<script src="js/app.js"></script>
 	<script src="js/controller.js"></script>
 	<script src="js/service.js"></script>
 </head>
-
 <body ng-app="fkliving" ng-controller="SearchCtrl">
-
 	<div ng-include="'templates/header.html'"></div>
-
-	<!--<div class="headerIndex">
-		<div class="box clearfix">
-			<div class="logoImage pull-left">
-				<img src="images/logo.png" alt="logo">
-				<span class="logoTitle">风控在线</span>
-			</div>
-			<ul class="pull-left clearfix navList">
-				<li class="pull-left"><a href="index.html">首页</a></li>
-				<li class="pull-left"><a class="active" href="recorded.html">课程录播</a></li>
-				<li class="pull-left"><a href="living.html">课程直播</a></li>
-				<li class="pull-left"><a href="activity.html">活动 <img src="images/down.png" style="vertical-align: 3px;"></a></li>
-			</ul>
-			<div class="pull-left search">
-				<input class="search_box" type="text"><span class="search_btn">搜索</span>
-			</div>
-			<ul class="pull-right clearfix login_group">
-				<li class="register pull-left"><img src="images/register.png" alt="注册"><div>注册</div></li>
-				<li class="login pull-left"><img src="images/register.png" alt="登陆"><div>登陆</div></li>
-			</ul>
-		</div>
-	</div>-->
 
 	<div class="box">
 		<div class="nav-search">
@@ -59,102 +37,33 @@
 			<div class="wrapper-course">
 				<div class="wrapper-title clearfix">
 					<span class="pull-left">课程</span>
-					<span class="pull-right">更多>></span>
+					<span class="pull-right">
+						<a href="recorded.html">更多>></a>
+					</span>
 				</div>
 
 				<div class="courseList clearfix">
-					<div class="courseItem pull-left">
+					<div class="courseItem pull-left" ng-repeat="course in courseList" ng-class="{'margin-r0':($index+1) % 4 == 0}">
 						<div class="courseItem_img">
-							<a href=""><img class="course" src="images/course.png"></a>
+							<a href="recordedCourseDetail.html?courseId={{course.courseId}}"><img class="course" ng-src="{{course.imageUrl}}"></a>
 						</div>
 						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">课程名称名称名称名称名称名称</div>
+							<div class="courseItem_detail_title line">{{course.courseName}}</div>
 							<div class="line clearfix">
 								<span class="name-left pull-left">讲师:</span>
-								<span class="info-right pull-left">某某某</span>
+								<span class="info-right pull-left">{{course.teacherName}}</span>
 							</div>
 							<div class="line clearfix">
 								<span class="name-left pull-left">简介:</span>
-								<span class="info-right pull-left">简介简介简介简介简介简介简介简介简介简介</span>
+								<span class="info-right pull-left singleLine-ellipsis">{{course.description}}</span>
 							</div>
 							<div class="line clearfix">
 								<div class="pull-left clearfix">
 									<span class="name-left pull-left">节数:</span>
-									<span class="info-right color-main pull-left" style="max-width:100px;">12</span>
+									<span class="info-right color-main pull-left" style="max-width:100px;">{{course.courseChapterNumber}}</span>
 								</div>
-								<span class="pull-right"><img src="images/eye.png"> <span class="color-main">12</span></span>
-							</div>
-						</div>
-					</div>
-
-					<div class="courseItem pull-left">
-						<div class="courseItem_img">
-							<a href=""><img class="course" src="images/course.png"></a>
-						</div>
-						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">课程名称名称名称名称名称名称</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">讲师:</span>
-								<span class="info-right pull-left">某某某</span>
-							</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">简介:</span>
-								<span class="info-right pull-left">简介简介简介简介简介简介简介简介简介简介</span>
-							</div>
-							<div class="line clearfix">
-								<div class="pull-left clearfix">
-									<span class="name-left pull-left">节数:</span>
-									<span class="info-right color-main pull-left" style="max-width:100px;">12</span>
-								</div>
-								<span class="pull-right"><img src="images/eye.png"> <span class="color-main">12</span></span>
-							</div>
-						</div>
-					</div>
-
-					<div class="courseItem pull-left">
-						<div class="courseItem_img">
-							<a href=""><img class="course" src="images/course.png"></a>
-						</div>
-						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">课程名称名称名称名称名称名称</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">讲师:</span>
-								<span class="info-right pull-left">某某某</span>
-							</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">简介:</span>
-								<span class="info-right pull-left">简介简介简介简介简介简介简介简介简介简介</span>
-							</div>
-							<div class="line clearfix">
-								<div class="pull-left clearfix">
-									<span class="name-left pull-left">节数:</span>
-									<span class="info-right color-main pull-left" style="max-width:100px;">12</span>
-								</div>
-								<span class="pull-right"><img src="images/eye.png"> <span class="color-main">12</span></span>
-							</div>
-						</div>
-					</div>
-
-					<div class="courseItem pull-left margin-r0">
-						<div class="courseItem_img">
-							<a href=""><img class="course" src="images/course.png"></a>
-						</div>
-						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">课程名称名称名称名称名称名称</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">讲师:</span>
-								<span class="info-right pull-left">某某某</span>
-							</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">简介:</span>
-								<span class="info-right pull-left">简介简介简介简介简介简介简介简介简介简介</span>
-							</div>
-							<div class="line clearfix">
-								<div class="pull-left clearfix">
-									<span class="name-left pull-left">节数:</span>
-									<span class="info-right color-main pull-left" style="max-width:100px;">12</span>
-								</div>
-								<span class="pull-right"><img src="images/eye.png"> <span class="color-main">12</span></span>
+								<!--<span class="pull-right"><img src="images/eye.png"> <span class="color-main">{{course.looked}}</span></span>-->
+								<span class="pull-right"><span class="color-main">{{course.price / 100}}元</span></span>
 							</div>
 						</div>
 					</div>
@@ -168,105 +77,27 @@
 				</div>
 
 				<div class="courseList clearfix">
-					<div class="courseItem pull-left">
+					<div class="courseItem pull-left" ng-repeat="video in videoList" ng-class="{'margin-r0':($index+1) % 4 == 0}">
 						<div class="courseItem_img">
-							<img class="course" src="images/course.png">
-							<a href=""><img class="video_play" src="images/video_play.png"></a>
+							<img class="course" ng-src="{{video.videoIcon}}">
+							<a href="video.html?videoId={{video.videoId}}"><img class="video_play" src="images/video_play.png"></a>
 						</div>
 						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">视频名称名称名称名称名称名称</div>
+							<div class="courseItem_detail_title line">{{video.videoName}}</div>
 							<div class="line clearfix">
 								<span class="name-left pull-left">讲师:</span>
-								<span class="info-right pull-left">某某某</span>
+								<span class="info-right pull-left">{{video.teacherName}}</span>
 							</div>
 							<div class="line clearfix">
 								<span class="name-left pull-left">简介:</span>
-								<span class="info-right pull-left">简介简介简介简介简介简介简介简介简介简介</span>
+								<span class="info-right pull-left singleLine-ellipsis">{{video.videoDescription}}</span>
 							</div>
 							<div class="line clearfix">
 								<div class="pull-left clearfix">
 									<span class="color-main">1234</span>人已报名
 								</div>
 								<div class="pull-right">
-									<span class="pull-right apply bgcolor-main">立即报名</span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="courseItem pull-left">
-						<div class="courseItem_img">
-							<img class="course" src="images/course.png">
-							<a href=""><img class="video_play" src="images/video_play.png"></a>
-						</div>
-						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">视频名称名称名称名称名称名称</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">讲师:</span>
-								<span class="info-right pull-left">某某某</span>
-							</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">简介:</span>
-								<span class="info-right pull-left">简介简介简介简介简介简介简介简介简介简介</span>
-							</div>
-							<div class="line clearfix">
-								<div class="pull-left clearfix">
-									<span class="color-main">1234</span>人已报名
-								</div>
-								<div class="pull-right">
-									<span class="pull-right apply bgcolor-main">立即报名</span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="courseItem pull-left">
-						<div class="courseItem_img">
-							<img class="course" src="images/course.png">
-							<a href=""><img class="video_play" src="images/video_play.png"></a>
-						</div>
-						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">视频名称名称名称名称名称名称</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">讲师:</span>
-								<span class="info-right pull-left">某某某</span>
-							</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">简介:</span>
-								<span class="info-right pull-left">简介简介简介简介简介简介简介简介简介简介</span>
-							</div>
-							<div class="line clearfix">
-								<div class="pull-left clearfix">
-									<span class="color-main">1234</span>人已报名
-								</div>
-								<div class="pull-right">
-									<span class="pull-right apply bgcolor-main">立即报名</span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="courseItem pull-left margin-r0">
-						<div class="courseItem_img">
-							<img class="course" src="images/course.png">
-							<a href=""><img class="video_play" src="images/video_play.png"></a>
-						</div>
-						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">视频名称名称名称名称名称名称</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">讲师:</span>
-								<span class="info-right pull-left">某某某</span>
-							</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">简介:</span>
-								<span class="info-right pull-left">简介简介简介简介简介简介简介简介简介简介</span>
-							</div>
-							<div class="line clearfix">
-								<div class="pull-left clearfix">
-									<span class="color-main">1234</span>人已报名
-								</div>
-								<div class="pull-right">
-									<span class="pull-right apply bgcolor-main">立即报名</span>
+									<span class="pull-right color-main">{{video.videoPrice / 100}}元</span>
 								</div>
 							</div>
 						</div>
@@ -277,173 +108,60 @@
 			<div class="wrapper-activity">
 				<div class="wrapper-title clearfix">
 					<span class="pull-left">活动</span>
-					<span class="pull-right">更多>></span>
+					<span class="pull-right">
+						<a href="activity.html">更多>></a>
+					</span>
 				</div>
 
 				<div class="courseList clearfix">
-					<div class="courseItem pull-left">
-						<div class="courseItem_img">
-							<img class="course" src="images/course.png">
-							<div class="activity-apply">立即报名</div>
-						</div>
-						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">活动名称名称名称名称名称名称</div>
-							<div class="line clearfix">
-								<div class="pull-left clearfix">
-									<span class="name-left pull-left">时间:</span>
-									<span class="info-right pull-left" style="max-width:100px;">2017-04-12</span>
-								</div>
-								<span class="pull-right">人数: <span class="color-main">12</span></span>
+					<div class="courseItem pull-left" ng-repeat="activity in activityList" ng-class="{'margin-r0':($index+1) % 4 == 0}">
+						<!--即将、正在-->
+						<div class="courseItem_img" ng-if="activity.newLiveStatus == 0 || activity.newLiveStatus == 1">
+							<div class="activity-apply">
+								<!--线下-->
+								<a ng-if="(activity.activityWay == 1 || activity.activityWay == 2)" ng-href="activityDetail.html?activityId={{activity.activityId}}">立即报名</a>
+								<!--线上-->
+								<a ng-if="activity.activityWay == 3" ng-href="salon.html?activityId={{activity.activityId}}&liveId={{activity.liveId}}">立即报名</a>
 							</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">地点:</span>
-								<span class="info-right pull-left">上海市松江区九亭大街12号</span>
-							</div>
+							<img class="course" ng-src="{{activity.activityIcon}}">
 						</div>
-					</div>
+						<!--已结束-->
+						<div class="courseItem_img" ng-if="activity.newLiveStatus == 2">
+							<!--线下-->
+							<a ng-if="activity.activityWay == 1 || activity.activityWay == 2" ng-href="activityDetail.html?activityId={{activity.activityId}}">
+								<img class="course" ng-src="{{activity.activityIcon}}">
+							</a>
+							<!--线上-->
+							<a ng-if="activity.activityWay == 3" ng-href="video.html?videoId={{activity.videoId}}">
+								<img class="course" ng-src="{{activity.activityIcon}}">
+							</a>
+						</div>
 
-					<div class="courseItem pull-left">
-						<div class="courseItem_img">
-							<img class="course" src="images/course.png">
-							<div class="activity-apply">立即报名</div>
-						</div>
-						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">活动名称名称名称名称名称名称</div>
-							<div class="line clearfix">
-								<div class="pull-left clearfix">
-									<span class="name-left pull-left">时间:</span>
-									<span class="info-right pull-left" style="max-width:100px;">2017-04-12</span>
-								</div>
-								<span class="pull-right">人数: <span class="color-main">12</span></span>
-							</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">地点:</span>
-								<span class="info-right pull-left">上海市松江区九亭大街12号</span>
-							</div>
-						</div>
-					</div>
 
-					<div class="courseItem pull-left">
-						<div class="courseItem_img">
-							<img class="course" src="images/course.png">
-							<div class="activity-apply">立即报名</div>
-						</div>
 						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">活动名称名称名称名称名称名称</div>
+							<div class="courseItem_detail_title line">{{activity.activityName}}</div>
+							<div class="line clearfix">
+								<span class="name-left pull-left">地点:</span>
+								<span class="info-right pull-left">{{activity.activityAddress}}</span>
+							</div>
 							<div class="line clearfix">
 								<div class="pull-left clearfix">
 									<span class="name-left pull-left">时间:</span>
-									<span class="info-right pull-left" style="max-width:100px;">2017-04-12</span>
+									<span class="info-right pull-left" style="max-width:100px;">{{activity.activityStartTime | date:'yyyy-MM-dd'}}</span>
 								</div>
-								<span class="pull-right">人数: <span class="color-main">12</span></span>
-							</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">地点:</span>
-								<span class="info-right pull-left">上海市松江区九亭大街12号</span>
+								<span class="pull-right">人数: <span class="color-main">{{activity.ativityNumber}}</span></span>
 							</div>
 						</div>
 					</div>
-
-					<div class="courseItem pull-left margin-r0">
-						<div class="courseItem_img">
-							<img class="course" src="images/course.png">
-							<!--<div class="activity-apply">立即报名</div>-->
-						</div>
-						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">活动名称名称名称名称名称名称</div>
-							<div class="line clearfix">
-								<div class="pull-left clearfix">
-									<span class="name-left pull-left">时间:</span>
-									<span class="info-right pull-left" style="max-width:100px;">2017-04-12</span>
-								</div>
-								<span class="pull-right">人数: <span class="color-main">12</span></span>
-							</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">地点:</span>
-								<span class="info-right pull-left">上海市松江区九亭大街12号</span>
-							</div>
-						</div>
-					</div>
-
-					<div class="courseItem pull-left">
-						<div class="courseItem_img">
-							<img class="course" src="images/course.png">
-							<!--<div class="activity-apply">立即报名</div>-->
-						</div>
-						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">活动名称名称名称名称名称名称</div>
-							<div class="line clearfix">
-								<div class="pull-left clearfix">
-									<span class="name-left pull-left">时间:</span>
-									<span class="info-right pull-left" style="max-width:100px;">2017-04-12</span>
-								</div>
-								<span class="pull-right">人数: <span class="color-main">12</span></span>
-							</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">地点:</span>
-								<span class="info-right pull-left">上海市松江区九亭大街12号</span>
-							</div>
-						</div>
-					</div>
-
-					<div class="courseItem pull-left">
-						<div class="courseItem_img">
-							<img class="course" src="images/course.png">
-							<!--<div class="activity-apply">立即报名</div>-->
-						</div>
-						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">活动名称名称名称名称名称名称</div>
-							<div class="line clearfix">
-								<div class="pull-left clearfix">
-									<span class="name-left pull-left">时间:</span>
-									<span class="info-right pull-left" style="max-width:100px;">2017-04-12</span>
-								</div>
-								<span class="pull-right">人数: <span class="color-main">12</span></span>
-							</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">地点:</span>
-								<span class="info-right pull-left">上海市松江区九亭大街12号</span>
-							</div>
-						</div>
-					</div>
-
-					<div class="courseItem pull-left">
-						<div class="courseItem_img">
-							<img class="course" src="images/course.png">
-							<!--<div class="activity-apply">立即报名</div>-->
-						</div>
-						<div class="courseItem_detail">
-							<div class="courseItem_detail_title line">活动名称名称名称名称名称名称</div>
-							<div class="line clearfix">
-								<div class="pull-left clearfix">
-									<span class="name-left pull-left">时间:</span>
-									<span class="info-right pull-left" style="max-width:100px;">2017-04-12</span>
-								</div>
-								<span class="pull-right">人数: <span class="color-main">12</span></span>
-							</div>
-							<div class="line clearfix">
-								<span class="name-left pull-left">地点:</span>
-								<span class="info-right pull-left">上海市松江区九亭大街12号</span>
-							</div>
-						</div>
-					</div>
-					
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="footer">
-		<ul class="footer-list clearfix">
-			<li class="pull-left">免责说明</li>
-			<li class="pull-left">用户反馈</li>
-			<li class="pull-left">关于我们</li>
-			<li class="pull-left">加入我们</li>
-		</ul>
-		<div style="margin-bottom: 10px;">备案号:沪ICP备10209551号-3</div>
-		<div>CopyRight © 2016 - 2017 风控在线 All Rights Reserved</div>
-	</div>
+	<div ng-include="'templates/footer.html'"></div>
 
+	<div login-register></div>
+
+	<div id="back-top"></div>
 </body>
-
 </html>

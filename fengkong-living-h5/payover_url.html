@@ -4,9 +4,12 @@
 	<meta charset="UTF-8">
 	<title>异步通知</title>
 	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+	<style>
+	
+	</style>
 </head>
 <body>
-<h1>支付成功</h1>
+<div class="title">支付成功</div>
 <button type="button" id="btn">点击返回</button>
 
 
@@ -43,7 +46,7 @@
 				window.location.href = h5Url + 'video/' + params.videoId;
 			}
 
-			// 即将开始 或 正在进行 的线上活动
+			// 即将开始 或 正在进行 的活动
 			if(params.activityId != 0){
 				$.ajax({
 					type:'POST',
@@ -57,25 +60,12 @@
 					success:function(data){
 						if (data.errorCode == 0) {
 							var data = data.result;
-							if(data.activityWay == 1 || data.activityWay ==2){
+							if(data.activity.activityWay == 1 || data.activity.activityWay ==2){
 								// 线下活动
 								window.location.href = h5Url + 'active_details' + params.activityId;
-							}else if(data.activityWay == 3){
+							}else if(data.activity.activityWay == 3){
 								// 线上活动
-								$.ajax({
-									type:'POST',
-									url:'http://www.igmhz.com/fengkong-server/activity/.do',
-									data: $.param({
-				                        
-				                    }),
-									dataType:'json',
-									success:function(data){
-										if (data.errorCode == 0) {
-											var data = data.result;
-											window.location.href = h5Url + 'salon/' + params.activityId + '/' + params.liveId;
-										}
-									}
-								});
+								window.location.href = h5Url + 'salon/' + params.activityId + '/' + data.activity.video.liveId;
 							}
 						}
 					}
@@ -94,7 +84,7 @@
 				window.location.href = pcUrl + 'video.html?videoId=' + params.videoId;
 			}
 
-			// 即将开始 或 正在进行 的线上活动
+			// 即将开始 或 正在进行 的活动
 			if(params.activityId != 0){
 				$.ajax({
 					type:'POST',
@@ -108,12 +98,12 @@
 					success:function(data){
 						if (data.errorCode == 0) {
 							var data = data.result;
-							if(data.activityWay == 1 || data.activityWay ==2){
+							if(data.activity.activityWay == 1 || data.activity.activityWay ==2){
 								// 线下活动
 								window.location.href = pcUrl + 'activityDetail.html?activityId=' + params.activityId;
-							}else if(data.activityWay == 3){
+							}else if(data.activity.activityWay == 3){
 								// 线上活动
-								window.location.href = pcUrl + 'salon.html?activityId=' + params.activityId + '&liveId=' + params.liveId;
+								window.location.href = pcUrl + 'salon.html?activityId=' + params.activityId + '&liveId=' + data.activity.video.liveId;
 							}
 						}
 					}

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=0;">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>微信登录</title>
+    <link href="https://res.wx.qq.com/connect/zh_CN/htmledition/images/favicon3696b4.ico" rel="Shortcut Icon">
+    <script src="https://res.wx.qq.com/connect/zh_CN/htmledition/js/jquery.min3696b4.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <style>
+        html{
+            font-size: 62.5%;
+        }
+        #waiting{
+            font-size: 2rem;
+            line-height: 2rem;
+            text-align: center;
+        }
+        #share{
+            display: none;
+            position: absolute;
+            width: 16rem;
+            height: 5rem;
+            line-height: 5rem;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff;
+            z-index: 999;
+        }
+        #share .shareBtn{
+            float: left;
+            width: 50%;
+            height: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="waiting">正在跳转，请稍后...</div>
+    <div id="share">
+        <span class="shareBtn onMenuShareTimeline">分享到朋友圈</span>
+        <span class="shareBtn onMenuShareAppMessage">分享给朋友</span>
+    </div>
+
+    <script>
+        function GetParams(){
+            var name,value;
+            var str=location.href;
+            var num=str.indexOf("?");
+            str=str.substr(num+1);
+            var arr=str.split("&");
+            for(var i=0;i < arr.length;i++){
+                num=arr[i].indexOf("=");
+                if(num>0){
+                    name=arr[i].substring(0,num);
+                    value=arr[i].substr(num+1);
+                    this[name]=value;
+                }
+            }
+        }
+
+        var appid = 'wxe82e8db99ff4b012';
+        var appsecret = '602fe8ccf3341a48bd36f27b7aa6c0c1';
+        
+        var params = new GetParams();
+        
+        if(params.state == '611a3dc30b99f111566fc3b975dd7f0cfb8d0ec7'){
+            // 微信登录
+            $.ajax({
+                type:'POST',
+                url:'http://www.igmhz.com/fengkong-server/user/thirdPartyLogin.do',
+                data:{
+                    code: params.code
+                },
+                dataType:'json',
+                success:function(data){
+                    if(data.errorCode == 0){
+                        localStorage.userId = data.result;
+                        window.location.href = 'http://www.igmhz.com/fengkong-living-h5/#/tab/myself';
+                    }
+                }
+            })
+        }else if(params.state.substr(0,36) == '611a3dc30b99f111566fc3b975wxShareUrl'){
+            alert('微信分享');
+            // 微信分享
+            var url = '';
+            var courseId,videoId;
+            if(params.state.substr(36,1) == 'c'){
+                courseId = params.state.substring(37);
+                tmpUrl = 'http://www.igmhz.com/fengkong-living-h5/#/recorded_list' + '/' + courseId;
+                url =encodeURIComponent('http://www.igmhz.com/fengkong-living-h5');
+                alert(tmpUrl);
+                alert(url);
+            }
+            $.ajax({
+                type:'POST',
+                url:'http://www.igmhz.com/fengkong-server/wechat/getSign.do',
+                data:{
+                    code: params.code,
+                    url: url
+                },
+                dataType:'json',
+                success:function(data){
+                    // alert(JSON.stringify(data));
+                    console.log(data.jsapi_ticket);
+                    console.log(data.nonceStr);
+                    console.log(data.timestamp);
+                    console.log(data.url);
+                    console.log(data.signature);
+                    wx.config({
+                        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                        appId: appid, // 必填，公众号的唯一标识
+                        timestamp: data.timestamp, // 必填，生成签名的时间戳
+                        nonceStr: data.nonceStr, // 必填，生成签名的随机串
+                        signature: data.signature,// 必填，签名，见附录1
+                        jsApiList: [
+                            'checkJsApi',
+                            'onMenuShareTimeline',
+                            'onMenuShareAppMessage'
+                        ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                    });
+
+
+                    wx.ready(function(){
+                        alert('ready');
+                        // $('body').css('background-color','#ccc');
+                        // $('#share').show();
+
+                        /*wx.checkJsApi({
+                            jsApiList: [
+                                'getLocation',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage'
+                            ],
+                            success: function (res) {
+                                alert(JSON.stringify(res));
+                            }
+                        });*/
+
+
+                        // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+
+                        // 获取“分享到朋友圈”按钮点击状态及自定义分享内容接口
+                        wx.onMenuShareTimeline({
+                            title: '课程', // 分享标题
+                            link: tmpUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                            imgUrl: 'http://demo.open.weixin.qq.com/jssdk/images/p2166127561.jpg', // 分享图标
+                            success: function () {
+                                // 用户确认分享后执行的回调函数
+                                alert('分享成功');
+                            },
+                            cancel: function () {
+                                // 用户取消分享后执行的回调函数
+                                alert('分享失败');
+                            }
+                        });
+
+                        // 获取“分享给朋友”按钮点击状态及自定义分享内容接口
+                        $('#share').find('.onMenuShareAppMessage').on('click',function(){
+                            alert('分享给朋友');
+                            wx.onMenuShareAppMessage({
+                                title: '课程', // 分享标题
+                                desc: '风控在线课程', // 分享描述
+                                link: tmpUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                                imgUrl: 'http://demo.open.weixin.qq.com/jssdk/images/p2166127561.jpg', // 分享图标
+                                type: 'link', // 分享类型,music、video或link，不填默认为link
+                                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                                success: function () { 
+                                    // 用户确认分享后执行的回调函数
+                                    alert('分享成功');
+                                },
+                                cancel: function () { 
+                                    // 用户取消分享后执行的回调函数
+                                    alert('分享失败');
+                                }
+                            });
+                        })
+                    });
+
+                }
+            })
+        }else{
+            alert('微信公众号支付');
+            // 微信公众号支付
+            var activityId = 0;
+            var courseId = 0;
+            var videoId = 0;
+            if(params.state.substring(36,37) == 'a'){
+                activityId = params.state.substring(37);
+                var str = 'activityId: '+activityId;
+                alert(str);
+            }else if(params.state.substring(36,37) == 'c'){
+                courseId = params.state.substring(37);
+                var str = 'courseId: '+courseId;
+                alert(str);
+            }else if(params.state.substring(36,37) == 'v'){
+                videoId = params.state.substring(37);
+                var str = 'videoId: '+videoId;
+                alert(str);
+            }
+
+            $.ajax({
+                type:'POST',
+                url:'http://www.igmhz.com/fengkong-server/wechatH5/comeBackSuccess.do',
+                data:{
+                    code: params.code,
+                    activityId:activityId,
+                    courseId:courseId,
+                    videoId:videoId
+                },
+                dataType:'json',
+                success:function(data){
+                    if(data.result.comeBackStatus == 'success'){
+                        if(activityId){
+                            window.location.href = 'http://www.igmhz.com/fengkong-living-h5/wxgzhpay.html?activityId=' + activityId;
+                        }else if(courseId){
+                            window.location.href = 'http://www.igmhz.com/fengkong-living-h5/wxgzhpay.html?courseId=' + courseId;
+                        }else if(videoId){
+                            window.location.href = 'http://www.igmhz.com/fengkong-living-h5/wxgzhpay.html?videoId=' + videoId;
+                        }
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+</html>

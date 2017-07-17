@@ -1,179 +1,69 @@
-<ion-header-bar align-title="center" class='home_head themebgcolor'>
-    <a ng-click="goBack()" class="margin-top10 margin-left10"><img src="img/prepage.png"></a>
-    <h3>我的活动</h3>
+<ion-header-bar align-title="center" class='themebgcolor'>
+    <a ng-click="goBack()" class="header_bar_a"><img src="img/prepage.png"></a>
+    <h3 class="header_bar_title">我的活动</h3>
 </ion-header-bar>
-
 
 <ion-content>
     <div class="row">
-        <div class="col-33 myself_active_navigation_all progress_select">
+        <!--<div class="col-33 myself_active_navigation_all progress_select">-->
+        <div class="col-33 myself_active_navigation_all">
             <div style="text-align:center;padding-top:2%;" ng-click="all()">全部</div>
         </div>
-
-
         <div class="col-33 myself_active_navigation_all">
-            <div style="text-align: center;padding-top: 2%;" class="dropdownType">类别</div>
-            <ul class="down-list hide" style="background-color:#ccc;">
-                <li class="down-item">
-                    <a ng-click="progressType(1)" class="clearfix">
-                        <span ng-class="{actived_font_color:type_id == 1}" style="float:left;">内控</span>
-                        <label class="actived_font_color" ng-if="type_id == 1" style="float:right;">&#10003</label>
-                    </a>
-                </li>
-                <li class="down-item">
-                    <a ng-click="progressType(2)" class="clearfix">
-                        <span ng-class="{actived_font_color:type_id == 2}" style="float:left;">审计</span>
-                        <label class="actived_font_color" ng-if="type_id == 2" style="float:right;">&#10003</label>
-                    </a>
-                </li>
-                <li class="down-item">
-                    <a ng-click="progressType(3)" class="clearfix">
-                        <span ng-class="{actived_font_color:type_id == 3}" style="float:left;">财务</span>
-                        <label class="actived_font_color" ng-if="type_id == 3" style="float:right;">&#10003</label>
-                    </a>
-                </li>
-                <li class="down-item">
-                    <a ng-click="progressType(4)" class="clearfix">
-                        <span ng-class="{actived_font_color:type_id == 4}" style="float:left;">税务</span>    
-                        <label class="actived_font_color" ng-if="type_id == 4" style="float:right;">&#10003</label>
-                    </a>
-                </li>
-                <li class="down-item">
-                    <a ng-click="progressType(5)" class="clearfix">
-                        <span ng-class="{actived_font_color:type_id == 5}" style="float:left;">风控</span>
-                        <label class="actived_font_color" ng-if="type_id == 5" style="float:right;">&#10003</label>
-                    </a>
-                </li>
-            </ul>
+            <select ng-model="typeData.typeId" ng-options="value.id as value.name for value in typeOpts" ng-change="getTypesId(typeData.typeId)"></select>
         </div>
-
-     
         <div class="col-33 myself_active_navigation_all">
-            <div style="text-align: center;padding-top: 2%" class="dropdownPrice">价格</div>
-            <ul class="down-list hide" style="background-color:#ccc;">
-                <li class="down-item">
-                    <a ng-click="progressPrice(1)" class="clearfix">
-                        <span ng-class="{actived_font_color:price_id == 1}" style="float:left;">已支付</span>
-                        <label ng-if="price_id == 1" style="float:right;" class="actived_font_color">&#10003</label>
-                    </a>
-                </li>
-                <li class="down-item">
-                    <a ng-click="progressPrice(2)" class="clearfix">
-                        <span ng-class="{actived_font_color:price_id == 2}" style="float:left;">未支付</span>
-                        <label ng-if="price_id == 2" style="float:right;" class="actived_font_color">&#10003</label>
-                    </a>
-                </li>
-            </ul>
+            <select ng-model="priceData.priceId" ng-options="value.id as value.name for value in priceOpts" ng-change="getPricesId(priceData.priceId)"></select>
         </div>
     </div>
     
 
-    <div>
-        <div id="my_active_content">
-            <div class="progress_background_color"></div>
+    <div id="my_active_content">
+        <div class="progress_background_color"></div>
 
-            <div id="my_active_all" ng-if="navIndex == 1">
-                <div class="row" ng-repeat="myActiveList in activeList">
-                    <div class="col-50" style="position: relative">
-                        <a href="#/active_details/{{myActiveList.activityId}}">
-                            <img src="{{myActiveList.activityIcon}}" style="width: 100%;height: 22%;">
-                        
-                            <span class="myself_active_start" ng-if="myActiveList.newActivityStatus == 1">即将开始</span>
-                            <span class="myself_active_start" ng-if="myActiveList.newActivityStatus == 2">正在进行</span>
-                            <span class="myself_active_start" style="background-color: black" ng-if="myActiveList.newActivityStatus == 3">已结束</span>
-                        </a>
-                    </div>
+        <div class="row" ng-repeat="activeItem in activeList" style="margin-bottom:20px;">
+            <div class="col-50" style="position: relative">
+                <!--线上沙龙活动 即将进行、正在进行-->
+                <a href="#/salon/{{activeItem.activityId}}/{{activeItem.liveId}}" ng-if="activeItem.activityWay == 3 && (activeItem.newActivityStatus == 1 || activeItem.newActivityStatus == 2)">
+                    <img src="{{activeItem.activityIcon}}" style="width: 100%;height: 22%;">
+                </a>
+                <!--线上沙龙活动 已结束-->
+                <a href="#/video/{{activeItem.videoId}}" ng-if="activeItem.activityWay == 3 && activeItem.newActivityStatus == 3">
+                    <img src="{{activeItem.activityIcon}}" style="width: 100%;height: 22%;">
+                </a>
+                <!--线下活动-->
+                <a href="#/active_details/{{activeItem.activityId}}" ng-if="activeItem.activityWay == 1 || activeItem.activityWay == 2">
+                    <img src="{{activeItem.activityIcon}}" style="width: 100%;height: 22%;">
+                </a>
 
-                    <div class="col-50" style="margin-right: 10px;margin-left: 5px;position:relative;">
-                        <span style="border-radius:3px;background-color: #c95f47;width: 35%;font-size:8px;color:#fff;display:inline-block;text-align: center;">标签类型</span>
-                        <span>{{myActiveList.activityName}}</span><br>
-                        <span style="display:inline-block;margin-top: 0px;font-size: 12px;">
-                            地点:<span>{{myActiveList.address}}</span><br>
-                            <span>
-                                {{myActiveList.count}}人报名
-                            </span>
-                        </span>
-                        <div style="font-size: 12px;color:silver;margin-top:10px;">
-
-                            <span style="display:inline-block;position: absolute;left: 0;bottom: 0;">
-                                {{myActiveList.startTime| date:'yyyy-MM-dd'}}
-                            </span>
-                            <span style="display:inline-block;position: absolute;right: 10px;bottom: 2px;color: #bddf8b;" ng-if="myActiveList.userPayStatus==1">
-                                已付款
-                            </span>
-                             <span style="display:inline-block;position: absolute; right: 10px;bottom: 2px;color: red;" ng-if="myActiveList.userPayStatus==0">
-                                未付款
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                <span style="position:absolute;top:0;left:0;padding:0 10px;height:20px;text-align:center;color:#fff;background-color: #c8705b;" ng-if="activeItem.newActivityStatus == 1">即将开始</span>
+                <span style="position:absolute;top:0;left:0;padding:0 10px;height:20px;text-align:center;color:#fff;background-color: #c8705b;" ng-if="activeItem.newActivityStatus == 2">正在进行</span>
+                <span style="position:absolute;top:0;left:0;padding:0 10px;height:20px;text-align:center;color:#fff;background-color:#000;" ng-if="activeItem.newActivityStatus == 3">已结束</span>
             </div>
 
-            <div id="my_active_type" ng-if="navIndex == 2">
-                <div class="row" style="margin-left: 0px;" >
-                    <div class="col-50" style="position: relative">
-                        <img src="img/1.png" style="width: 100%;height: 22%;">
-                        <span class="myself_active_start">即将开始</span>
-                    </div>
-                    <div class="col-50" style="margin-right: 10px;margin-left: 5px;position:relative;">
-                        <span style="border-radius:3px;background-color: #c95f47;width: 35%;font-size:8px;color:#fff;display:inline-block;text-align: center;">标签类型</span>
-                        <span>名称名称名称名称名称名称名称</span>
-                        <span style="display:inline-block;margin-top: 10px;font-size: 12px;">
-                            地点:<span>上海市上海市上海市</span><br>
-                            <span>
-                                120人报名
-                            </span>
-                        </span>
-                        <div style="font-size: 12px;color:silver;margin-top:10px;">
+            <div class="col-50" style="margin-right: 10px;margin-left: 5px;position:relative;">
+                <span style="border-radius:3px;background-color: #c95f47;padding:0 10px;font-size:9px;color:#fff;display:inline-block;text-align: center;" ng-if="activeItem.activityType == 1">内控</span>
+                <span style="border-radius:3px;background-color: #c95f47;padding:0 10px;font-size:9px;color:#fff;display:inline-block;text-align: center;" ng-if="activeItem.activityType == 2">审计</span>
+                <span style="border-radius:3px;background-color: #c95f47;padding:0 10px;font-size:9px;color:#fff;display:inline-block;text-align: center;" ng-if="activeItem.activityType == 3">财务</span>
+                <span style="border-radius:3px;background-color: #c95f47;padding:0 10px;font-size:9px;color:#fff;display:inline-block;text-align: center;" ng-if="activeItem.activityType == 4">税务</span>
+                <span style="border-radius:3px;background-color: #c95f47;padding:0 10px;font-size:9px;color:#fff;display:inline-block;text-align: center;" ng-if="activeItem.activityType == 5">风控</span>
 
-                            <span style="display:inline-block;position: absolute;left: 0;bottom: 0;">
-                                2017-12-12
-                            </span>
-                            <span style="display:inline-block;position: absolute;right: 0;bottom: 0;color: #bddf8b;">
-                                已付款
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <span>{{activeItem.activityName}}</span><br>
+                <span style="display:block;margin-top: 40px;font-size: 12px;">
+                    地点:<span>{{activeItem.activityAddress}}</span><br>
+                </span>
+                <span style="display:block;margin-top: 10px;font-size: 12px;">
+                    {{activeItem.enrollNumber}}人报名
+                </span>
+                <div style="font-size: 12px;color:silver;margin-top:10px;">
+                    <span style="position: absolute;left: 0;bottom: 0;">
+                        {{activeItem.activityStartTime | date:'yyyy-MM-dd'}}
+                    </span>
 
-            <div id="my_active_price" ng-if="navIndex == 3">
-                <div class="row" style="margin-left: 0px;margin-top: 5px;" ng-repeat="myActiveList in activeList">
-                    <div class="col-50" style="position: relative">
-                        <img src="img/1.png" style="width: 100%;height: 22%;">
-                       
-                        <span class="myself_active_start" style="background-color: black" ng-if="myActiveList.activityType == 1">已经结束</span>
-                        <span class="myself_active_start" ng-if="myActiveList.activityType == 0">即将开始</span>
-                    </div>
-
-                    <div class="col-50" style="margin-right: 10px;margin-left: 5px;position:relative;">
-                        <span style="border-radius:3px;background-color: #c95f47;width: 35%;font-size:8px;color:#fff;display:inline-block;text-align: center;">标签类型</span>
-                        <span>{{myActiveList.activityName}}</span><br>
-                        <span style="display:inline-block;margin-top: 0px;font-size: 12px;">
-                            地点:<span>{{myActiveList.address}}</span><br>
-                            <span>
-                                {{myActiveList.count}}人报名
-                            </span>
-                        </span>
-                        <div style="font-size: 12px;color:silver;margin-top:10px;">
-
-                            <span style="display:inline-block;position: absolute;left: 0;bottom: 0;">
-                                {{myActiveList.startTime| date:'yyyy-MM-dd'}}
-                            </span>
-                            <span style="display:inline-block;position: absolute;right: 10px;bottom: 2px;color: #bddf8b;" ng-if="myActiveList.userPayStatus==1">
-                                已付款
-                            </span>
-                             <span style="display:inline-block;position: absolute; right: 10px;bottom: 2px;color: red;" ng-if="myActiveList.userPayStatus==0">
-                                未付款
-                            </span>
-                        </div>
-                    </div>
-                
+                    <span style="position: absolute;right: 10px;bottom: 2px;color: #bddf8b;" ng-if="activeItem.userPayStatus==2">已支付</span>
+                    <span style="position: absolute; right: 10px;bottom: 2px;color: red;" ng-if="activeItem.userPayStatus==1">未支付</span>
                 </div>
             </div>
         </div>
     </div>
-    <!--end-->
-    
 </ion-content>
-

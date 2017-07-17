@@ -1,0 +1,50 @@
+.couponBg{
+	width: 550px;
+	height: 200px;
+}
+.couponBg .radioWrapper{
+    width: 50px;
+    height: 200px;
+    line-height: 200px;
+    padding-left: 10px;
+}
+.couponBg img{
+	width: 500px;
+	height: 200px;
+}
+.couponBg .coupon-l{
+	position: absolute;
+	left: 30px;
+	top: 70px;
+	font-size: 30px;
+}
+.couponBg .coupon-r{
+	position: absolute;
+    top: 50px;
+    left: 190px;
+	font-size: 16px;
+}
+
+/*选择优惠券单选框*/
+input[type="radio"]{
+	opacity:0;
+}
+
+label i.selectedRadio {
+	font-size: 12px;
+	font-style: normal;
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	text-align: center;
+	line-height: 18px;
+	color: #fff;
+	vertical-align: middle;
+	margin: -2px 2px 1px 0px;
+	border: #d8573f 1px solid;
+	border-radius:3px;
+}
+
+input[type="radio"]:checked+ i {
+	background: #d8573f;
+}

@@ -79,17 +79,13 @@
 
                 <div class="row" style="border-bottom: 1px solid silver;padding-bottom: 15px;" ng-if="activityRelatedList.length > 0" ng-repeat="activityRelatedItem in activityRelatedList">
                     <div class="col-33" style="margin-top: 10px;margin-left: 10px;">
-
-
-
-
-                        <a href="#/active_details/{{activityRelatedItem.activityId}}">
+                        <a ng-if="activityRelatedItem.activityWay == 1 || activityRelatedItem.activityWay ==2" href="#/active_details/{{activityRelatedItem.activityId}}">
                             <img src="{{activityRelatedItem.activityIcon}}" width="90px" height="90px">
                         </a>
 
-
-
-                        
+                        <a ng-if="activityRelatedItem.activityWay == 3" href="#/salon/{{activityRelatedItem.activityId}}/{{activityRelatedItem.video.liveId}}">
+                            <img src="{{activityRelatedItem.activityIcon}}" width="90px" height="90px">
+                        </a>
                     </div>
                     <div class="col-66" style="margin-top: 10px;">
                         <div style="margin-bottom: 20px;display: inline-block;font-size: 16px;">活动名称：{{activityRelatedItem.activityName}}</div>

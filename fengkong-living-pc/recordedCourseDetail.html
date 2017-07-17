@@ -13,6 +13,11 @@
 	<script src="js/lib/jquery-1.12.3.js"></script>
 	<script src="js/backTop.js"></script>
 	<script src="js/lib/materialize.min.js"></script>
+
+	<script src="js/lib/encrypt/crypto-js.js"></script>
+	<script src="js/lib/encrypt/aes.js"></script>
+	<script src="js/lib/encrypt/pad-zeropadding.js"></script>
+	
 	<script src="js/lib/angular/angular.min.js"></script>
 	<script src="js/app.js"></script>
 	<script src="js/controller.js"></script>
@@ -30,7 +35,7 @@
 			</div>
 			<div class="course_video_r pull-right">
 				<div class="clearfix">
-					<div class="pull-left" style="width: 120px;">课节: 12</div>
+					<div class="pull-left" style="width: 120px;">课节: {{recordedCourseList.length}}</div>
 					<div class="pull-left" style="width: 150px;">购买人数: 30</div>
 					<div class="pull-left" style="width: 120px;">评论: {{commentList.length}}</div>
 				</div>
@@ -66,7 +71,7 @@
 
 				<div class="course_price clearfix">
 					<div class="pull-left" style="line-height:50px;">
-						价格: <span class="color-main">￥{{courseInfo.coursePrice / 100}}</span>
+						价格: <span class="color-main">￥{{courseInfo.price / 100}}</span>
 					</div>
 					<div class="pull-right">
 						<span class="btn_buy bgcolor-main" ng-if="courseBuyStatus" ng-click="createCourseOrder()">购买课程</span>
@@ -95,7 +100,7 @@
 				<span>(12)</span>
 			</li>
 			<li class="pull-right" style="text-align: right;">
-				查看所有课节 >>
+				<a href="recorded.html">查看所有课节 >></a>
 			</li>
 		</ul>
 
@@ -139,7 +144,8 @@
 
 						<div class="commentItem clearfix" ng-repeat="commentItem in commentList">
 							<div class="commentItem_l pull-left">
-								<img src="images/user_comment.png">
+								<!--<img src="images/user_comment.png">-->
+								<img src="{{commentItem.userIcon}}" style="width:100%;height:100%;">
 							</div>
 							<div class="commentItem_r pull-left">
 								<div>{{commentItem.userName}} &nbsp;&nbsp;&nbsp;&nbsp; <span class="flag bgcolor-main">内控达人</span></div>
@@ -247,6 +253,32 @@
 			$(this).addClass('color-main').siblings().removeClass('color-main').parent().next().children('div').eq($(this).index()).show().siblings().hide();
 		})
 	</script>
+
+
+	<!-- 课程确认订单 -->
+	<div id="courseConfirmOrder" class="modal">
+		<div class="modal-content">
+	        <div>
+	            <span style="display:inline-block;width:80px;">课程名称</span>
+	            <span>{{courseInfo.courseName}}</span>
+	        </div>
+			<div>
+	            <span style="display:inline-block;width:80px;">课程价格</span>
+	            <span>{{courseInfo.price / 100}}元</span>
+	        </div>
+	        <button type="button" ng-click="courseConfirmOrderSubmit()">确认</button>
+		</div>
+	</div>
+	<!-- 课程选择支付方式 -->
+	<div id="selectCoursePayType" class="modal">
+		<div class="modal-content">
+	        <div>支付方式</div>
+	        <div ng-click="courseBalancePay()">余额支付</div>
+	        <div ng-click="courseWechatPay()">微信支付</div>
+	        <div ng-click="courseAliPay()">支付宝支付</div>
+	        <div ng-click="courseCouponPay()">体验券支付</div>
+		</div>
+	</div>
 
 </body>
 

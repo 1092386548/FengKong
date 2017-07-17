@@ -179,7 +179,7 @@
 
 
 #content .wrapper .user-consume .user-content .ul_nav li{
-	width: 120px;
+	width: 150px;
 	cursor: auto;
 }
 
@@ -238,6 +238,27 @@
 	padding-bottom: 10px;
 	border-bottom: 1px solid #d6d6d6;
 }
+#content .wrapper .user-recharge .user-content .exchange .couponBg{
+	position: relative;
+	width: 450px;
+	height: 150px;
+}
+#content .wrapper .user-recharge .user-content .exchange .couponBg img{
+	width: 100%;
+	height: 100%;
+}
+#content .wrapper .user-recharge .user-content .exchange .couponBg .coupon-l{
+	position: absolute;
+	left: 30px;
+	top: 50px;
+	font-size: 30px;
+}
+#content .wrapper .user-recharge .user-content .exchange .couponBg .coupon-r{
+	position: absolute;
+    top: 20px;
+    left: 170px;
+	font-size: 16px;
+}
 
 
 #content .wrapper .user-setting .user-content .password_name{
@@ -255,4 +276,10 @@
 #content .wrapper .user-setting .user-content .sub-info{
 	margin-top: 22px;
 	margin-bottom: 26px;
+}
+
+
+.rechangeActive{
+	background-color: rgb(216,87,63);
+    color: #fff;
 }

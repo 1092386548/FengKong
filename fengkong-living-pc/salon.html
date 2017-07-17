@@ -12,6 +12,11 @@
 	<script src="js/lib/jquery-1.12.3.js"></script>
 	<script src="js/backTop.js"></script>
 	<script src="js/lib/materialize.min.js"></script>
+
+	<script src="js/lib/encrypt/crypto-js.js"></script>
+	<script src="js/lib/encrypt/aes.js"></script>
+	<script src="js/lib/encrypt/pad-zeropadding.js"></script>
+	
 	<script src="js/lib/angular/angular.min.js"></script>
 	<script src="js/app.js"></script>
 	<script src="js/controller.js"></script>
@@ -52,29 +57,28 @@
 				</div>
 				<div class="clearfix" style="margin-top: 10px;">
 					<!--即将直播 未报名-->
-					<div class="apply_now inline-block bgcolor-main" ng-if="activityInfo.newActivityStatus == 1 && !livingEnrollStatus" ng-click="livingApply()">即将直播立即报名</div>
+					<div class="apply_now inline-block bgcolor-main" ng-if="!isV && activityInfo.newActivityStatus == 1 && !livingEnrollStatus" ng-click="livingApply()">即将直播立即报名</div>
 
 					<!--即将直播 已报名但未支付-->
-					<div class="apply_now inline-block bgcolor-main" ng-if="activityInfo.newActivityStatus == 1 && livingEnrollStatus && !livingPayStatus" ng-click="livingApplyed()">即将直播去支付</div>
+					<div class="apply_now inline-block bgcolor-main" ng-if="!isV && activityInfo.newActivityStatus == 1 && livingEnrollStatus && !livingPayStatus" ng-click="livingApplyed()">即将直播去支付</div>
 
 					<!--即将直播 已报名且已支付-->
-					<div class="apply_now inline-block bgcolor-main" ng-if="activityInfo.newActivityStatus == 1 && livingEnrollStatus && livingPayStatus">即将直播已支付</div>
+					<div class="apply_now inline-block bgcolor-main" ng-if="!isV && activityInfo.newActivityStatus == 1 && livingEnrollStatus && livingPayStatus">即将直播已支付</div>
 
 
 
 
 					<!--正在直播 未报名-->
-					<div class="apply_now inline-block bgcolor-main" ng-if="activityInfo.newActivityStatus == 2 && !livingEnrollStatus" ng-click="livingApply()">正在直播立即报名</div>
+					<div class="apply_now inline-block bgcolor-main" ng-if="!isV && activityInfo.newActivityStatus == 2 && !livingEnrollStatus" ng-click="livingApply()">正在直播立即报名</div>
 
 					<!--正在直播 已报名但未支付-->
-					<div class="apply_now inline-block bgcolor-main" ng-if="activityInfo.newActivityStatus == 2 && livingEnrollStatus && !livingPayStatus" ng-click="livingApplyed()">正在直播去支付</div>
+					<div class="apply_now inline-block bgcolor-main" ng-if="!isV && activityInfo.newActivityStatus == 2 && livingEnrollStatus && !livingPayStatus" ng-click="livingApplyed()">正在直播去支付</div>
 
 					<!--正在直播 已报名且已支付-->
 					<a class="apply_now inline-block bgcolor-main" ng-if="activityInfo.newActivityStatus == 2 && livingEnrollStatus && livingPayStatus" href="livingDetail.html?activityId={{activityId}}&liveId={{liveId}}">立即观看</a>
 
 
-
-					<div class="inline-block">{{activityInfo.activityJoinNumber}}人已报名</div>
+					<div class="inline-block">{{activityInfo.number}}人已报名</div>
 				</div>
 
 				<!-- <ul class="wrapper clearfix">
@@ -87,18 +91,19 @@
 
 		<div class="course_summary clearfix">
 			<div class="course_summary_l pull-left">
-				<div class="introduction">
-					<h3 class="introduction_title">活动介绍</h3>
-					<p class="introduction_content" id="j-activityDetail">{{activityInfo.activityDescription}}</p>
-				</div>
-				<div class="introduction">
-					<h3 class="introduction_title">讲师介绍</h3>
-					<p class="introduction_content">
+				<ul class="introduction clearfix">
+					<li class="introduction_title pull-left color-main">活动介绍</li>
+					<li class="introduction_title pull-left">讲师介绍</li>
+				</ul>
+				<div>
+					<div class="introduction_content" id="j-activityDetail">{{activityInfo.activityDescription}}</div>
+					<div class="introduction_content" style="display:none;">
 						<div>讲师姓名 : {{activityTeacherInfo.teacherName}}</div>
-						<div>讲师简介 : {{activityTeacherInfo.teacherDescription}}</div>
-					</p>
+						<div style="width:100%;">讲师简介 : {{activityTeacherInfo.teacherDescription}}</div>
+					</div>
 				</div>
 			</div>
+
 
 			<div class="course_summary_r pull-left">
 				<!-- <h3 class="title">相关活动</h3> -->
@@ -106,18 +111,13 @@
 				<div class="courseList">
 					<div class="courseItem" ng-repeat="activityRelatedItem in activityRelatedList">
 						<div class="courseItem_img pull-left">
-
-
-
-
-
-							<a href="activityDetail.html?activityId={{activityRelatedItem.activityId}}">
+							<a ng-if="activityRelatedItem.activityWay == 1 || activityRelatedItem.activityWay ==2" href="activityDetail.html?activityId={{activityRelatedItem.activityId}}">
 								<img src="{{activityRelatedItem.activityIcon}}" style="width: 100%;height: 100%;" alt="">
 							</a>
 
-
-
-
+							<a ng-if="activityRelatedItem.activityWay == 3" href="salon.html?activityId={{activityRelatedItem.activityId}}&liveId={{activityRelatedItem.video.liveId}}">
+								<img src="{{activityRelatedItem.activityIcon}}" style="width: 100%;height: 100%;" alt="">
+							</a>
 						</div>
 						<div class="courseItem_info pull-left">
 							<div class="activity_name">{{activityRelatedItem.activityName}}</div>
@@ -142,7 +142,6 @@
 
 	<div id="back-top"></div>
 
-
 	<!-- <div before-living-apply open="openModal()"></div> -->
 
 	<!-- 即将直播、正在直播报名 -->
@@ -151,19 +150,19 @@
 			<form name="livingApplyForm">
 		        <div>
 		            <span style="display:inline-block;width:80px;">参与人</span>
-		            <input type="text" name="enrollName" placeholder="填写姓名" style="display:inline-block;width:240px;vertical-align:2px;" ng-required="true" ng-model="livingApplyInfo.enrollName">
-		            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="livingApplyForm.enrollName.$dirty && livingApplyForm.enrollName.$error.required">参与人不能为空</div>
+		            <input type="text" name="userName" placeholder="填写姓名" style="display:inline-block;width:240px;vertical-align:2px;" ng-required="true" ng-model="livingApplyInfo.userName">
+		            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="livingApplyForm.userName.$dirty && livingApplyForm.userName.$error.required">参与人不能为空</div>
 		        </div>
 		        <div>
 		            <span style="display:inline-block;width:80px;">联系方式</span>
-		            <input type="text" name="contactWay" placeholder="填写手机号码" style="display:inline-block;width:240px;vertical-align:2px;" ng-required="true" ng-pattern="/^1[34578]\d{9}$/" ng-model="livingApplyInfo.contactWay">
-		            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="livingApplyForm.contactWay.$dirty && livingApplyForm.contactWay.$error.required">联系方式不能为空</div>
-		            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="livingApplyForm.contactWay.$dirty && livingApplyForm.contactWay.$error.pattern">联系方式格式不正确</div>
+		            <input type="text" name="userPhone" placeholder="填写手机号码" style="display:inline-block;width:240px;vertical-align:2px;" ng-required="true" ng-pattern="/^1[34578]\d{9}$/" ng-model="livingApplyInfo.userPhone">
+		            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="livingApplyForm.userPhone.$dirty && livingApplyForm.userPhone.$error.required">联系方式不能为空</div>
+		            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="livingApplyForm.userPhone.$dirty && livingApplyForm.userPhone.$error.pattern">联系方式格式不正确</div>
 		        </div>
 		        <div>
 		            <span style="display:inline-block;width:80px;">公司名称</span>
-		            <input type="text" name="companyName" placeholder="填写完整公司名称" style="display:inline-block;width:240px;vertical-align:2px;" ng-required="true" ng-model="livingApplyInfo.companyName">
-		            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="livingApplyForm.companyName.$dirty && livingApplyForm.companyName.$error.required">公司名称不能为空</div>
+		            <input type="text" name="userCompany" placeholder="填写完整公司名称" style="display:inline-block;width:240px;vertical-align:2px;" ng-required="true" ng-model="livingApplyInfo.userCompany">
+		            <div style="margin-left:80px;font-size:12px;color:#f00;" ng-show="livingApplyForm.userCompany.$dirty && livingApplyForm.userCompany.$error.required">公司名称不能为空</div>
 		        </div>
 
 		        <button type="button" ng-disabled="livingApplyForm.$invalid" ng-click="livingApplySubmit()">提交</button>
@@ -197,9 +196,14 @@
 	        <div ng-click="wechatPay()">微信支付</div>
 	        <div ng-click="aliPay()">支付宝支付</div>
 	        <div ng-click="couponPay()">体验券支付</div>
-	        <!-- <button type="button" ng-click="livingSelectPayTypeSubmit()">提交</button> -->
 		</div>
 	</div>
 
+	<script>
+		var li = $('#content').find('.course_summary_l').find('.introduction').find('.introduction_title');
+		li.on('click', function () {			
+			$(this).addClass('color-main').siblings().removeClass('color-main').parent().next().children('div').eq($(this).index()).show().siblings().hide();
+		})
+	</script>
 </body>
 </html>

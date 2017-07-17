@@ -9,9 +9,14 @@
 	<link rel="stylesheet" href="style/header_footer.css">
 	<link rel="stylesheet" href="style/login.css">
 	<link rel="stylesheet" href="style/personalCenter.css">
-	<script src="js/lib/jquery-1.12.3.js"></script>
+	<script src="js/lib/jquery.min.js"></script>
 	<script src="js/backTop.js"></script>
 	<script src="js/lib/materialize.min.js"></script>
+
+	<script src="js/lib/encrypt/crypto-js.js"></script>
+	<script src="js/lib/encrypt/aes.js"></script>
+	<script src="js/lib/encrypt/pad-zeropadding.js"></script>
+	
 	<script src="js/lib/angular/angular.min.js"></script>
 	<script src="js/app.js"></script>
 	<script src="js/controller.js"></script>
@@ -55,7 +60,7 @@
 				<div class="user-content">
 					<div class="line">
 						<span class="name">昵称</span>
-						<span><input type="text" ng-model="user.userName"></span>
+						<span><input type="text" placeholder="您还没有昵称，点击添加昵称" ng-model="user.userSpareStrone"></span>
 					</div>
 					<div class="line">
 						<span class="name">性别</span>
@@ -64,10 +69,6 @@
 							<input id="woman" type="radio" name="sex" value="2" ng-model="user.sex"> <label for="woman">女</label>
 						</span>
 					</div>
-					<!-- <div class="line">
-						<span class="name">出生日期</span>
-						<span><input type="text" style="width: 60px;"> 年 <input type="text" style="width: 40px;"> 月 <input type="text" style="width: 40px;"> 日</span>
-					</div> -->
 					<div class="line">
 						<span class="name">公司名称</span>
 						<span><input type="text" ng-model="user.userAddress"></span>
@@ -84,71 +85,65 @@
 				</div>
 			</div>
 
-			<div class="user-activity" ng-if="item == 2">
+			<div class="user-activity" ng-show="item == 2" style="height:500px;">
 				<h4 class="title">我的活动</h4>
 				<div class="user-content">
-					<ul class="ul_nav clearfix">
-						<li class="pull-left active">全部</li>
-						<li class="up_down class pull-left">
-							<span>类别</span>
-							<div class="down">
-								<div class="item active">审计</div>
-								<div class="item">内控</div>
-								<div class="item">财务</div>
-								<div class="item">风控</div>
-								<div class="item">税务</div>
-							</div>
+					<ul class="nav_title clearfix">
+						<li class="pull-left">
+							<a class='btn' href='#' data-activates='dropdown1' ng-click="all()">全部</a>
 						</li>
-						<li class="up_down online pull-left">线上</li>
+						<li class="pull-left">
+							<a class='dropdown-button btn' href='#' data-activates='dropdown2'>{{typeName || '类别'}}</a>
+							<ul id='dropdown2' class='dropdown-content'>
+								<li ng-click="toggleType(0)">类别</li>
+								<li ng-click="toggleType(1)">内控</li>
+								<li ng-click="toggleType(2)">审计</li>
+								<li ng-click="toggleType(3)">财务</li>
+								<li ng-click="toggleType(4)">税务</li>
+								<li ng-click="toggleType(5)">风控</li>
+							</ul>
+						</li>
+						<li class="pull-left">
+							<a class='dropdown-button btn' href='#' data-activates='dropdown3'>{{priceName || '状态'}}</a>
+							<ul id='dropdown3' class='dropdown-content'>
+								<li ng-click="togglePrice(0)">状态</li>
+								<li ng-click="togglePrice(1)">未支付</li>
+								<li ng-click="togglePrice(2)">已支付</li>
+							</ul>
+						</li>
 					</ul>
 
-					<dl class="clearfix">
+
+					<dl class="clearfix" ng-repeat="activeItem in activeList">
 						<dt class="pull-left dt_l">
 							<div class="courseItem_img pull-left">
 								<img class="video_course" src="images/course.png">
-								<img class="video_play" src="images/video_play.png">
+								<!--<img class="video_play" src="images/video_play.png">-->
 							</div>
 							<div class="courseItem_info pull-left">
-								<div class="course_name">活动标题标题标题标题</div>
-								<div class="course_price"><span class="color-main">免费</span></div>
+								<div class="course_name">{{activeItem.activityName}}</div>
+								<div class="course_price">
+									<span class="color-main" ng-if="activeItem.activityPrice == 0">免费</span>
+									<span class="color-main" ng-if="activeItem.activityPrice > 0">{{activeItem.activityPrice / 100}}元</span>
+								</div>
 								<div class="course_teacher">人数 <span class="color-939393">12</span></div>
-								<div class="color-939393">2017-05-03</div>
+								<div class="color-939393">{{activeItem.activityStartTime | date:'yyyy-MM-dd'}}</div>
 							</div>
 						</dt>
-						<dt class="pull-left dt_m">风</dt>
-						<dt class="pull-left dt_r">线上</dt>
-					</dl>
-					<dl class="clearfix">
-						<dt class="pull-left dt_l">
-							<div class="courseItem_img pull-left">
-								<img class="video_course" src="images/course.png">
-							</div>
-							<div class="courseItem_info pull-left">
-								<div class="course_name">活动标题标题标题标题</div>
-								<div class="course_price"><span class="color-main">12元</span></div>
-								<div class="course_teacher">地点 <span class="color-939393">上海市松江区某某某地点地点</span></div>
-								<div class="color-939393">2017-05-03</div>
-							</div>
+						<dt class="pull-left dt_m">
+							<span ng-if="activeItem.activityType == 1">控</span>
+							<span ng-if="activeItem.activityType == 2">审</span>
+							<span ng-if="activeItem.activityType == 3">财</span>
+							<span ng-if="activeItem.activityType == 4">税</span>
+							<span ng-if="activeItem.activityType == 5">风</spa>
 						</dt>
-						<dt class="pull-left dt_m">审</dt>
-						<dt class="pull-left dt_r">线下</dt>
-					</dl>
-					<dl class="clearfix">
-						<dt class="pull-left dt_l">
-							<div class="courseItem_img pull-left">
-								<img class="video_course" src="images/course.png">
-							</div>
-							<div class="courseItem_info pull-left">
-								<div class="course_name">活动标题标题标题标题</div>
-								<div class="course_price"><span class="color-main">12元</span></div>
-								<div class="course_teacher">地点 <span class="color-939393">上海市松江区某某某地点地点</span></div>
-								<div class="color-939393">2017-05-03</div>
-							</div>
+						<dt class="pull-left dt_r">
+							<span ng-if="activeItem.activityWay == 3">线上</span>
+							<span ng-if="activeItem.activityWay == 1 || activeItem.activityWay == 2">线下</span>
 						</dt>
-						<dt class="pull-left dt_m">审</dt>
-						<dt class="pull-left dt_r">线下</dt>
 					</dl>
-					<button class="sub-info">保存</button>
+					
+					<!--<button class="sub-info">保存</button>-->
 				</div>
 			</div>
 
@@ -162,7 +157,9 @@
 
 					<div>
 						<div class="activity_course" ng-if="collectionType == 1">
-							<dl class="clearfix" ng-repeat="collectItem in collectList">
+							<span ng-if="collectList.length == 0">暂无收藏课程</span>
+
+							<dl class="clearfix" ng-if="collectList.length > 0" ng-repeat="collectItem in collectList">
 								<dt class="pull-left dt_l">
 									<div class="courseItem_img pull-left">
 										<!-- <img class="video_course" src="images/course.png"> -->
@@ -187,12 +184,14 @@
 								<dt class="pull-left dt_r">线上</dt>
 							</dl>
 
-							<button class="sub-info">编辑</button>
+							<!--<button class="sub-info">编辑</button>-->
 						</div>
 
 
 						<div class="activity_video" ng-if="collectionType == 2">
-							<dl class="clearfix" ng-repeat="collectItem in collectList">
+							<span ng-if="collectList.length == 0">暂无收藏视频</span>
+							
+							<dl class="clearfix" ng-if="collectList.length > 0" ng-repeat="collectItem in collectList">
 								<dt class="pull-left dt_l">
 									<div class="courseItem_img pull-left">
 										<img class="video_course" src="{{collectItem.videoIcon}}">
@@ -215,7 +214,7 @@
 								<dt class="pull-left dt_r">线上</dt>
 							</dl>
 
-							<button class="sub-info">编辑</button>
+							<!--<button class="sub-info">编辑</button>-->
 						</div>
 					</div>
 				</div>
@@ -231,50 +230,17 @@
 						<li class="pull-left">时间</li>
 					</ul>
 
-					<ul class="ul_nav clearfix border-none">
-						<li class="pull-left">某某课程名称</li>
-						<li class="pull-left"><span class="color-main">￥ 12</span></li>
-						<li class="pull-left">已付款</li>
-						<li class="pull-left">2017-05-03</li>
+					<ul class="ul_nav clearfix border-none" ng-repeat="consumptionItem in consumptionList">
+						<li class="pull-left">{{consumptionItem.shoppingName}}</li>
+						<li class="pull-left"><span class="color-main">￥ {{consumptionItem.orderTurnover / 100}}</span></li>
+						<li class="pull-left">
+							<span style="color:rgb(143, 143, 143);font-size:12px;" ng-if="consumptionItem.orderStatus == 1">未支付</span>
+							<span style="color:rgb(105,196,78);font-size:12px;" ng-if="consumptionItem.orderStatus == 2">已支付</span>
+						</li>
+						<li class="pull-left">{{consumptionItem.createdDate | date:'yyyy-MM-dd HH:mm:ss'}}</li>
 					</ul>
-					<ul class="ul_nav clearfix border-none">
-						<li class="pull-left">某某课程名称</li>
-						<li class="pull-left"><span class="color-main">￥ 12</span></li>
-						<li class="pull-left">已取消</li>
-						<li class="pull-left">2017-05-03</li>
-					</ul>
-					<ul class="ul_nav clearfix border-none">
-						<li class="pull-left">某某课程名称</li>
-						<li class="pull-left"><span class="color-main">￥ 12</span></li>
-						<li class="pull-left">已付款</li>
-						<li class="pull-left">2017-05-03</li>
-					</ul>
-					<ul class="ul_nav clearfix border-none">
-						<li class="pull-left">某某课程名称</li>
-						<li class="pull-left"><span class="color-main">￥ 12</span></li>
-						<li class="pull-left">已付款</li>
-						<li class="pull-left">2017-05-03</li>
-					</ul>
-					<ul class="ul_nav clearfix border-none">
-						<li class="pull-left">某某课程名称</li>
-						<li class="pull-left"><span class="color-main">￥ 12</span></li>
-						<li class="pull-left">已付款</li>
-						<li class="pull-left">2017-05-03</li>
-					</ul>
-					<ul class="ul_nav clearfix border-none">
-						<li class="pull-left">某某课程名称</li>
-						<li class="pull-left"><span class="color-main">￥ 12</span></li>
-						<li class="pull-left">已付款</li>
-						<li class="pull-left">2017-05-03</li>
-					</ul>
-					<ul class="ul_nav clearfix border-none">
-						<li class="pull-left">某某课程名称</li>
-						<li class="pull-left"><span class="color-main">￥ 12</span></li>
-						<li class="pull-left">已付款</li>
-						<li class="pull-left">2017-05-03</li>
-					</ul>
-
-					<button class="sub-info">编辑</button>
+					
+					<!--<button class="sub-info">编辑</button>-->
 				</div>
 			</div>
 
@@ -507,7 +473,7 @@
 								<dt class="pull-left dt_r">线上</dt>
 							</dl>
 
-							<button class="sub-info">清空记录</button>
+							<!--<button class="sub-info">清空记录</button>-->
 						</div>
 					</div>
 				</div>
@@ -526,7 +492,7 @@
 							<dl class="clearfix">
 								<dd class="pull-left account_balance">账户余额</dd>
 								<dd class="pull-left account_balance_rmb"><span class="color-main">￥ {{userBalance}}</span></dd>
-								<dd class="pull-left account_recharge bgcolor-main">立即充值</dd>
+								<dd class="pull-left account_recharge bgcolor-main" ng-click="rechargeBtn()">立即充值</dd>
 							</dl>
 
 							<ul class="ul_nav_record clearfix">
@@ -537,18 +503,44 @@
 								<dd class="pull-left recharge_date">{{consumptionItem.recordTime | date:'yyyy-MM-dd'}}</dd>
 								<dd class="pull-left recharge_num color-main">+ {{consumptionItem.recordMoney * 100}}元</dd>
 							</dl>
+
+
+
+							<!--<div id="ckepop">
+								<span class="jiathis_txt">分享到：</span>
+								<a class="jiathis_button_weixin">微信</a>
+								<a href="http://www.jiathis.com/share"  class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+								<a class="jiathis_counter_style"></a> </div> 
+								<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1" charset="utf-8"></script>
+							</div>-->
+
+
+
 						</div>
 
 						<div class="exchange" style="display: none;">
 							<ul class="clearfix">
-								<li class="pull-left"><input class="exchange_code" type="text" placeholder="请输入兑换码"></li>
-								<li class="pull-left"><button class="exchange_btn bgcolor-main">立即兑换</button></li>
+								<li class="pull-left"><input class="exchange_code" type="text" placeholder="请输入兑换码" ng-model="data.exchangeCode"></li>
+								<li class="pull-left"><button class="exchange_btn bgcolor-main" ng-click="exchangeCodeBtn()">立即兑换</button></li>
 							</ul>
 
 							<ul class="discount">
-								<li style="text-align: left;">优惠券</li>
+								<li style="text-align: left;">体验券</li>
 							</ul>
-						</div>						
+							<span ng-if="couponList.length == 0">暂无体验券</span>
+							<ul ng-if="couponList.length > 0">
+								<li class="couponBg" ng-repeat="couponItem in couponList">
+									<img src="images/coupon-bg.png" alt="">
+									<span class="coupon-l color-main">体验券</span>
+									<div class="coupon-r">
+										<div class="color-main">{{couponItem.couponName}}</div>
+										<div>1. {{couponItem.couponDescription}}</div>
+										<div>2. 有效期：{{couponItem.couponStartTime | date:'yyyy MM dd'}} -- {{couponItem.couponEndTime | date:'yyyy MM dd'}}</div>
+										<div>3. 券码：{{couponItem.couponNumber}}</div>
+									</div>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -563,7 +555,7 @@
 					<ul>
 						<li class="clearfix">
 							<div class="pull-left password_name">旧密码</div>
-							<div class="pull-left"><input class="password_input" type="password" ng-model="registerData.oldPassword"></div>
+							<div class="pull-left"><input class="password_input" type="password" ng-model="registerData.oldpassword"></div>
 						</li>
 						<li class="clearfix">
 							<div class="pull-left password_name">新密码</div>
@@ -575,7 +567,7 @@
 						</li>
 					</ul>
 
-					<button class="sub-info" ng-click="pswBtn()">保存</button>
+					<button class="sub-info" ng-click="modifyPasswordBtn()">保存</button>
 
 					<ul class="ul_nav">
 						<li style="text-align: left;">账户绑定</li>
@@ -596,6 +588,59 @@
 	<div login-register></div>
 
 	<div id="back-top"></div>
+
+
+	<!--账户余额充值-->
+	<div id="rechargeModal" class="modal">
+		<div class="modal-content">
+			<div>充值金额</div>
+			<div class="row">
+				<div class="col m6" ng-repeat="rechargeItem in rechargeList" ng-click="selectAmount($event,rechargeItem.productPrice)">
+					充￥{{rechargeItem.productPrice / 100}}
+				</div>
+			</div>
+			<ul>
+				<li ng-click="selectPayType(1)">
+					<label for="ali" class="clearfix">
+						<div style="float:left;">
+							<img src="images/Alipay.png" style="width:30px;height:30px;"><span ng-class="{rechangeActive:selectedPayType == 1}">支付宝</span>
+						</div>
+						<input type="radio" name="radio" id="ali" style="float:right;width:20px;height:20px">
+						<i class="selectedRadio" style="float:right;">√</i>
+					</label>
+				</li>
+				<li ng-click="selectPayType(2)">
+					<label for="weixin" class="clearfix">
+						<div style="float:left;">
+							<img src="images/weixin.png" style="width:30px;height:30px;"><span ng-class="{rechangeActive:selectedPayType == 2}">微信</span>
+						</div>
+						<input type="radio" name="radio" id="weixin" style="float:right;width:20px;height:20px">
+						<i class="selectedRadio" style="float:right;">√</i>
+					</label>
+				</li>
+			</ul>
+			<button ng-click="confirmRecharge()">充值</button>
+		</div>
+	</div>
+
+	<!--兑换优惠券-->
+	<div id="exchangeCoupon" class="modal">
+		<div class="modal-content">
+			<h5 style="text-align:center;">兑换成功!</h5>
+			<div style="text-align:center">
+				成功兑换一张<span style="color:#f00;">{{codeDescriptionCoupon}}</span>
+			</div>
+		</div>
+	</div>
+	<!--兑换风控币-->
+	<div id="exchangeMoney" class="modal">
+		<div class="modal-content">
+			<h4>兑换成功!</h4>
+			<div style="text-align:center">
+				成功兑换风控币<span style="color:#f00;">{{codeDescriptionMoney}}</span>
+			</div>
+		</div>
+	</div>
 
 
 	<script>

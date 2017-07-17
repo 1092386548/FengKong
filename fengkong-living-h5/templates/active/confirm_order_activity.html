@@ -1,55 +1,38 @@
 <ion-header-bar align-title="center" class='themebgcolor'>
-    <a ng-click="goBack()" style="display:inline-block;width:15px;height:26px;position:absolute;top:50%;left:10px;margin-top:-13px;z-index:9;"><img src="img/prepage.png"></a>
-    <h3 style="font-size:18px;line-height:34px;">确认订单</h3>
+    <a ng-click="goBack()" class="header_bar_a"><img src="img/prepage.png"></a>
+    <h3 class="header_bar_title">确认订单</h3>
 </ion-header-bar>
 
-
 <ion-content>
+    <div class="weixin-tip">
+		<p>
+			<img src="img/wxlink.png" style="width:100%;height:auto;" alt="微信打开"/>
+		</p>
+    </div>
+    
     <div>
-        <div style="height: 40px;line-height:40px;padding-left:10px;font-size: 18px;border-bottom: 1px solid #DEDEDE;">
-            <span style="display:inline-block;width:100px;">活动名称：</span>
+        <div style="height: 40px;line-height:40px;padding-left:10px;font-size: 16px;border-bottom: 1px solid #DEDEDE;">
+            <span style="display:inline-block;width:90px;">活动名称：</span>
             <span>{{activityName}}</span>
         </div>
 
-
-
-
         <div style="margin-top: 10px;padding-left:10px;height: 40px;line-height:40px;font-size: 16px;border-bottom: 1px solid #DEDEDE;">
-            <span style="display:inline-block;width:80px;">参与人</span>
-            <!--<input type="text" placeholder="填写姓名" style="display:inline-block;width:240px;vertical-align:2px;">-->
+            <span style="display:inline-block;width:90px;">参 与 人：</span>
             <span>{{activityInfo.joiner}}</span>
         </div>
         <div style="margin-top: 10px;padding-left:10px;height: 40px;line-height:40px;font-size: 16px;border-bottom: 1px solid #DEDEDE;">
-            <span style="display:inline-block;width:80px;">联系方式</span>
-            <!--<input type="text" placeholder="填写手机号码" style="display:inline-block;width:240px;vertical-align:2px;">-->
+            <span style="display:inline-block;width:90px;">联系方式：</span>
             <span>{{activityInfo.mobile}}</span>
         </div>
         <div style="margin-top: 10px;padding-left:10px;height: 40px;line-height:40px;font-size: 16px;border-bottom: 1px solid #DEDEDE;">
-            <span style="display:inline-block;width:80px;">公司名称</span>
-            <!--<input type="text" placeholder="填写完整公司名称" style="display:inline-block;width:240px;vertical-align:2px;">-->
+            <span style="display:inline-block;width:90px;">公司名称：</span>
             <span>{{activityInfo.company}}</span>
         </div>
 
-
-
-        
-        <div style="margin-top: 10px;height: 40px;font-size: 15px;">
+        <div style="margin-top: 10px;height: 40px;font-size: 16px;">
             <span style="display:inline-block;float: right;margin-right: 10px;">金额：<b style="color:#bf5b44">{{activityPrice / 100}}元</b></span>
         </div>
     </div>
-    <!-- <div style="background-color: #fbf9f9;height:50px;">
-        <div style="margin-left:5px;padding-top: 10px;">
- -->
-            <!--<img src="img/check.png" style="width:20px;height: 20px;">-->
-            <!-- <div style="width: 20px; display: inline-block;border: 1px solid #ccc;border-radius: 2px; height: 20px;margin-top: 5px;"><img src="img/checked.png" style="width:20px;height: 20px;display: none;"></div>
-            <a href="#/change_coupon">
-                <div style="display: inline-block;width: 92%;vertical-align: top;padding-top: 4px;">
-                    <span>优惠券抵扣<b>3.00</b>元</span>
-                    <img src="img/right.png" style="width: 20px;height: 20px;float: right">
-                </div>
-            </a>
-        </div>
-    </div> -->
 
 
     <script id="modal.html" type="text/ng-template">
@@ -66,7 +49,8 @@
 
                 <div style="padding-top:20px;padding-bottom: 20px;font-size: 16px;border-bottom: 1px solid silver;">
                     <a href=""><img style="display: inline-block;float:left;margin-left: 20px" src="img/wechat.png" width="25px" height="25px">
-                    <span style="margin-left: -100px;color:black" ng-click="wechatPay()">微信支付</span>
+                    <span style="margin-left: -100px;color:black" ng-if="!isWein" ng-click="wechatPay()">微信支付</span>
+                    <a style="margin-left: -100px;color:black" ng-if="isWein" ng-href="{{wxOAuth}}">微信支付</a>
                     <img style="display: inline-block;float:right;" src="img/right.png" width="25px" height="25px">
                     </a>
                 </div>
@@ -89,7 +73,11 @@
     </script>
 </ion-content>
 
-<ion-footer-bar class='themebgcolor' style="color:#fff;text-align: center" ng-click="pay()">
-    <h3 style="line-height:34px;font-size:18px;">立即支付</h3>
+<ion-footer-bar class='themebgcolor' style="color:#fff;text-align: center" ng-if="!wxgzhzfShow" ng-click="pay()">
+    <h3 class="header_bar_title">立即下单</h3>
+</ion-footer-bar>
+
+<ion-footer-bar class='themebgcolor' style="color:#fff;text-align: center" ng-if="wxgzhzfShow" ng-click="wxgzhzfPay()">
+    <h3 class="header_bar_title">立即支付</h3>
 </ion-footer-bar>
 

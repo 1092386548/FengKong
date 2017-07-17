@@ -11,8 +11,10 @@
 }
 .nav-search .nav-search-input{
 	display: inline-block;
+	box-sizing: border-box;
 	width: 940px;
 	height: 50px;
+	margin: 0;
 	padding: 10px;
 	border: 1px solid #f00;
 	outline: none;

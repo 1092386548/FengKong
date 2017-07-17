@@ -111,7 +111,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             // 首页 搜索
             .state('tabs.home_search', {
                 url: "/home_search",
-                cache: 'false',
+                cache: 'true',
                 views: {
                     'tab-home': {
                         templateUrl: "templates/home/home_search.html",
@@ -193,7 +193,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                 templateUrl: 'templates/myself/rechange.html',
                 controller: 'MyRechangeCtrl'
             })
-            //修改密码
+            //修改密码(获取验证码)
             .state('modify_password', {
                 url: '/modify_password',
                 cache: 'false',
@@ -374,7 +374,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                 templateUrl: 'pay/alipay/pay.html',
                 controller: 'AlipayCtrl'
             })
-            //确认支付--课程(余额下单)
+            //确认支付--余额
             .state('course_order', {
                 url: '/course_order/{orderId}/{orderCode}/{orderTurnover}/{description}',
                 cache: 'false',

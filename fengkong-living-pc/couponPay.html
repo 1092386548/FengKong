@@ -13,6 +13,10 @@
 	<script src="js/backTop.js"></script>
 	<script src="js/lib/materialize.min.js"></script>
 
+	<script src="js/lib/encrypt/crypto-js.js"></script>
+	<script src="js/lib/encrypt/aes.js"></script>
+	<script src="js/lib/encrypt/pad-zeropadding.js"></script>
+
 	<script src="js/lib/angular/angular.min.js"></script>
 	<script src="js/app.js"></script>
 	<script src="js/controller.js"></script>
@@ -27,8 +31,32 @@
         <div>订单名称：{{orderInfo.description}}</div>
         <div>付款金额：<span style="color: #f00;">{{orderInfo.orderTurnover}}元</span></div>
         <div>商品描述：{{orderInfo.description}}</div>
-        <button type="button" ng-click="couponPaySubmit()">提交</button>
-	</div>
+        <button type="button" ng-click="couponPaySubmit()">立即支付</button>
+
+
+
+		<div ng-if="couponList.length == 0" class="color-main" style="font-size:18px;margin-top:20px;">暂无体验券</div>
+		<ul ng-if="couponList.length > 0" style="margin-top:20px;">
+			<li class="couponBg" ng-repeat="couponItem in couponList">
+				<div class="pull-left radioWrapper">
+					<label>
+						<input type="radio" name="tiyanquan" ng-click="selectCoupon($event,couponItem.couponId)"><i class="selectedRadio">✓</i>
+					</label>
+				</div>
+
+				<div class="pull-left" style="position: relative;">
+					<img src="images/coupon-bg.png" alt="">
+					<span class="coupon-l color-main">体验券</span>
+					<div class="coupon-r">
+						<div class="color-main">{{couponItem.couponName}}</div>
+						<div>1. {{couponItem.couponDescription}}</div>
+						<div>2. 有效期：{{couponItem.couponStartTime | date:'yyyy MM dd'}} -- {{couponItem.couponEndTime | date:'yyyy MM dd'}}</div>
+						<div>3. 券码：{{couponItem.couponNumber}}</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>	
 
 
 	<div ng-include="'templates/footer.html'"></div>

@@ -52,7 +52,18 @@
 	padding: 20px;
 	border-right: 1px solid #e3e3e3;
 }
-#content .course_summary .course_summary_l p.introduction_content{
+#content .course_summary .course_summary_l .introduction{
+	width: 100%;
+	border-bottom: 1px solid #e3e3e3;
+}
+#content .course_summary .course_summary_l .introduction .introduction_title{
+	width: 130px;
+    height: 58px;
+    line-height: 58px;
+    padding-left: 20px;
+	cursor: pointer;
+}
+#content .course_summary .course_summary_l .introduction_content{
 	margin: 10px 0 30px 0;
 }
 
@@ -63,7 +74,7 @@
 #content .course_summary .course_summary_r .title{
 	height: 58px;
 	line-height: 58px;
-	/* border-bottom: 1px solid #e3e3e3; */
+	 /*border-bottom: 1px solid #e3e3e3; */
 }
 #content .course_summary .course_summary_r .courseList{
 	padding-top: 10px;

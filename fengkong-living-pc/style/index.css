@@ -55,7 +55,7 @@
   position: absolute;
   left: 50%;
   bottom: 12px;
-  margin-left: -18px;
+  transform: translateX(-50%);
 }
 .swiper-pagination-switch {
   display: inline-block;

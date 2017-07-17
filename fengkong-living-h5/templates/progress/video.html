@@ -1,10 +1,15 @@
-<ion-header-bar align-title="center" class='home_head themebgcolor'>
-    <a ng-click="goBack()" class="margin-top10 margin-left10"><img src="img/prepage.png"></a>
-    <h4 style="line-height:40px;color:#fff;">风控在线视频</h4>
+<ion-header-bar align-title="center" class='themebgcolor'>
+    <a ng-click="goBack()" class="header_bar_a"><img src="img/prepage.png"></a>
+    <h3 class="header_bar_title">风控在线</h3>
 </ion-header-bar>
 
-
 <ion-content>
+    <div class="weixin-tip">
+		<p>
+			<img src="img/wxlink.png" style="width:100%;height:auto;" alt="微信打开"/>
+		</p>
+    </div>
+
     <div class="container">
         <div class="row" style="padding:10px;">
             <span>{{videoResult.videoName}}</span>
@@ -26,8 +31,19 @@
                 <span style="vertical-align: 5px;">点赞({{currentVideoEarnedProle}})</span>
             </div>
             <div class="col-33" style="text-align: right;">
-                <img src="img/share.png" style="width:25px;height: 25px;margin-left:33%">
-                <span style="vertical-align: 5px;">分享</span>
+                <img src="img/share.png" style="width:25px;height: 25px;margin-left:33%" ng-click="share()">
+                <span class="-mob-share-open" style="vertical-align: 5px;">分享</span>
+
+
+                <!--MOB SHARE BEGIN-->
+                <div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-bottom" style="display: none">
+                    <ul class="-mob-share-list">
+                        <li class="-mob-share-weixin"><p>微信</p></li>
+                    </ul>
+                    <div class="-mob-share-close">取消</div>
+                </div>
+                <div class="-mob-share-ui-bg"></div>
+                <!--MOB SHARE END-->
             </div>
         </div>
         <div class="margin-top10 progress_all_search_line" style="height: 3px;"></div>
@@ -88,7 +104,7 @@
                 </div>
 
                 <div class="row margin-top10" style="text-align: left;">
-                    <div>录播介绍:</div>
+                    <div>视频介绍:</div>
                     <div>{{videoDetail.videodeDescription}}</div>
                 </div>
             </div>
@@ -96,13 +112,15 @@
             <!--相关start-->
             <div id="progress_recorded_related" class="container" style="display: none">
                 <div class="row" style="border-bottom: 1px solid silver;width: 110%;padding-bottom: 15px;" ng-repeat="videoRelevantItem in videoRelevantList">
-                    <div class="col-33"  style="margin-top: 10px;margin-left: 10px;position:relative;">
+                    <div class="col-33" style="margin-top: 10px;margin-left: 10px;position:relative;">
                         <img src="{{videoRelevantItem.videoIcon}}" width="90px" height="90px">
-                        <img src="img/play-icon.png" style="position: absolute;width:40px;height:40px;top:25%;left:25%;">
+                        <a href="#/video/{{videoRelevantItem.videoId}}">
+                            <img src="img/play-icon.png" style="position: absolute;width:40px;height:40px;top:25%;left:25%;">
+                        </a>
                     </div>
                     <div class="col-66" style="margin-top: 10px;">
-                        <span style="margin-bottom: 20px;display: inline-block;font-size: 16px;">录播名称:{{videoRelevantItem.videoName}}</span><br>
-                        录播简介:<span>{{videoRelevantItem.videoDescription}}</span>
+                        <span style="margin-bottom: 20px;display: inline-block;font-size: 16px;">视频名称:{{videoRelevantItem.videoName}}</span><br>
+                        视频简介:<span>{{videoRelevantItem.videoDescription}}</span>
                     </div>
                 </div>
 

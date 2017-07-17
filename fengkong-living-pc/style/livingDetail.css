@@ -193,9 +193,18 @@
 	width: 140px;
 	height: 100px;
 }
-#content .course_summary .course_summary_r .courseList .courseItem .courseItem_img img{
+#content .course_summary .course_summary_r .courseList .courseItem .courseItem_img .videoRelevantBg{
 	width: 100%;
 	height: 100%;
+}
+#content .course_summary .course_summary_r .courseList .courseItem .courseItem_img .video_play{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 50px;
+	height: 50px;
+	margin-top: -25px;
+	margin-left: -25px;
 }
 #content .course_summary .course_summary_r .courseList .courseItem .courseItem_info{
 	padding-left: 20px;

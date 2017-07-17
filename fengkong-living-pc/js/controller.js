@@ -1,8 +1,8 @@
 angular.module('fkliving.controller', ['fkliving.services'])
 
 	.constant('ApiEndpoint', {
-		// url: 'http://www.igmhz.com/fengkong-server/'
-		url: 'http://localhost:8080/fengkong-server/'
+		url: 'http://www.igmhz.com/fengkong-server/'
+		// url: 'http://localhost:8080/fengkong-server/'
 	})
 
 	// 登录注册
@@ -10,6 +10,7 @@ angular.module('fkliving.controller', ['fkliving.services'])
 		$(function () {
 			$('.modal').modal();
 		});
+
 
 		// 登录
 		$scope.user = {};
@@ -22,12 +23,18 @@ angular.module('fkliving.controller', ['fkliving.services'])
 				Materialize.toast('密码不能为空!', 3000);
 				return false;
 			} else {
+                var data = $scope.user.password;
+                var key  = CryptoJS.enc.Latin1.parse('1234567812345678');
+                var iv   = CryptoJS.enc.Latin1.parse('1234567812345678');
+                var encrypted = CryptoJS.AES.encrypt(data,key,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.ZeroPadding});
+                var psw  = ''+encrypted;
+                
 				$http({
 					method: 'POST',
 					url: ApiEndpoint.url + 'user/login.do',
 					data: $.param({
 						userName: $scope.user.userName,
-						password: $scope.user.password
+						password: psw
 					}),
 					headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
 				}).success(function (data) {
@@ -36,6 +43,8 @@ angular.module('fkliving.controller', ['fkliving.services'])
 						$('#modal').modal('close');
 
 						localStorage.userId = data.result.userId;
+                        // localStorage.userName = data.result.userName;
+
 						$rootScope.loginStatus = true;
 					} else if (data.errorCode == 11311) {
 						Materialize.toast('用户不存在!', 3000);
@@ -82,39 +91,6 @@ angular.module('fkliving.controller', ['fkliving.services'])
 			}
 		}
 		$scope.registerBtn = function(){
-			/*if (!$scope.registerData.mobile) {
-                Materialize.toast('手机号码不能为空',2000);
-            } else if (!$scope.registerData.authcode) {
-                Materialize.toast("验证码不能为空",2000);
-            } else if (!$scope.registerData.password) {
-                Materialize.toast("密码不能为空",2000);
-            } else if (!$scope.registerData.rpassword) {
-                Materialize.toast("重复密码不能为空",2000);
-            } else if ($scope.registerData.password.length < 6) {
-                Materialize.toast("密码位数不能小于6位",2000);
-            } else if ($scope.registerData.rpassword != $scope.registerData.password) {
-                Materialize.toast("两次输入的密码不一致",2000);
-            } else {
-                $http.post(ApiEndpoint.url + 'user/register.do', {}, {
-                    params: {
-                        mobile: $scope.registerData.mobile,
-                        password: $scope.registerData.password,
-                        authcode: $scope.registerData.authcode,
-                        nickName: $scope.registerData.nickName
-                    }
-                }).success(function (data) {
-                    if (data.errorCode == 0) {
-                        localStorage.user = JSON.stringify(data.result);
-                        localStorage.userId = data.result.userId;
-                        localStorage.userName = data.result.userName;
-                        localStorage.password = data.result.password;
-                        Materialize.toast('注册成功，已登录');
-                        $state.go('tabs.home');
-                    } else {
-                        Materialize.toast(data.errorMessage);
-                    }
-                })
-            }*/
             if (!$scope.registerData.mobile) {
                 Materialize.toast('手机号码不能为空',2000);
             } else if (!$scope.registerData.authcode) {
@@ -124,20 +100,26 @@ angular.module('fkliving.controller', ['fkliving.services'])
             } else if ($scope.registerData.password.length < 6) {
                 Materialize.toast("密码位数不能小于6位",2000);
             } else {
+                var data = $scope.registerData.password;
+                var key  = CryptoJS.enc.Latin1.parse('1234567812345678');
+                var iv   = CryptoJS.enc.Latin1.parse('1234567812345678');
+                var encrypted = CryptoJS.AES.encrypt(data,key,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.ZeroPadding});
+                var psw  = ""+encrypted;
+
             	$http({
 					method: 'POST',
 					url: ApiEndpoint.url + 'user/register.do',
 					data: $.param({
 						mobile: $scope.registerData.mobile,
-                        password: $scope.registerData.password,
                         authcode: $scope.registerData.authcode,
-                        nickName: ''
+                        nickName: $scope.registerData.userName,
+                        password: psw
 					}),
 					headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
 				}).success(function (data) {
                     if (data.errorCode == 0) {
                         localStorage.userId = data.result.userId;
-                        localStorage.userName = data.result.userName;
+                        // localStorage.userName = data.result.userName;
                         Materialize.toast('注册成功，已登录',2000);
                         $rootScope.loginStatus = true;
                  		$('#modal').modal('close');
@@ -170,6 +152,7 @@ angular.module('fkliving.controller', ['fkliving.services'])
 		}else if(localStorage.userId != undefined){
 			$rootScope.loginStatus = true;
 		}
+
 
 		// 登录注册按钮
 		var loginRegister = $('#loginRegister');
@@ -218,9 +201,30 @@ angular.module('fkliving.controller', ['fkliving.services'])
 	}])
 
 	//首页
-	.controller('IndexCtrl', ['$scope', '$http', '$timeout', 'ApiEndpoint', function ($scope, $http, $timeout, ApiEndpoint) {
+	.controller('IndexCtrl', ['$scope', '$http', '$timeout', 'ApiEndpoint','GetParams', function ($scope, $http, $timeout, ApiEndpoint,GetParams) {
 		// activeIndex(导航栏定位)
 		$scope.activeIndex = 1;
+
+        var urlParams = new GetParams.UrlSearch();
+        if(localStorage.isV == undefined){
+            if(urlParams.openId == undefined || urlParams.openId == ''){
+                alert('参数不合法');
+            }else{
+                alert('参数合法');
+                /*$http({
+                    method: 'POST',
+                    url: ApiEndpoint.url + '.do',
+                    data: $.param({
+                        
+                    }),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).success(function(data){
+
+                })*/
+                localStorage.isV = 1;
+                localStorage.userId = 123;
+            }
+        }
 
 		$http({
 			method: 'POST',
@@ -331,13 +335,68 @@ angular.module('fkliving.controller', ['fkliving.services'])
 	}])
 
 	//搜索
-	.controller('SearchCtrl', ['$scope', '$http', 'ApiEndpoint', function ($scope, $http, ApiEndpoint) {
+	.controller('SearchCtrl', ['$scope', '$http', 'ApiEndpoint', 'GetParams',function ($scope, $http, ApiEndpoint,GetParams) {
+        var urlParams = new GetParams.UrlSearch();
+        var searchName = urlParams.key;
 
+        function search() {
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'home/getNowTime.do',
+                data: $.param({}),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function(data){
+                if(data.errorCode == 0){
+                    var time = data.result;//获取时间戳
+                }
+            
+                $http({
+                    method: 'POST',
+                    url: ApiEndpoint.url + 'homePage/homePageSearch.do',
+                    data: $.param({
+                        serachName: $scope.searchName
+                    }),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).success(function (data) {
+                    if (data.errorCode == 0) {
+                        $scope.courseList = [];
+                        $scope.videoList = [];
+                        $scope.activityList = [];
+
+                        angular.forEach(data.result, function (value, key) {
+                            if (key == 'courseList') {
+                                $scope.courseList = data.result[key];
+                            } else if (key == 'videoList') {
+                                $scope.videoList = data.result[key];
+                            } else if (key == 'activityList') {
+                                var tmpActivityList = data.result[key];
+                                angular.forEach(tmpActivityList, function (value) {
+                                    if (time >= value.activityStartTime && time <= value.activityEndTime) {
+                                        //正在
+                                        value.newLiveStatus = 1;
+                                        $scope.activityList.push(value);
+                                    } else if (time < value.activityStartTime) {
+                                        // 即将
+                                        value.newLiveStatus = 0;
+                                        $scope.activityList.push(value);
+                                    } else if (time > value.activityEndTime) {
+                                        // 已结束
+                                        value.newLiveStatus = 2;
+                                        $scope.activityList.push(value);
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            })
+        }
+        search();
 	}])
 
 	
 	//直播
-	.controller('LivingCtrl', ['$scope', '$http','$timeout', 'ApiEndpoint', function ($scope, $http, $timeout,ApiEndpoint) {
+	.controller('LivingCtrl', ['$scope','$http','$timeout', 'ApiEndpoint', function ($scope, $http, $timeout,ApiEndpoint) {
 		// activeIndex(导航栏定位)
 		$scope.activeIndex = 3;
 
@@ -415,6 +474,11 @@ angular.module('fkliving.controller', ['fkliving.services'])
 		})
 
 
+
+
+
+
+        /*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@以下可以删除了@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
 
         /***********即将直播开始***********/
 
@@ -586,6 +650,8 @@ angular.module('fkliving.controller', ['fkliving.services'])
 
         /***********即将直播结束***********/
 
+        /*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@以上可以删除了@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+
 
 	}])
 
@@ -598,7 +664,7 @@ angular.module('fkliving.controller', ['fkliving.services'])
 		var urlParams = new GetParams.UrlSearch();
 		var liveId = urlParams.liveId;
 		var activityId = urlParams.activityId;
-		
+
 
 		$http({
             method: 'POST',
@@ -980,37 +1046,26 @@ angular.module('fkliving.controller', ['fkliving.services'])
             $scope.selectedLivingRecorded = 1;//显示直播
         }else if(homeBtn != ''){
             
-            if (homeBtn == 0) {//点击首页的推荐课程的'更多'过来的,需要显示录播
-                // $scope.selectedLivingRecorded = 2;//显示录播
+            if (homeBtn == 0) {//点击首页的推荐课程的'更多'过来的
                 getAllCourses();
             }else if(homeBtn == 1){
                 // 点击首页'内控'跳转至录播对应'内控筛选'课程
-                // $scope.selectedLivingRecorded = 2;
-                // $scope.typeData.typeId = 1;
                 $scope.typeName = '内控';
                 $scope.toggleType(1);
             }else if(homeBtn == 2){
                 // 点击首页'审计'跳转至录播对应'审计筛选'课程
-                // $scope.selectedLivingRecorded = 2;
-                // $scope.typeData.typeId = 2;
                 $scope.typeName = '审计';
                 $scope.toggleType(2);
             }else if(homeBtn == 3){
                 // 点击首页'财务'跳转至录播对应'财务筛选'课程
-                // $scope.selectedLivingRecorded = 2;
-                // $scope.typeData.typeId = 3;
                 $scope.typeName = '财务';
                 $scope.toggleType(3);
             }else if(homeBtn == 4){
                 // 点击首页'税务'跳转至录播对应'税务筛选'课程
-                // $scope.selectedLivingRecorded = 2;
-                // $scope.typeData.typeId = 4;
                 $scope.typeName = '税务';
                 $scope.toggleType(4);
             }else if(homeBtn == 5){
                 // 点击首页'风控'跳转至录播对应'风控筛选'课程
-                // $scope.selectedLivingRecorded = 2;
-                // $scope.typeData.typeId = 5;
                 $scope.typeName = '风控';
                 $scope.toggleType(5);
             }
@@ -1027,6 +1082,23 @@ angular.module('fkliving.controller', ['fkliving.services'])
 		var urlParams = new GetParams.UrlSearch();
 		$scope.courseId = urlParams.courseId;
 
+		$scope.addPunctuatin=function(){
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'punctuation/addPunctuationRecord.do',
+                data: $.param({
+                    userId:localStorage.userId,
+                     liveId:0,
+                     courseId:$scope.courseId,
+                     videoId:0,
+                     activityId:0
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function(data){
+
+            })
+        }
+        $scope.addPunctuatin();
 
 		$scope.currentCourseCollectPeople = 0;//课程收藏人数
         $scope.currentCourseEarnedPeople = 0;//课程点赞人数
@@ -1223,7 +1295,7 @@ angular.module('fkliving.controller', ['fkliving.services'])
                 // 获取课程名称
                 $scope.courseInfo.courseName = data.result.course.courseName;
                 // 获取课程价格
-                $scope.courseInfo.coursePrice = data.result.course.price;
+                $scope.courseInfo.price = data.result.course.price;
                 // 获取课程封面地址
                 $scope.courseInfo.imgUrl = data.result.course.imageUrl;
 
@@ -1235,28 +1307,144 @@ angular.module('fkliving.controller', ['fkliving.services'])
                 }
 
 
-                //如果课程免费,那么该课程下的所有课时肯定全部免费
-                if ($scope.courseInfo.coursePrice == 0) {
-                    console.log('课程免费');
-                    $scope.courseBuyStatus = false;
-                } else if ($scope.courseInfo.coursePrice > 0) {
-                    if ($scope.courseInfo.courseIsPay == 0) {
-                        console.log('课程收费且未支付');
-                        $scope.courseBuyStatus = true;
-                    } else if ($scope.courseInfo.courseIsPay == 1) {
-                        console.log('课程收费但已支付');
+                if(localStorage.isV == undefined){
+                    //如果课程免费,那么该课程下的所有课时肯定全部免费
+                    if ($scope.courseInfo.price == 0) {
+                        console.log('课程免费');
                         $scope.courseBuyStatus = false;
+                    } else if ($scope.courseInfo.price > 0) {
+                        if ($scope.courseInfo.courseIsPay == 0) {
+                            console.log('课程收费且未支付');
+                            $scope.courseBuyStatus = true;
+                        } else if ($scope.courseInfo.courseIsPay == 1) {
+                            console.log('课程收费但已支付');
+                            $scope.courseBuyStatus = false;
+                        }
                     }
+                }else if(localStorage.isV != undefined){
+                    $scope.courseBuyStatus = false;
                 }
             }
         })
 
 
         $scope.createCourseOrder = function () {
-            alert(1)
+            $('#courseConfirmOrder').modal('open');
+
+            $scope.courseConfirmOrderSubmit = function(){
+                $('#courseConfirmOrder').modal('close');
+                $('#selectCoursePayType').modal('open');
+            }
         }
 
+        // 课程选择支付方式--余额
+        $scope.courseBalancePay = function(){
+        	// 获取orderId进行下单
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'order/generateOrder.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    courseId: $scope.courseId,
+                    orderTurnover: $scope.courseInfo.price,
+                    orderName: '风控币下单',
+                    orderType: 3, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.courseInfo.courseName
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    Materialize.toast('下单成功',3000);
 
+                    var orderInfo = {};
+                    var orderInfo = data.result;
+
+                    window.location.href = 'balancePay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                } else {
+                    Materialize.toast('下单失败',3000);
+                }
+            })
+        }
+        // 课程选择支付方式--微信扫码
+        $scope.courseWechatPay = function () {
+            // 获取orderId进行下单
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'order/generateOrder.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    courseId: $scope.courseId,
+                    orderTurnover: $scope.courseInfo.price,
+                    orderName: '微信下单',
+                    orderType: 4, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.courseInfo.courseName
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    var orderInfo = {};
+                    var orderInfo = data.result;
+
+                    window.location.href = 'wechatPay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                }
+            })
+        }
+        // 课程选择支付方式--支付宝
+        $scope.courseAliPay = function () {
+            // 获取orderId进行下单
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'order/generateOrder.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    courseId: $scope.courseId,
+                    orderTurnover: $scope.courseInfo.price,
+                    orderName: '支付宝下单',
+                    orderType: 5, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.courseInfo.courseName
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    Materialize.toast('下单成功',3000);
+
+                    var orderInfo = {};
+                    var orderInfo = data.result;
+
+                    window.location.href = 'aliPay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                } else {
+                    Materialize.toast('下单失败',3000);
+                }
+            })
+        }
+        // 课程选择支付方式--体验券
+        $scope.courseCouponPay = function () {
+            // 获取orderId进行下单
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'order/generateOrder.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    courseId: $scope.courseId,
+                    orderTurnover: $scope.courseInfo.price,
+                    orderName: '体验券下单',
+                    orderType: 1, // orderType:1体验券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.courseInfo.courseName
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    var orderInfo = {};
+                    var orderInfo = data.result;
+
+                    window.location.href = 'couponPay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                }
+            })
+        }
 
 
 	}])
@@ -1273,6 +1461,23 @@ angular.module('fkliving.controller', ['fkliving.services'])
         $scope.hasCourse = false;
         $scope.btnBuyStatus = false;
 
+        $scope.addPunctuatin=function(){
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'punctuation/addPunctuationRecord.do',
+                data: $.param({
+                    userId:localStorage.userId,
+                     liveId:0,
+                     courseId:0,
+                     videoId:$scope.videoId,
+                     activityId:0
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function(data){
+
+            })
+        }
+        $scope.addPunctuatin();
 
 		//获取视频信息及准备播放器
         $scope.getVideoInfo = function () {
@@ -1396,6 +1601,8 @@ angular.module('fkliving.controller', ['fkliving.services'])
                     }).success(function (data) {
                         if (data.errorCode == 0) {
                             var courseInfo = data.result;
+                            $scope.courseInfo = data.result.course;
+                            
                             // courseIsPay课程付费状态: 0未付费  1已付费
                             var courseIsPay = courseInfo.courseVideoForH5[0].courseIspay;
 
@@ -1423,8 +1630,6 @@ angular.module('fkliving.controller', ['fkliving.services'])
                             }).success(function (data) {
                                 if (data.errorCode == 0) {
                                     var videoResult = data.result;
-                                    $scope.videoInfo = data.result;
-                                    console.log(videoResult);
                                     
                                     // 获取登录用户课时付费状态  selectType(查询类别):视频1 直播2 课程3 活动4
                                     function isPayStatus(selectType, videoId, liveId, courseId, activityId) {
@@ -1451,31 +1656,36 @@ angular.module('fkliving.controller', ['fkliving.services'])
                                             console.log(courseIsPay);//undefined #####################################这里有坑，取不到值，坑坑坑坑坑坑坑坑坑坑啊啊啊啊啊
                                             console.log($scope.courseIsPayStatus);
                                             //最终作判断
-                                            if (courseInfo.course.price == 0) {
-                                                console.log('课程免费');
-                                                $scope.btnBuyStatus = false;
-                                                videoPlay();
-                                            } else if (courseInfo.course.price > 0) {
-                                                if ($scope.courseIsPayStatus == 1) {
-                                                    console.log('课程收费但用户已付费');
+                                            if(localStorage.isV == undefined){
+                                                if (courseInfo.course.price == 0) {
+                                                    console.log('课程免费');
                                                     $scope.btnBuyStatus = false;
                                                     videoPlay();
-                                                } else if ($scope.courseIsPayStatus == 0) {
-                                                    if (videoResult.videoPrice == 0) {
-                                                        console.log('课程收费且用户未付费,但课时免费');
+                                                } else if (courseInfo.course.price > 0) {
+                                                    if ($scope.courseIsPayStatus == 1) {
+                                                        console.log('课程收费但用户已付费');
                                                         $scope.btnBuyStatus = false;
                                                         videoPlay();
-                                                    } else if (videoResult.videoPrice > 0) {
-                                                        if (videoPayStatus.isPay == 0) {
-                                                            console.log('课程收费且用户未付费,课时收费且用户未付费');
-                                                            $scope.btnBuyStatus = true;
-                                                        } else if (videoPayStatus.isPay > 0) {
-                                                            console.log('课程收费且用户未付费,课时收费但用户已付费');
+                                                    } else if ($scope.courseIsPayStatus == 0) {
+                                                        if (videoResult.videoPrice == 0) {
+                                                            console.log('课程收费且用户未付费,但课时免费');
                                                             $scope.btnBuyStatus = false;
                                                             videoPlay();
+                                                        } else if (videoResult.videoPrice > 0) {
+                                                            if (videoPayStatus.isPay == 0) {
+                                                                console.log('课程收费且用户未付费,课时收费且用户未付费');
+                                                                $scope.btnBuyStatus = true;
+                                                            } else if (videoPayStatus.isPay > 0) {
+                                                                console.log('课程收费且用户未付费,课时收费但用户已付费');
+                                                                $scope.btnBuyStatus = false;
+                                                                videoPlay();
+                                                            }
                                                         }
                                                     }
                                                 }
+                                            }else if(localStorage.isV != undefined){
+                                                $scope.btnBuyStatus = false;
+                                                videoPlay();
                                             }
 
                                         })
@@ -1501,10 +1711,8 @@ angular.module('fkliving.controller', ['fkliving.services'])
                         if (data.errorCode == 0) {
                             var videoResult = data.result;
 
-
                             // 获取登录用户视频的付费状态  selectType(查询类别):视频1 直播2 课程3 活动4
                             function isPayStatus(selectType, videoId, liveId, courseId, activityId) {
-                                console.log(localStorage.userId, selectType, videoId, liveId, courseId, activityId);
                                 $http.post(ApiEndpoint.url + "homePage/selectUserIsPayStatus.do", {}, {
                                     params: {
                                         userId: localStorage.userId,
@@ -1520,19 +1728,24 @@ angular.module('fkliving.controller', ['fkliving.services'])
 
 
                                     //最终作判断
-                                    if (videoResult.videoPrice == 0) {
-                                        console.log('视频免费');
-                                        $scope.btnBuyStatus = false;
-                                        videoPlay();
-                                    } else if (videoResult.videoPrice > 0) {
-                                        if (videoPayStatus.isPay == 0) {
-                                            console.log('视频收费且用户未付费');
-                                            $scope.btnBuyStatus = true;
-                                        } else if (videoPayStatus.isPay > 0) {
-                                            console.log('视频收费但用户已付费');
+                                    if(localStorage.isV == undefined){
+                                        if (videoResult.videoPrice == 0) {
+                                            console.log('视频免费');
                                             $scope.btnBuyStatus = false;
                                             videoPlay();
+                                        } else if (videoResult.videoPrice > 0) {
+                                            if (videoPayStatus.isPay == 0) {
+                                                console.log('视频收费且用户未付费');
+                                                $scope.btnBuyStatus = true;
+                                            } else if (videoPayStatus.isPay > 0) {
+                                                console.log('视频收费但用户已付费');
+                                                $scope.btnBuyStatus = false;
+                                                videoPlay();
+                                            }
                                         }
+                                    }else if(localStorage.isV != undefined){
+                                        $scope.btnBuyStatus = false;
+                                        videoPlay();
                                     }
 
                                 })
@@ -1723,10 +1936,10 @@ angular.module('fkliving.controller', ['fkliving.services'])
 
 
 
-        //获取录播详情--相关
+        //获取视频--相关
         $http({
             method: 'POST',
-            url: ApiEndpoint.url + 'comment/getvideoRelevant.do',
+            url: ApiEndpoint.url + 'video/getvideoRelevant.do',
             data: $.param({
                 videoId: $scope.videoId
             }),
@@ -1734,89 +1947,271 @@ angular.module('fkliving.controller', ['fkliving.services'])
         }).success(function (data) {
             if (data.errorCode == 0) {
                 $scope.videoRelevantList = data.result;
+                console.log(data.result);
             }
         })
 
 
+        // 购买课程视频、课程
         $scope.createCourseVideoOrder = function(){
             $('#createCourseVideoOrder').modal('open');
 
-            // 购买视频
-            $scope.hasCourse = false;
-            $scope.courseVideoConfirmOrderInfo = {};
+            // 购买课程视频
             $scope.buyCourseVideo = function(){
-                $http({
-                    method: 'POST',
-                    url: ApiEndpoint.url + 'video/getCourseIdByVideo.do',//根据videoId获取是否有courseId
-                    data: $.param({
-                        videoId: $scope.videoId
-                    }),
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                }).success(function(data){
-                    if(data.errorCode == 0){
-                        if(data.result == 0){
-                            $scope.hasCourse = false;
-                        }else if(data.result > 0){
-                            $scope.hasCourse = true;
-                            var courseId = data.result;
-                            //获取课程信息
-                            $http({
-                                method: 'POST',
-                                url: ApiEndpoint.url + 'course/getCourseById.do',
-                                data: $.param({
-                                    userId: localStorage.userId,
-                                    courseId: courseId,
-                                    // type(点赞类型):1直播 2视频 3课程
-                                    type: 3,
-                                    //collectType(收藏类型):1课程 2视频
-                                    collectType: 1
-                                }),
-                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                            }).success(function (data) {
-                                if (data.errorCode == 0) {
-                                    $scope.courseVideoConfirmOrderInfo.courseName = data.result.course.courseName;
-                                }
-                            })
-                        }
-                    }
-                })
+                $('#createCourseVideoOrder').modal('close');
+                $('#courseVideoConfirmOrder').modal('open');
 
+                $scope.courseVideoConfirmOrderSubmit = function(){
+                    $('#courseVideoConfirmOrder').modal('close');
+                    // 选择支付方式
+                    $('#selectPayType').modal('open');
+                }
+            }
 
+            // 购买课程
+            $scope.buyCourse = function(){
+                $('#createCourseVideoOrder').modal('close');
+                $('#courseConfirmOrder').modal('open');
 
-                $http({
-                    method: 'POST',
-                    url: ApiEndpoint.url + 'video/getVideoById.do',
-                    data: $.param({
-                        videoId: $scope.videoId
-                    }),
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                }).success(function(data){
-                    if(data.errorCode == 0){
-                        console.log(data.result);
-                        $scope.courseVideoConfirmOrderInfo.videoName = data.result.videoName;
-                        $scope.courseVideoConfirmOrderInfo.videoPrice = data.result.videoPrice;
+                $scope.courseConfirmOrderSubmit = function(){
+                    $('#courseConfirmOrder').modal('close');
+                    // 选择支付方式
+                    $('#selectCoursePayType').modal('open');
+                }
+            }
+        }
 
-                        //获取orderId
-                        $http({
-                            method: 'POST',
-                            url: ApiEndpoint.url + 'order/generateOrder.do',
-                            data: $.param({
-                                userId: localStorage.userId,
-                                videoId: $scope.videoId,
-                                orderTurnover: $scope.courseVideoConfirmOrderInfo.videoPrice
-                            }),
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                        }).success(function (data) {
-                            if (data.errorCode == 0) {
-                                $scope.orderId = data.result.orderId;
-                            }
-                        })
-                    }
-                })
+        // 购买不属于课程的视频
+        $scope.createVideoOrder = function(){
+            $('#videoConfirmOrder').modal('open');
+
+            $scope.videoConfirmOrderSubmit = function(){
+                $('#videoConfirmOrder').modal('close');
+                // 选择支付方式
+                $('#selectPayType').modal('open');
             }
         }
 
 
+        // 视频选择支付方式--余额
+        $scope.balancePay = function(){
+        	// 获取orderId进行下单
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'order/generateOrder.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    videoId: $scope.videoId,
+                    orderTurnover: $scope.videoResult.videoPrice,
+                    orderName: '风控币下单',
+                    orderType: 3, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.videoResult.videoName
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    Materialize.toast('下单成功',3000);
+
+                    var orderInfo = {};
+                    var orderInfo = data.result;
+
+                    window.location.href = 'balancePay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                } else {
+                    Materialize.toast('下单失败',3000);
+                }
+            })
+        }
+        // 视频选择支付方式--微信
+        $scope.wechatPay = function () {
+            // 获取orderId进行下单
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'order/generateOrder.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    videoId: $scope.videoId,
+                    orderTurnover: $scope.videoResult.videoPrice,
+                    orderName: '微信下单',
+                    orderType: 4, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.videoResult.videoName
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    var orderInfo = {};
+                    var orderInfo = data.result;
+
+                    window.location.href = 'wechatPay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                }
+            })
+        }
+        // 视频选择支付方式--支付宝
+        $scope.aliPay = function () {
+            // 获取orderId进行下单
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'order/generateOrder.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    videoId: $scope.videoId,
+                    orderTurnover: $scope.videoResult.videoPrice,
+                    orderName: '支付宝下单',
+                    orderType: 5, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.videoResult.videoName
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    Materialize.toast('下单成功',3000);
+
+                    var orderInfo = {};
+                    var orderInfo = data.result;
+
+                    window.location.href = 'aliPay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                } else {
+                    Materialize.toast('下单失败',3000);
+                }
+            })
+        }
+        // 视频选择支付方式--体验券
+        $scope.couponPay = function () {
+            // 获取orderId进行下单
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'order/generateOrder.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    videoId: $scope.videoId,
+                    orderTurnover: $scope.videoResult.videoPrice,
+                    orderName: '体验券下单',
+                    orderType: 1, // orderType:1体验券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.videoResult.videoName
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    var orderInfo = {};
+                    var orderInfo = data.result;
+
+                    window.location.href = 'couponPay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                }
+            })
+        }
+
+
+
+        // 课程选择支付方式--余额
+        $scope.courseBalancePay = function(){
+        	// 获取orderId进行下单
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'order/generateOrder.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    courseId: $scope.courseInfo.courseId,
+                    orderTurnover: $scope.courseInfo.price,
+                    orderName: '风控币下单',
+                    orderType: 3, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.courseInfo.courseName
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    Materialize.toast('下单成功',3000);
+
+                    var orderInfo = {};
+                    var orderInfo = data.result;
+
+                    window.location.href = 'balancePay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                } else {
+                    Materialize.toast('下单失败',3000);
+                }
+            })
+        }
+        // 课程选择支付方式--微信
+        $scope.courseWechatPay = function () {
+            // 获取orderId进行下单
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'order/generateOrder.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    courseId: $scope.courseInfo.courseId,
+                    orderTurnover: $scope.courseInfo.price,
+                    orderName: '微信下单',
+                    orderType: 4, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.courseInfo.courseName
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    var orderInfo = {};
+                    var orderInfo = data.result;
+
+                    window.location.href = 'wechatPay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                }
+            })
+        }
+        // 课程选择支付方式--支付宝
+        $scope.courseAliPay = function () {
+            // 获取orderId进行下单
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'order/generateOrder.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    courseId: $scope.courseInfo.courseId,
+                    orderTurnover: $scope.courseInfo.price,
+                    orderName: '支付宝下单',
+                    orderType: 5, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.courseInfo.courseName
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    Materialize.toast('下单成功',3000);
+
+                    var orderInfo = {};
+                    var orderInfo = data.result;
+
+                    window.location.href = 'aliPay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                } else {
+                    Materialize.toast('下单失败',3000);
+                }
+            })
+        }
+        // 课程选择支付方式--体验券
+        $scope.courseCouponPay = function () {
+            // 获取orderId进行下单
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'order/generateOrder.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    courseId: $scope.courseInfo.courseId,
+                    orderTurnover: $scope.courseInfo.price,
+                    orderName: '体验券下单',
+                    orderType: 1, // orderType:1体验券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.courseInfo.courseName
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    var orderInfo = {};
+                    var orderInfo = data.result;
+
+                    window.location.href = 'couponPay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                }
+            })
+        }
 
 	}])
 
@@ -2024,7 +2419,7 @@ angular.module('fkliving.controller', ['fkliving.services'])
 
 	}])
 
-	// 线下活动详情(包括特训营和公开课)
+	// 活动--线下活动详情(包括特训营和公开课)
 	.controller('ActivityDetailCtrl',['$scope', '$http', 'ApiEndpoint','GetParams', function ($scope, $http, ApiEndpoint,GetParams){
 		// activeIndex(导航栏定位)
 		$scope.activeIndex = 4;
@@ -2032,13 +2427,24 @@ angular.module('fkliving.controller', ['fkliving.services'])
 		var urlParams = new GetParams.UrlSearch();
 		$scope.activityId = urlParams.activityId;
 
-		/*// 未报名
-        $scope.notEnroll = false;
-        // 已报名但未支付
-        $scope.enrolled = false;
-        // 已结束但未支付
-        $scope.notPayEndedActivity = false;*/
 
+		$scope.addPunctuatin=function(){
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'punctuation/addPunctuationRecord.do',
+                data: $.param({
+                    userId:localStorage.userId,
+                     liveId:0,
+                     courseId:0,
+                     videoId:0,
+                     activityId:$scope.activityId
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function(data){
+
+            })
+        }
+        $scope.addPunctuatin();
 
         // 即将直播、正在直播报名状态livingEnrollStatus：false未报名  true已报名
         $scope.livingEnrollStatus = false;
@@ -2047,142 +2453,140 @@ angular.module('fkliving.controller', ['fkliving.services'])
         /*// 线下已结束活动支付状态
         $scope.endedAtivityStatus = false;*/
 
+        function getActivityInfo(){
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'home/getNowTime.do',
+                data: $.param({}),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    var time = data.result;
 
-        $http({
-            method: 'POST',
-            url: ApiEndpoint.url + 'home/getNowTime.do',
-            data: $.param({}),
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        }).success(function (data) {
-            if (data.errorCode == 0) {
-                var time = data.result;
+                    $http({
+                        method: 'POST',
+                        url: ApiEndpoint.url + 'activity/getActivityById.do',
+                        data: $.param({
+                            userId: localStorage.userId,
+                            activityId: $scope.activityId,
+                            enrollType: 2    //1直播报名  2活动报名
+                        }),
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                    }).success(function (data) {
+                        if (data.errorCode == 0) {
+                            $scope.activityInfo = data.result.activity;
+                            console.log($scope.activityInfo);
 
-                $http({
-                    method: 'POST',
-                    url: ApiEndpoint.url + 'activity/getActivityById.do',
-                    data: $.param({
-                        userId: localStorage.userId,
-                        activityId: $scope.activityId,
-                        enrollType: 2    //1直播报名  2活动报名
-                    }),
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                }).success(function (data) {
-                    if (data.errorCode == 0) {
-                        $scope.activityInfo = data.result.activity;
-                        console.log($scope.activityInfo);
-
-                        //enrollStatus(报名状态):0未报名  1已报名
-                        $scope.activityEnroll = data.result.enrollStatus;
-
-
-                        var activityDescription = data.result.activity.activityDescription;
-                        $('#j-activityDetail').html(activityDescription);
+                            //enrollStatus(报名状态):0未报名  1已报名
+                            $scope.activityEnroll = data.result.enrollStatus;
 
 
-                        // activityType(活动类型): 1内  2审  3财  4税  5风
-                        // 活动--相关(根据activityType获取活动的相关活动列表)
-                        $http({
-                            method: 'POST',
-                            url: ApiEndpoint.url + 'activity/getAllActivityList.do',
-                            data: $.param({
-                                activityType: $scope.activityInfo.activityType
-                            }),
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                        }).success(function (data) {
-                            if (data.errorCode == 0) {
-                                var activityRelatedResult = data.result;
+                            var activityDescription = data.result.activity.activityDescription;
+                            $('#j-activityDetail').html(activityDescription);
 
-                                $scope.activityRelatedList = [];
 
-                                // 相关列表去除本身
-                                if (activityRelatedResult.length > 0) {
-                                    angular.forEach(activityRelatedResult, function (value) {
-                                        if ($scope.activityId != value.activityId) {
-                                            $scope.activityRelatedList.push(value);
+                            // activityType(活动类型): 1内  2审  3财  4税  5风
+                            // 活动--相关(根据activityType获取活动的相关活动列表)
+                            $http({
+                                method: 'POST',
+                                url: ApiEndpoint.url + 'activity/getAllActivityList.do',
+                                data: $.param({
+                                    activityType: $scope.activityInfo.activityType
+                                }),
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                            }).success(function (data) {
+                                if (data.errorCode == 0) {
+                                    var activityRelatedResult = data.result;
+
+                                    $scope.activityRelatedList = [];
+
+                                    // 相关列表去除本身
+                                    if (activityRelatedResult.length > 0) {
+                                        angular.forEach(activityRelatedResult, function (value) {
+                                            if ($scope.activityId != value.activityId) {
+                                                $scope.activityRelatedList.push(value);
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+
+
+
+                            // newActivityStatus用于判断活动状态
+                            if (time < $scope.activityInfo.activityStartTime) {
+                                // 即将开始
+                                $scope.activityInfo.newActivityStatus = 1;
+                            } else if (time >= $scope.activityInfo.activityStartTime && time <= $scope.activityInfo.activityEndTime) {
+                                // 正在进行
+                                $scope.activityInfo.newActivityStatus = 2;
+                            } else if (time > $scope.activityInfo.activityEndTime) {
+                                // 已结束
+                                $scope.activityInfo.newActivityStatus = 3;
+                            }
+
+
+
+
+                            $http({
+                                method: 'POST',
+                                url: ApiEndpoint.url + 'order/getOrderByActivityAndUserId.do',
+                                data: $.param({
+                                    userId: localStorage.userId,
+                                    activityId: $scope.activityId
+                                }),
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                            }).success(function (data) {
+                                if (data.errorCode == 0) {
+                                    // total:1已支付  未支付
+                                    $scope.activityPayStatus = data.total;
+                                    
+                                    if(localStorage.isV == undefined){
+                                        $scope.isV = false;
+                                        // (线下活动)即将进行 未报名
+                                        if($scope.activityInfo.newActivityStatus == 1 && $scope.activityEnroll == 0){
+                                            $scope.livingEnrollStatus = false;
                                         }
-                                    })
+                                        // (线下活动)即将进行 已报名但未支付
+                                        else if($scope.activityInfo.newActivityStatus == 1 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 2){
+                                            $scope.livingEnrollStatus = true;
+                                            $scope.livingPayStatus = false;
+                                        }
+                                        // (线下活动)即将进行 已报名且已支付
+                                        else if($scope.activityInfo.newActivityStatus == 1 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 1){
+                                            $scope.livingEnrollStatus = true;
+                                            $scope.livingPayStatus = true;
+                                        }
+
+
+                                        // (线下活动)正在进行 未报名
+                                        if($scope.activityInfo.newActivityStatus == 2 && $scope.activityEnroll == 0){
+                                            $scope.livingEnrollStatus = false;
+                                        }
+                                        // (线下活动)正在进行 已报名但未支付
+                                        else if($scope.activityInfo.newActivityStatus == 2 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 2){
+                                            $scope.livingEnrollStatus = true;
+                                            $scope.livingPayStatus = false;
+                                        }
+                                        // (线下活动)正在进行 已报名且已支付
+                                        else if($scope.activityInfo.newActivityStatus == 2 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 1){
+                                            $scope.livingEnrollStatus = true;
+                                            $scope.livingPayStatus = true;
+                                        }
+                                    }else if(localStorage.isV != undefined){
+                                        $scope.isV = true;
+                                        $scope.livingEnrollStatus = true;
+                                        $scope.livingPayStatus = true;
+                                    }
+
                                 }
-                            }
-                        })
-
-
-
-                        // newActivityStatus用于判断活动状态
-                        if (time < $scope.activityInfo.activityStartTime) {
-                            // 即将开始
-                            $scope.activityInfo.newActivityStatus = 1;
-                        } else if (time >= $scope.activityInfo.activityStartTime && time <= $scope.activityInfo.activityEndTime) {
-                            // 正在进行
-                            $scope.activityInfo.newActivityStatus = 2;
-                        } else if (time > $scope.activityInfo.activityEndTime) {
-                            // 已结束
-                            $scope.activityInfo.newActivityStatus = 3;
+                            })
                         }
-
-
-
-
-                        $http({
-                            method: 'POST',
-                            url: ApiEndpoint.url + 'order/getOrderByActivityAndUserId.do',
-                            data: $.param({
-                                userId: localStorage.userId,
-                                activityId: $scope.activityId
-                            }),
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                        }).success(function (data) {
-                            if (data.errorCode == 0) {
-                                // total:1已支付  未支付
-                                $scope.activityPayStatus = data.total;
-                                
-
-                                // (线下活动)即将进行 未报名
-                                if($scope.activityInfo.newActivityStatus == 1 && $scope.activityEnroll == 0){
-                                    $scope.livingEnrollStatus = false;
-                                }
-                                // (线下活动)即将进行 已报名但未支付
-                                else if($scope.activityInfo.newActivityStatus == 1 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 2){
-                                    $scope.livingEnrollStatus = true;
-                                    $scope.livingPayStatus = false;
-                                }
-                                // (线下活动)即将进行 已报名且已支付
-                                else if($scope.activityInfo.newActivityStatus == 1 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 1){
-                                    $scope.livingEnrollStatus = true;
-                                    $scope.livingPayStatus = true;
-                                }
-
-
-                                // (线下活动)正在进行 未报名
-                                if($scope.activityInfo.newActivityStatus == 2 && $scope.activityEnroll == 0){
-                                    $scope.livingEnrollStatus = false;
-                                }
-                                // (线下活动)正在进行 已报名但未支付
-                                else if($scope.activityInfo.newActivityStatus == 2 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 2){
-                                    $scope.livingEnrollStatus = true;
-                                    $scope.livingPayStatus = false;
-                                }
-                                // (线下活动)正在进行 已报名且已支付
-                                else if($scope.activityInfo.newActivityStatus == 2 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 1){
-                                    $scope.livingEnrollStatus = true;
-                                    $scope.livingPayStatus = true;
-                                }
-
-
-                                /*// (线下活动)已结束 未支付
-                                if($scope.activityInfo.newActivityStatus == 3 && $scope.activityPayStatus == 2){
-                                    $scope.endedAtivityStatus = false;
-                                }
-                                // (线下活动)已结束 已支付
-                                else if($scope.activityInfo.newActivityStatus == 3 && $scope.activityPayStatus == 1){
-                                    $scope.endedAtivityStatus = true;
-                                }*/
-
-                            }
-                        })
-                    }
-                })
-            }
-        })
+                    })
+                }
+            })
+        }
+        getActivityInfo();
 
 
 		// 活动--讲师
@@ -2204,17 +2608,30 @@ angular.module('fkliving.controller', ['fkliving.services'])
         // 1.即将进行和正在进行  点击'立即报名'
         $scope.livingApply = function(){
         	// 填写报名信息后提交
+            $scope.livingApplyInfo = {};
+            $http({
+	            method: 'POST',
+	            url: ApiEndpoint.url + 'user/getUserByUserId.do',
+	            data: $.param({
+	                userId: localStorage.userId
+	            }),
+	            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+	        }).success(function (data) {
+	            if (data.errorCode == 0) {
+	                $scope.livingApplyInfo = data.result;
+	            }
+	        })
         	$('#livingApply').modal('open');
-        	$scope.livingApplyInfo = {};
+        	
 	        $scope.livingApplySubmit = function () {
 	            $http({
 	                method: 'POST',
 	                url: ApiEndpoint.url + 'enroll/addEnroll.do',
 	                data: $.param({
 	                    userId: localStorage.userId,
-	                    enrollName:$scope.livingApplyInfo.enrollName,
-	                    mobile: $scope.livingApplyInfo.contactWay,
-	                    company: $scope.livingApplyInfo.companyName,
+	                    enrollName:$scope.livingApplyInfo.userName,
+	                    mobile: $scope.livingApplyInfo.userPhone,
+	                    company: $scope.livingApplyInfo.userCompany,
 	                    objectId: $scope.activityId,
 	                    enrollType: 2  //enrollType:1直播报名  2活动报名
 	                }),
@@ -2223,7 +2640,7 @@ angular.module('fkliving.controller', ['fkliving.services'])
 	                if (data.errorCode == 0) {
 	                    Materialize.toast('报名成功',3000);
 
-	                    getSalonInfo();//更新报名状态
+	                    getActivityInfo();//更新报名状态
 
 	                    $('#livingApply').modal('close');
 
@@ -2317,7 +2734,9 @@ angular.module('fkliving.controller', ['fkliving.services'])
                     activityId: $scope.activityId,
                     orderTurnover: $scope.activityInfo.activityPrice,
                     orderName: '风控币下单',
-                    orderType: 3 // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    orderType: 3, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.activityInfo.activityName
                 }),
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).success(function (data) {
@@ -2344,7 +2763,9 @@ angular.module('fkliving.controller', ['fkliving.services'])
                     activityId: $scope.activityId,
                     orderTurnover: $scope.activityInfo.activityPrice,
                     orderName: '微信下单',
-                    orderType: 4 // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    orderType: 4, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.activityInfo.activityName
                 }),
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).success(function (data) {
@@ -2367,7 +2788,9 @@ angular.module('fkliving.controller', ['fkliving.services'])
                     activityId: $scope.activityId,
                     orderTurnover: $scope.activityInfo.activityPrice,
                     orderName: '支付宝下单',
-                    orderType: 5 // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    orderType: 5, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.activityInfo.activityName
                 }),
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).success(function (data) {
@@ -2394,7 +2817,9 @@ angular.module('fkliving.controller', ['fkliving.services'])
                     activityId: $scope.activityId,
                     orderTurnover: $scope.activityInfo.activityPrice,
                     orderName: '体验券下单',
-                    orderType: 1 // orderType:1体验券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    orderType: 1, // orderType:1体验券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.activityInfo.activityName
                 }),
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).success(function (data) {
@@ -2402,18 +2827,10 @@ angular.module('fkliving.controller', ['fkliving.services'])
                     var orderInfo = {};
                     var orderInfo = data.result;
 
-                    /*$state.go('change_coupon', {
-                        orderId: orderInfo.orderId
-                    });*/
                     window.location.href = 'couponPay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
                 }
             })
         }
-
-
-
-
-
 
 	}])
 
@@ -2443,7 +2860,6 @@ angular.module('fkliving.controller', ['fkliving.services'])
 		var urlParams = new GetParams.UrlSearch();
 		$scope.activityId = urlParams.activityId;
 		$scope.liveId = urlParams.liveId;
-		console.log($scope.activityId,$scope.liveId);
 
 
         // 即将直播、正在直播报名状态livingEnrollStatus：false未报名  true已报名
@@ -2452,6 +2868,23 @@ angular.module('fkliving.controller', ['fkliving.services'])
         $scope.livingPayStatus = false;
         
 
+        $scope.addPunctuatin=function(){
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'punctuation/addPunctuationRecord.do',
+                data: $.param({
+                    userId:localStorage.userId,
+                     liveId:0,
+                     courseId:0,
+                     videoId:$scope.liveId,
+                     activityId:0
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function(data){
+
+            })
+        }
+        $scope.addPunctuatin();
 
         function getSalonInfo(){
 	        $http({
@@ -2539,37 +2972,43 @@ angular.module('fkliving.controller', ['fkliving.services'])
 	                                // total:1已支付  未支付
 	                                $scope.activityPayStatus = data.total;
 	                                
+                                    if(localStorage.isV == undefined){
+                                        $scope.isV = false;
+                                        // 即将直播 未报名
+                                        if($scope.activityInfo.newActivityStatus == 1 && $scope.activityEnroll == 0){
+                                            $scope.livingEnrollStatus = false;
+                                        }
+                                        // 即将直播 已报名但未支付
+                                        else if($scope.activityInfo.newActivityStatus == 1 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 2){
+                                            $scope.livingEnrollStatus = true;
+                                            $scope.livingPayStatus = false;
+                                        }
+                                        // 即将直播 已报名且已支付
+                                        else if($scope.activityInfo.newActivityStatus == 1 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 1){
+                                            $scope.livingEnrollStatus = true;
+                                            $scope.livingPayStatus = true;
+                                        }
 
-	                                // 即将直播 未报名
-	                                if($scope.activityInfo.newActivityStatus == 1 && $scope.activityEnroll == 0){
-	                                    $scope.livingEnrollStatus = false;
-	                                }
-	                                // 即将直播 已报名但未支付
-	                                else if($scope.activityInfo.newActivityStatus == 1 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 2){
-	                                    $scope.livingEnrollStatus = true;
-	                                    $scope.livingPayStatus = false;
-	                                }
-	                                // 即将直播 已报名且已支付
-	                                else if($scope.activityInfo.newActivityStatus == 1 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 1){
-	                                    $scope.livingEnrollStatus = true;
-	                                    $scope.livingPayStatus = true;
-	                                }
 
-
-	                                // 即将直播、正在直播 未报名
-	                                if($scope.activityInfo.newActivityStatus == 2 && $scope.activityEnroll == 0){
-	                                    $scope.livingEnrollStatus = false;
-	                                }
-	                                // 即将直播、正在直播 已报名但未支付
-	                                else if($scope.activityInfo.newActivityStatus == 2 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 2){
-	                                    $scope.livingEnrollStatus = true;
-	                                    $scope.livingPayStatus = false;
-	                                }
-	                                // 即将直播、正在直播 已报名且已支付
-	                                else if($scope.activityInfo.newActivityStatus == 2 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 1){
-	                                    $scope.livingEnrollStatus = true;
-	                                    $scope.livingPayStatus = true;
-	                                }
+                                        // 即将直播、正在直播 未报名
+                                        if($scope.activityInfo.newActivityStatus == 2 && $scope.activityEnroll == 0){
+                                            $scope.livingEnrollStatus = false;
+                                        }
+                                        // 即将直播、正在直播 已报名但未支付
+                                        else if($scope.activityInfo.newActivityStatus == 2 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 2){
+                                            $scope.livingEnrollStatus = true;
+                                            $scope.livingPayStatus = false;
+                                        }
+                                        // 即将直播、正在直播 已报名且已支付
+                                        else if($scope.activityInfo.newActivityStatus == 2 && $scope.activityEnroll == 1 && $scope.activityPayStatus == 1){
+                                            $scope.livingEnrollStatus = true;
+                                            $scope.livingPayStatus = true;
+                                        }
+                                    }else if(localStorage.isV != undefined){
+                                        $scope.isV = true;
+                                        $scope.livingEnrollStatus = true;
+                                        $scope.livingPayStatus = true;
+                                    }
 
 	                            }
 	                        })
@@ -2601,17 +3040,31 @@ angular.module('fkliving.controller', ['fkliving.services'])
         // 1.即将直播 点击'立即报名'
         $scope.livingApply = function(){
         	// 填写报名信息后提交
+            $scope.livingApplyInfo = {};
+            $http({
+	            method: 'POST',
+	            url: ApiEndpoint.url + 'user/getUserByUserId.do',
+	            data: $.param({
+	                userId: localStorage.userId
+	            }),
+	            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+	        }).success(function (data) {
+	            if (data.errorCode == 0) {
+	                $scope.livingApplyInfo = data.result;
+	            }
+	        })
         	$('#livingApply').modal('open');
-        	$scope.livingApplyInfo = {};
+
+        	
 	        $scope.livingApplySubmit = function () {
 	            $http({
 	                method: 'POST',
 	                url: ApiEndpoint.url + 'enroll/addEnroll.do',
 	                data: $.param({
 	                    userId: localStorage.userId,
-	                    enrollName:$scope.livingApplyInfo.enrollName,
-	                    mobile: $scope.livingApplyInfo.contactWay,
-	                    company: $scope.livingApplyInfo.companyName,
+	                    enrollName:$scope.livingApplyInfo.userName,
+	                    mobile: $scope.livingApplyInfo.userPhone,
+	                    company: $scope.livingApplyInfo.userCompany,
 	                    objectId: $scope.activityId,
 	                    enrollType: 2  //enrollType:1直播报名  2活动报名
 	                }),
@@ -2701,7 +3154,9 @@ angular.module('fkliving.controller', ['fkliving.services'])
                     activityId: $scope.activityId,
                     orderTurnover: $scope.activityInfo.activityPrice,
                     orderName: '风控币下单',
-                    orderType: 3 // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    orderType: 3, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.activityInfo.activityName
                 }),
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).success(function (data) {
@@ -2728,7 +3183,9 @@ angular.module('fkliving.controller', ['fkliving.services'])
                     activityId: $scope.activityId,
                     orderTurnover: $scope.activityInfo.activityPrice,
                     orderName: '微信下单',
-                    orderType: 4 // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    orderType: 4, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.activityInfo.activityName
                 }),
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).success(function (data) {
@@ -2751,7 +3208,9 @@ angular.module('fkliving.controller', ['fkliving.services'])
                     activityId: $scope.activityId,
                     orderTurnover: $scope.activityInfo.activityPrice,
                     orderName: '支付宝下单',
-                    orderType: 5 // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    orderType: 5, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.activityInfo.activityName
                 }),
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).success(function (data) {
@@ -2778,7 +3237,9 @@ angular.module('fkliving.controller', ['fkliving.services'])
                     activityId: $scope.activityId,
                     orderTurnover: $scope.activityInfo.activityPrice,
                     orderName: '体验券下单',
-                    orderType: 1 // orderType:1体验券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    orderType: 1, // orderType:1体验券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                    payPath: 2,
+                    shoppingName : $scope.activityInfo.activityName
                 }),
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).success(function (data) {
@@ -2797,7 +3258,7 @@ angular.module('fkliving.controller', ['fkliving.services'])
 	}])
 
 	//余额支付
-	.controller('BalancePayCtrl', ['$scope', '$http','$timeout', 'ApiEndpoint','GetParams', function ($scope, $http,$timeout, ApiEndpoint,GetParams) {
+	.controller('BalancePayCtrl', ['$scope', '$http','$interval', 'ApiEndpoint','GetParams', function ($scope, $http,$interval, ApiEndpoint,GetParams) {
 		// $scope.activeIndex = 4;
 		var params = new GetParams.UrlSearch();
 		$scope.orderInfo = {};
@@ -2805,6 +3266,10 @@ angular.module('fkliving.controller', ['fkliving.services'])
         $scope.orderInfo.orderCode = params.orderCode;
         $scope.orderInfo.orderTurnover = params.orderTurnover / 100;
         $scope.orderInfo.description = params.description;
+
+        $scope.goBack = function(){
+            window.history.go(-1);
+        }
 
 		$scope.balancePaySubmit = function () {
             $http({
@@ -2820,10 +3285,19 @@ angular.module('fkliving.controller', ['fkliving.services'])
             }).success(function (data) {
                 console.log(data.result);
                 if (data.errorCode == 0) {
-                    Materialize.toast('支付成功',3000);
-                    $timeout(function(){
-	                    window.history.go(-1);
-                    },3000)
+
+                    $('#balancePayModal').modal('open');
+                    $scope.balancePayTime = 3;
+                    var timer = $interval(function(){
+                        $scope.balancePayTime --;
+                        if($scope.balancePayTime == 0){
+                            $('#balancePayModal').modal('close');
+                            $interval.cancel(timer);
+                            $scope.goBack();
+                        }
+                    },1000)
+                }else{
+                    Materialize.toast(data.errorMessage,3000);
                 }
             })
         }
@@ -2865,7 +3339,7 @@ angular.module('fkliving.controller', ['fkliving.services'])
         }
 	}])
 
-	//微信支付
+	//微信扫码支付
 	.controller('WechatPayCtrl', ['$scope', '$http', 'ApiEndpoint','GetParams', function ($scope, $http, ApiEndpoint,GetParams) {
 		var params = new GetParams.UrlSearch();
 		$scope.orderInfo = {};
@@ -2873,25 +3347,6 @@ angular.module('fkliving.controller', ['fkliving.services'])
         $scope.orderInfo.orderCode = params.orderCode;
         $scope.orderInfo.orderTurnover = params.orderTurnover / 100;
         $scope.orderInfo.description = params.description;
-
-		$scope.wechatPaySubmit = function () {
-            /*$http({
-                method: 'POST',
-                url: ApiEndpoint.url + 'order/userBalancePay.do',
-                data: $.param({
-                    userId: localStorage.userId,
-                    payType: 3,  //1入场券支付  2线下支付  3余额支付 4 微信支付  5支付宝支付
-                    orderId: $scope.orderInfo.orderId,
-                    totalPrice: $scope.orderInfo.orderTurnover * 100
-                }),
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            }).success(function (data) {
-                console.log(data.result);
-                if (data.errorCode == 0) {
-                    Materialize.toast('支付成功',3000);
-                }
-            })*/
-        }
 
         $http({
             method: 'POST',
@@ -2916,8 +3371,13 @@ angular.module('fkliving.controller', ['fkliving.services'])
         })
 	}])
 
+    .factory('CouponService', function () {
+        return {
+            couponInfo: {}
+        }
+    })
 	//体验券支付
-	.controller('CouponPayCtrl', ['$scope', '$http', 'ApiEndpoint','GetParams', function ($scope, $http, ApiEndpoint,GetParams) {
+	.controller('CouponPayCtrl', ['$scope', '$http','$timeout', 'ApiEndpoint','GetParams','CouponService', function ($scope, $http,$timeout, ApiEndpoint,GetParams,CouponService) {
 		var params = new GetParams.UrlSearch();
 		$scope.orderInfo = {};
         $scope.orderInfo.orderId = params.orderId;
@@ -2925,13 +3385,62 @@ angular.module('fkliving.controller', ['fkliving.services'])
         $scope.orderInfo.orderTurnover = params.orderTurnover / 100;
         $scope.orderInfo.description = params.description;
 
-		$scope.couponPaySubmit = function () {
-            /*$http({
+
+        function getcouponList(){
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'coupon/getUserCouponList.do',
+                data: $.param({
+                    userId: localStorage.userId
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    $scope.couponList = data.result;
+                }
+            })
+        }
+        getcouponList();
+
+        $scope.selectCoupon = function (e, couponId) {
+            CouponService.couponInfo.couponId = couponId;
+        }
+
+
+        $scope.couponPaySubmit = function () {
+            if (CouponService.couponInfo.couponId == undefined) {
+                Materialize.toast('请选择体验券',3000);
+                return;
+            }
+
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'order/reedeemPay.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    orderId: $scope.orderInfo.orderId,
+                    couponId: CouponService.couponInfo.couponId
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    Materialize.toast('支付成功',2000);
+                    getcouponList();
+                    $timeout(function(){
+                        window.history.go(-1);
+                    },3000);
+                }
+            })
+        }
+
+
+		/*$scope.couponPaySubmit1 = function () {
+            $http({
                 method: 'POST',
                 url: ApiEndpoint.url + 'order/userBalancePay.do',
                 data: $.param({
                     userId: localStorage.userId,
-                    payType: 3,  //1入场券支付  2线下支付  3余额支付 4 微信支付  5支付宝支付
+                    payType: 1,  //1入场券支付  2线下支付  3余额支付 4 微信支付  5支付宝支付
                     orderId: $scope.orderInfo.orderId,
                     totalPrice: $scope.orderInfo.orderTurnover * 100
                 }),
@@ -2941,14 +3450,19 @@ angular.module('fkliving.controller', ['fkliving.services'])
                 if (data.errorCode == 0) {
                     Materialize.toast('支付成功',3000);
                 }
-            })*/
-        }
+            })
+        }*/
+
 	}])
 
-
+    .factory('PayType', function () {
+        return {
+            payType: {}
+        }
+    })
 	//个人中心
-	.controller('PersonalCenterCtrl', ['$scope', '$http','ApiEndpoint','GetParams', function ($scope, $http,ApiEndpoint,GetParams) {
-		//用户资料
+	.controller('PersonalCenterCtrl', ['$scope','$rootScope', '$http','ApiEndpoint','GetParams', 'PayType',function ($scope, $rootScope,$http,ApiEndpoint,GetParams,PayType) {
+		//1.用户资料
 		$scope.userData = function(item){
 			$scope.item = item;
 		
@@ -2962,7 +3476,6 @@ angular.module('fkliving.controller', ['fkliving.services'])
 	        }).success(function (data) {
 	            if (data.errorCode == 0) {
 	                $scope.user = data.result;
-	                console.log($scope.user);
 	                if($scope.user.userSex == '男'){
 	                	$scope.user.sex = 1;
 	                }else if($scope.user.userSex == '女'){
@@ -2978,7 +3491,7 @@ angular.module('fkliving.controller', ['fkliving.services'])
 	                url: ApiEndpoint.url + 'user/modifyUser.do',
 	                data: $.param({
 	                    userId: localStorage.userId,
-	                    userName: $scope.user.userName,
+	                    nickName: $scope.user.userSpareStrone,
 	                    mobile: $scope.user.userPhone,
 	                    sex: $scope.user.userSex,
 	                    address: $scope.user.userAddress,
@@ -2996,70 +3509,202 @@ angular.module('fkliving.controller', ['fkliving.services'])
         }
         
 
-        // 我的活动
+        // 2.我的活动
         $scope.userActivity = function(item){
         	$scope.item = item;
 
-        	/*$http({
-	            method: 'POST',
-	            url: ApiEndpoint.url + '.do',
-	            data: $.param({
-	                userId: localStorage.userId
-	            }),
-	            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-	        }).success(function (data) {
-	            if (data.errorCode == 0) {
-	                
-	            }
-	        })*/
+            getMyActivityByTypeAndPrice();//默认全部(不筛选)
+        }
+        /**
+         * 类别(typeId)
+         *     类别(全部)0
+         *     内控1
+         *     审计2
+         *     财务3
+         *     税务4
+         *     风控5
+         * 状态(priceId)
+         *     状态(全部)2
+         *     未支付1
+         *     已支付2
+         */
+        $scope.typeId = 0;//默认类别(全部)
+        $scope.priceId = 0;//默认状态(全部)
+        // 获取我的活动
+        function getMyActivityByTypeAndPrice(){
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'home/getNowTime.do',
+                data: $.param({}),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function(data){
+                var time = data.result;
+
+                $http({
+                    method: 'POST',
+                    url: ApiEndpoint.url + 'activity/getMyActivityByTypeAndPrice.do',
+                    data: $.param({
+                        userId: localStorage.userId,
+                        activityType:$scope.typeId,
+                        activityPrice:$scope.priceId
+                    }),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).success(function (data) {
+                    if (data.errorCode == 0) {
+                        $scope.activeList = data.result;
+
+                        // newActivityStatus(活动状态):1即将开始(报名中)  2正在进行  3已结束
+                        angular.forEach($scope.activeList, function (value) {
+                            if (time < value.activityStartTime) {
+                                // 即将开始
+                                value.newActivityStatus = 1;
+                            } else if (time >= value.activityStartTime && time <= value.activityEndTime) {
+                                // 正在进行
+                                value.newActivityStatus = 2;
+                            } else if (time > value.activityEndTime) {
+                                // 已结束
+                                value.newActivityStatus = 3;
+                            }
+                        })
+                    }
+                })
+            })
+        }            
+
+        /*类别筛选*/
+        $scope.typeOpts = [
+            {
+                id:0,
+                name:'类别'
+            },
+            {
+                id: 1,
+                name: '内控'
+            },
+            {
+                id: 2,
+                name: '审计'
+            },
+            {
+                id:3,
+                name: '财务'
+            },
+            {
+                id:4,
+                name: '税务'
+            },
+            {
+                id:5,
+                name: '风控'
+            }
+        ];
+        $scope.typeData = {};
+        $scope.typeData.typeId = 0;//默认显示类别
+        $scope.toggleType = function(typeId){
+            $scope.typeId = typeId;
+            //通过类型筛选活动
+            getMyActivityByTypeAndPrice();
         }
 
+        /*状态筛选*/
+        $scope.priceOpts = [
+            {
+                id: 0,
+                name: '状态'
+            },
+            {
+                id:1,
+                name: '未支付'
+            },
+            {
+                id: 2,
+                name: '已支付'
+            }
+        ];
+        $scope.priceData = {};
+        $scope.priceData.priceId = 0;//默认显示状态
+        $scope.togglePrice = function(priceId){
+            $scope.priceId = priceId;
+            //通过状态筛选活动
+            getMyActivityByTypeAndPrice();
+        }
 
-        // 我的收藏
+        // 点击全部初始化
+        $scope.all = function(){
+            $scope.typeData.typeId = 0;
+            $scope.priceData.priceId = 0;
+
+            $scope.typeId = 0;
+            $scope.priceId = 0;
+            getMyActivityByTypeAndPrice();
+        }
+        
+
+
+
+        // 3.我的收藏
         $scope.userCollection = function(item){
         	$scope.item = item;
 
         	$scope.collectionType = 1;
-	        $scope.getMyCollection = function (type) {
-	            $scope.collectionType = type;
-
-	            $http({
-	                method: 'POST',
-	                url: ApiEndpoint.url + 'collect/getMyCollect.do',
-	                data: $.param({
-	                    userId: localStorage.userId,
-	                    type: type,
-	                    pageNum: 1,
-	                    pageSize: 10
-	                }),
-	                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-	            }).success(function (data) {
-	                if (data.errorCode == 0) {
-	                    $scope.collectList = data.result;
-	                }
-	            })
-	        }
-
+	        
 	        $scope.getMyCollection(1);
+        }
+        $scope.getMyCollection = function (type) {
+            $scope.collectionType = type;
 
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'collect/getMyCollect.do',
+                data: $.param({
+                    userId: localStorage.userId,
+                    type: type,
+                    pageNum: 1,
+                    pageSize: 10
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    $scope.collectList = data.result;
+                    console.log($scope.collectList);
+                }else if(data.errorCode == 23211){
+                    $scope.collectList = [];
+                    // Materialize.toast(data.errorMessage,3000);
+                }
+            })
         }
 
 
-        // 消费记录
+        // 4.消费记录
         $scope.userConsume = function(item){
         	$scope.item = item;
 
+            // 消费记录查询
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'home/getUserConsumptionRecond.do',
+                data: $.param({
+                    userId: localStorage.userId
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    $scope.consumptionList = data.result;
+                }else{
+                    Materialize.toast(data.errorMessage,3000);
+                }
+            })
         }
 
 
-        // 历史记录
+        // 5.历史记录
         $scope.userHistory = function(item){
         	$scope.item = item;
 
         }
 
 
-        // 充值兑换
+        // 6.充值兑换
         $scope.userRecharge = function(item){
         	$scope.item = item;
 
@@ -3091,41 +3736,237 @@ angular.module('fkliving.controller', ['fkliving.services'])
 	            }
 	        })
 
+
+            $http({
+                method: 'POST',
+                url: ApiEndpoint.url + 'coupon/getUserCouponList.do',
+                data: $.param({
+                    userId: localStorage.userId
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).success(function (data) {
+                if (data.errorCode == 0) {
+                    $scope.couponList = data.result;
+                }
+            })
+        }
+        // 充值
+        // 充值额度
+        $scope.orderAmount = 0;
+        // 充值方式: 1支付宝  2微信
+        $scope.selectPayType = function (type) {
+            PayType.payType.type = type;
+            $scope.selectedPayType = type;
+        }
+        $http({
+            method: 'POST',
+            url: ApiEndpoint.url + 'product/getProductListForH5.do',
+            data: $.param({}),
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        }).success(function (data) {
+            if (data.errorCode == 0) {
+                $scope.rechargeList = data.result;
+
+                $scope.selectAmount = function (e, amount) {
+                    $(e.target).addClass('rechangeActive').siblings().removeClass('rechangeActive');
+                    $scope.orderAmount = amount;
+                }
+            }
+        })
+        $scope.rechargeBtn = function(){
+            $('#rechargeModal').modal('open');
+        }
+        $scope.confirmRecharge = function(){
+            if ($scope.orderAmount == 0) {
+                Materialize.toast('请选择充值额度',3000);
+                return;
+            }
+            if (PayType.payType.type == undefined) {
+                Materialize.toast('请选择支付方式',3000);
+                return;
+            }
+
+            if (PayType.payType.type == 1) {
+                //支付宝充值
+                // 第一步:生成充值记录
+                $http({
+                    method: 'POST',
+                    url: ApiEndpoint.url + 'record/addRecord.do',
+                    data: $.param({
+                        userId: localStorage.userId,
+                        recordMoney: $scope.orderAmount,
+                        recordType: '支付宝',
+                        rocordStatus: 1   // rocordStatus(是否已经支付): 1 未支付  2支付
+                    }),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).success(function (data) {
+                    if (data.errorCode == 0) {
+                        console.log('生成充值记录成功');
+                        var recordId = data.result;
+
+                        // 第二步:获取orderId进行下单
+                        $http({
+                            method: 'POST',
+                            url: ApiEndpoint.url + 'order/generateOrder.do',
+                            data: $.param({
+                                userId: localStorage.userId,
+                                recordId: recordId,
+                                orderTurnover: $scope.orderAmount,
+                                orderName: '支付宝下单',
+                                orderType: 5, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                                payPath: 2
+                            }),
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                        }).success(function (data) {
+                            if (data.errorCode == 0) {
+                                Materialize.toast('下单成功',3000);
+
+                                var orderInfo = {};
+                                var orderInfo = data.result;
+
+                                window.location.href = 'aliPay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                            } else {
+                                Materialize.toast('下单失败',3000);
+                            }
+                        })
+                    } else {
+                        // console.log('生成充值记录失败');
+                        Materialize.toast(data.errorMessage,3000);
+                    }
+                })
+            } else if (PayType.payType.type == 2) {
+                //微信充值
+                $http({
+                    method: 'POST',
+                    url: ApiEndpoint.url + 'record/addRecord.do',
+                    data: $.param({
+                        userId: localStorage.userId,
+                        recordMoney: $scope.orderAmount,
+                        recordType: '微信',
+                        rocordStatus:1   // rocordStatus(是否已经支付): 1 未支付  2支付
+                    }),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).success(function (data) {
+                    if (data.errorCode == 0) {
+                        console.log('生成充值记录成功');
+                        var recordId = data.result;
+
+                        // 第二步:获取orderId进行下单
+                        $http({
+                            method: 'POST',
+                            url: ApiEndpoint.url + 'order/generateOrder.do',
+                            data: $.param({
+                                userId: localStorage.userId,
+                                recordId: recordId,
+                                orderTurnover: $scope.orderAmount,
+                                orderName:'微信下单',
+                                orderType: 4, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                                payPath: 2
+                            }),
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                        }).success(function (data) {
+                            if (data.errorCode == 0) {
+                                Materialize.toast('下单成功',3000);
+
+                                var orderInfo = {};
+                                var orderInfo = data.result;
+
+                                window.location.href = 'wechatPay.html?orderId='+orderInfo.orderId+'&orderCode='+orderInfo.orderCode+'&orderTurnover='+orderInfo.orderTurnover+'&description='+orderInfo.description;
+                            }else{
+                                Materialize.toast('下单失败',3000);
+                            }
+                        })
+                    }else{
+                        // console.log('生成充值记录失败');
+                        Materialize.toast(data.errorMessage,3000);
+                    }
+                })
+            }
+        }
+
+        // 兑换码
+        $scope.data = {};
+        $scope.exchangeCodeBtn = function(){
+            if ($scope.data.exchangeCode != undefined && $scope.data.exchangeCode != '') {
+                $http({
+                    method: 'POST',
+                    url: ApiEndpoint.url + 'redeemCode/exchangeGoods.do',
+                    data: $.param({
+                        userId: localStorage.userId,
+                        exchangeCode: $scope.data.exchangeCode
+                    }),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).success(function(data){
+                    if(data.errorCode == 0){
+                        // redeemType兑换码类型: 1体验券  2虚拟商品货币
+                        if (data.result.redeemType == 1) {
+                            $('#exchangeCoupon').modal('open');
+                            $scope.codeDescriptionCoupon = data.result.codeDescription;
+                        }else if (data.result.redeemType == 2) {
+                            $('#exchangeMoney').modal('open');
+                            $scope.codeDescriptionMoney = data.result.codeDescription;
+                        }
+                    }else{
+                        Materialize.toast(data.errorMessage,3000);
+                    }
+                })
+            }else{
+                Materialize.toast('兑换码不能为空',3000);
+            }
         }
 
 
-        // 账户设置
+        // 7.账户设置
         $scope.userSetting = function(item){
         	$scope.item = item;
+        }
+        $scope.registerData = {};
+        $scope.modifyPasswordBtn = function(){
+            if (!$scope.registerData.oldpassword) {
+                Materialize.toast("旧密码不能为空",3000);
+            } else if (!$scope.registerData.password) {
+                Materialize.toast("新密码不能为空",3000);
+            } else if (!$scope.registerData.rpassword) {
+                Materialize.toast("确认密码不能为空",3000);
+            } else if ($scope.registerData.password.length < 6) {
+                Materialize.toast("密码长度不能少于6位",3000);
+            } else if ($scope.registerData.rpassword != $scope.registerData.password) {
+                Materialize.toast("两次输入的密码不一致",3000);
+            } else {
+                var oldPwd = $scope.registerData.oldpassword;
+                var newPwd = $scope.registerData.password;
+                var confirmPwd = $scope.registerData.rpassword;
+                var key  = CryptoJS.enc.Latin1.parse('1234567812345678');
+                var iv   = CryptoJS.enc.Latin1.parse('1234567812345678');
+                var encryptedOldPwd = CryptoJS.AES.encrypt(oldPwd,key,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.ZeroPadding});
+                var encryptedNewPwd = CryptoJS.AES.encrypt(newPwd,key,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.ZeroPadding});
+                var encryptedConfirmPwd = CryptoJS.AES.encrypt(confirmPwd,key,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.ZeroPadding});
+                var opsw = ''+encryptedOldPwd;
+                var npsw = ''+encryptedNewPwd;
+                var rpsw = ''+encryptedConfirmPwd;
 
-    		$scope.registerData = {};
+                $http({
+                    method: 'POST',
+                    url: ApiEndpoint.url + "user/modifyPassword.do",
+                    data: $.param({
+                        userId: localStorage.userId,
+                        oldPwd: opsw,
+                        newPwd: npsw,
+                        confirmPwd: rpsw
+                    }),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).success(function (data) {
+                    if (data.errorCode == 0) {
+                        Materialize.toast("修改成功",3000);
 
-        	$scope.pswBtn = function(){
-        		if (!$scope.registerData.password) {
-	                Materialize.toast("新密码不能为空",3000);
-	            } else if (!$scope.registerData.rpassword) {
-	                Materialize.toast("确认密码不能为空",3000);
-	            } else if ($scope.registerData.password.length < 6) {
-	                Materialize.toast("密码长度不能少于6位",3000);
-	            } else if ($scope.registerData.rpassword != $scope.registerData.password) {
-	                Materialize.toast("两次输入的密码不一致",3000);
-	            } else {
-	            	$http({
-			            method: 'POST',
-			            url: ApiEndpoint.url + 'user/modifyPassword.do',
-			            data: $.param({
-			                userId: localStorage.userId,
-	                        newPwd: $scope.registerData.password,
-	                        confirmPwd: $scope.registerData.rpassword
-			            }),
-			            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-			        }).success(function (data) {
-	                    if (data.errorCode == 0) {
-	                        Materialize.toast("修改成功",3000);
-	                    }
-	                })
-	            }
-        	}
+                        /*localStorage.clear();
+                        $rootScope.loginStatus = false;
+                        window.location.href = 'index.html';*/
+                    } else {
+                        Materialize.toast(data.errorMessage,3000);
+                    }
+                })
+            }
         }
 
 

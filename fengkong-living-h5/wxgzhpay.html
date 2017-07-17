@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>微信支付</title>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+</head>
+<body>
+<script>
+    function GetParams(){
+        var name,value;
+        var str=location.href;
+        var num=str.indexOf("?");
+        str=str.substr(num+1);
+        var arr=str.split("&");
+        for(var i=0;i < arr.length;i++){
+            num=arr[i].indexOf("=");
+            if(num>0){
+                name=arr[i].substring(0,num);
+                value=arr[i].substr(num+1);
+                this[name]=value;
+            }
+        }
+    }
+
+    var params = new GetParams();
+
+    var feUrl = 'http://www.igmhz.com/fengkong-living-h5';
+    var beUrl = 'http://www.igmhz.com/fengkong-server/';
+
+    if(params.activityId != undefined){
+        $.ajax({
+            type:"post",
+            url:beUrl + 'activity/getActivityById.do',
+            dataType:"json",
+            data: $.param({
+                    userId: localStorage.userId,
+                    activityId: params.activityId,
+                    enrollType: 2   //1直播报名  2活动报名
+                }),
+            success:function(data) {
+                if (data.errorCode == 0) {
+                    var activityName = data.result.activity.activityName;
+                    var activityPrice = data.result.activity.activityPrice;
+                    var isOnlineActivity = false;
+                    if(data.result.activity.activityWay == 3){
+                        isOnlineActivity = true;
+                        var liveId = data.result.activity.video.liveId;
+                    }
+
+                    $.ajax({
+                        type:"post",
+                        url:beUrl + 'order/generateOrder.do',
+                        dataType:"json",
+                        data: $.param({
+                                userId: localStorage.userId,
+                                activityId: params.activityId,
+                                orderTurnover: activityPrice,
+                                orderName: '微信下单',
+                                orderType: 4, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                                payPath: 1,
+                                shoppingName: activityName
+                            }),
+                        success:function(data) {
+                            if (data.errorCode == 0) {
+                                var orderInfo = {};
+                                var orderInfo = data.result;
+
+                                $.ajax({
+                                    type:"post",
+                                    url:beUrl + 'wechatH5/getPrepareIdForH5.do',
+                                    dataType:"json",
+                                    data: $.param({
+                                            totalPrice: activityPrice,
+                                            orderId: orderInfo.orderId,
+                                            userId: localStorage.userId,
+                                        }),
+                                    success:function(data) {
+                                        function onBridgeReady() {
+                                            WeixinJSBridge.invoke(
+                                                'getBrandWCPayRequest', {
+                                                    "appId": data.result.appId, //公众号名称，由商户传入
+                                                    "timeStamp": data.result.timeStamp, //时间戳，自1970年以来的秒数     
+                                                    "nonceStr": data.result.nonceStr, //随机串     
+                                                    "package": data.result.package,
+                                                    "signType": data.result.signType, //微信签名方式
+                                                    "paySign": data.result.paySign //微信签名 
+                                                },
+                                                function (res) {
+                                                    if (res.err_msg == "get_brand_wcpay_request:ok") {
+                                                        // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                                                        if(isOnlineActivity){
+                                                            window.location.href = feUrl + '/#/salon/' + params.activityId + '/' + liveId;
+                                                        }else{
+                                                            window.location.href = feUrl + '/#/active_details/' + params.activityId;
+                                                        }
+                                                    }else{
+                                                        alert('支付失败');
+                                                        if(isOnlineActivity){
+                                                            window.location.href = feUrl + '/#/salon/' + params.activityId + '/' + liveId;
+                                                        }else{
+                                                            window.location.href = feUrl + '/#/active_details/' + params.activityId;
+                                                        }
+                                                    }
+                                                }
+                                            );
+                                        }
+                                        if (typeof WeixinJSBridge == "undefined") {
+                                            if (document.addEventListener) {
+                                                document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                                            } else if (document.attachEvent) {
+                                                document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                                                document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                                            }
+                                        } else {
+                                            onBridgeReady();
+                                        }
+                                    }
+                                });
+
+                            }
+                        }
+                    });
+
+                }
+            }
+        });
+    }else if(params.courseId != undefined){
+        $.ajax({
+            type:"post",
+            url:beUrl + 'course/getCourseById.do',
+            dataType:"json",
+            data: $.param({
+                    userId: localStorage.userId,
+                    courseId: params.courseId,
+                    type: 3, // type(点赞类型):1直播 2视频 3课程
+                    collectType: 1 //collectType(收藏类型):1课程 2视频
+                }),
+            success:function(data) {
+                if (data.errorCode == 0) {
+                    var courseName = data.result.course.courseName;
+                    var coursePrice = data.result.course.price;
+                    
+                    $.ajax({
+                        type:"post",
+                        url:beUrl + 'order/generateOrder.do',
+                        dataType:"json",
+                        data: $.param({
+                                userId: localStorage.userId,
+                                courseId: params.courseId,
+                                orderTurnover: coursePrice,
+                                orderName: '微信下单',
+                                orderType: 4, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                                payPath: 1,
+                                shoppingName: courseName
+                            }),
+                        success:function(data) {
+                            if (data.errorCode == 0) {
+                                var orderInfo = {};
+                                var orderInfo = data.result;
+
+                                $.ajax({
+                                    type:"post",
+                                    url:beUrl + 'wechatH5/getPrepareIdForH5.do',
+                                    dataType:"json",
+                                    data: $.param({
+                                            totalPrice: coursePrice,
+                                            orderId: orderInfo.orderId,
+                                            userId: localStorage.userId,
+                                        }),
+                                    success:function(data) {
+                                        function onBridgeReady() {
+                                            WeixinJSBridge.invoke(
+                                                'getBrandWCPayRequest', {
+                                                    "appId": data.result.appId, //公众号名称，由商户传入
+                                                    "timeStamp": data.result.timeStamp, //时间戳，自1970年以来的秒数     
+                                                    "nonceStr": data.result.nonceStr, //随机串     
+                                                    "package": data.result.package,
+                                                    "signType": data.result.signType, //微信签名方式
+                                                    "paySign": data.result.paySign //微信签名 
+                                                },
+                                                function (res) {
+                                                    if (res.err_msg == "get_brand_wcpay_request:ok") {
+                                                        // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                                                        window.location.href = feUrl + '/#/recorded_list/' + params.courseId;
+                                                    }else{
+                                                        alert('支付失败');
+                                                        window.location.href = feUrl + '/#/recorded_list/' + params.courseId;
+                                                    }
+                                                }
+                                            );
+                                        }
+                                        if (typeof WeixinJSBridge == "undefined") {
+                                            if (document.addEventListener) {
+                                                document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                                            } else if (document.attachEvent) {
+                                                document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                                                document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                                            }
+                                        } else {
+                                            onBridgeReady();
+                                        }
+                                    }
+                                });
+
+                            }
+                        }
+                    });
+
+                }
+            }
+        });
+    }else if(params.videoId != undefined){
+        $.ajax({
+            type:"post",
+            url:beUrl + 'video/getVideoById.do',
+            dataType:"json",
+            data: $.param({
+                    videoId: params.videoId
+                }),
+            success:function(data) {
+                if (data.errorCode == 0) {
+                    var videoName = data.result.videoName;
+                    var videoPrice = data.result.videoPrice;
+                    
+                    $.ajax({
+                        type:"post",
+                        url:beUrl + 'order/generateOrder.do',
+                        dataType:"json",
+                        data: $.param({
+                                userId: localStorage.userId,
+                                videoId: params.videoId,
+                                orderTurnover: videoPrice,
+                                orderName: '微信下单',
+                                orderType: 4, // orderType:1入场券支付  2线下支付  3 余额支付  4微信支付  5支付宝支付
+                                payPath: 1,
+                                shoppingName: videoName
+                            }),
+                        success:function(data) {
+                            if (data.errorCode == 0) {
+                                var orderInfo = {};
+                                var orderInfo = data.result;
+
+                                $.ajax({
+                                    type:"post",
+                                    url:beUrl + 'wechatH5/getPrepareIdForH5.do',
+                                    dataType:"json",
+                                    data: $.param({
+                                            totalPrice: videoPrice,
+                                            orderId: orderInfo.orderId,
+                                            userId: localStorage.userId,
+                                        }),
+                                    success:function(data) {
+                                        function onBridgeReady() {
+                                            WeixinJSBridge.invoke(
+                                                'getBrandWCPayRequest', {
+                                                    "appId": data.result.appId, //公众号名称，由商户传入
+                                                    "timeStamp": data.result.timeStamp, //时间戳，自1970年以来的秒数     
+                                                    "nonceStr": data.result.nonceStr, //随机串     
+                                                    "package": data.result.package,
+                                                    "signType": data.result.signType, //微信签名方式
+                                                    "paySign": data.result.paySign //微信签名 
+                                                },
+                                                function (res) {
+                                                    if (res.err_msg == "get_brand_wcpay_request:ok") {
+                                                        // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                                                        window.location.href = feUrl + '/#/video/' + params.videoId;
+                                                    }else{
+                                                        alert('支付失败');
+                                                        window.location.href = feUrl + '/#/video/' + params.videoId;
+                                                    }
+                                                }
+                                            );
+                                        }
+                                        if (typeof WeixinJSBridge == "undefined") {
+                                            if (document.addEventListener) {
+                                                document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                                            } else if (document.attachEvent) {
+                                                document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                                                document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                                            }
+                                        } else {
+                                            onBridgeReady();
+                                        }
+                                    }
+                                });
+
+                            }
+                        }
+                    });
+
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

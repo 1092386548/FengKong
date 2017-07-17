@@ -1,0 +1,96 @@
+/**
+	 * Description: 发送手机消息
+	 */
+	@RequestMapping(value = "/message/sendMessageToPhone")
+	protected @ResponseBody Object sendMessageToPhone(HttpServletRequest request, HttpSession session) {
+		ResultSuccessInfo rsInfo = new ResultSuccessInfo();
+		ResultErrorInfo reInfo = new ResultErrorInfo();
+		StringBuilder code = new StringBuilder();
+
+		String mobile = request.getParameter("mobile");
+		String messageContent=request.getParameter("messageContent");
+		String messageType=request.getParameter("messageType");
+		
+		String type = request.getParameter("type");
+		
+		if (mobile == null || mobile.equals("")) {
+			reInfo.setErrorMessage("手机号不能为空!");
+			reInfo.setErrorCode("11130");
+			return reInfo;
+		}
+		int id = 0;
+		if (type == null || type.equals("")) {
+			id = 0;
+		} else {
+			id = 1;
+		}
+		if (id == 1) {
+			int u = 0;
+			try {
+				u = messageService.selectUserIsExist(mobile);
+			} catch (Exception e) {
+				e.printStackTrace();
+				reInfo.setErrorMessage("获取用户信息失败!");
+				reInfo.setErrorCode("11229");
+				return reInfo;
+			}
+			if (u != 0) {
+				reInfo.setErrorMessage("此用户已注册!");
+				reInfo.setErrorCode("11133");
+				return reInfo;
+			}
+		}
+		CRCode codes = (CRCode) session.getAttribute(mobile);
+		int time = 5;
+		if (codes != null) {
+			long nowtime = System.currentTimeMillis();
+			long pasttime = codes.getSendDate().getTime();
+			time = (int) ((nowtime - pasttime) / 1000 / 60);
+			if ((nowtime - pasttime) > 60000) {
+				Random random = new Random();
+				// 4位验证码
+				for (int i = 0; i < 4; i++) {
+					code.append(String.valueOf(random.nextInt(10)));
+				}
+				Date currentTime = new Date();
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String dateString = formatter.format(currentTime);
+				ParsePosition pos = new ParsePosition(0);
+				Date currentTimeTwo = formatter.parse(dateString, pos);
+				CRCode crCode = new CRCode();
+				crCode.setCrCode(code.toString());
+				crCode.setMobile(mobile);
+				crCode.setSendDate(currentTimeTwo);
+				SendSmsUtil.sendSms(mobile, code.toString());
+				// SingleSendSms.sendSms();
+				session.setAttribute(mobile, crCode);
+				rsInfo.setResult(crCode.getCrCode());
+				rsInfo.setErrorMessage("获取验证码成功！");
+				return rsInfo;
+			} else {
+				rsInfo.setResult(codes.getCrCode());
+				rsInfo.setErrorMessage("获取验证码成功！");
+				return rsInfo;
+			}
+		}
+
+		Random random = new Random();
+		// 4位验证码
+		for (int i = 0; i < 4; i++) {
+			code.append(String.valueOf(random.nextInt(10)));
+		}
+		Date currentTime = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dateString = formatter.format(currentTime);
+		ParsePosition pos = new ParsePosition(0);
+		Date currentTimeTwo = formatter.parse(dateString, pos);
+		CRCode crCode = new CRCode();
+		crCode.setCrCode(code.toString());
+		crCode.setMobile(mobile);
+		crCode.setSendDate(currentTimeTwo);
+		SendSmsUtil.sendSms(mobile, code.toString());
+		session.setAttribute(mobile, crCode);
+		rsInfo.setResult(crCode.getCrCode());
+		rsInfo.setErrorMessage("获取验证码成功成功！");
+		return rsInfo;
+	}

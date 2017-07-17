@@ -119,25 +119,10 @@
                 </div>
 
                 <div class="col-33 progress_record_navigation_all" style="text-align: center;padding-top: 2%">
-                    <!--<span class="recorded-nav-title progress-record-title progress-record-m" ng-click="sortByType($event)">类别</span>
-                    <ul class="down-list hide">
-                        <li class="down-item" ng-click="getTypeId(1)" ng-class="{active:typeId == 1}">内控</li>
-                        <li class="down-item" ng-click="getTypeId(2)" ng-class="{active:typeId == 2}">审计</li>
-                        <li class="down-item" ng-click="getTypeId(3)" ng-class="{active:typeId == 3}">财务</li>
-                        <li class="down-item" ng-click="getTypeId(4)" ng-class="{active:typeId == 4}">税务</li>
-                        <li class="down-item" ng-click="getTypeId(5)" ng-class="{active:typeId == 5}">风控</li>
-                    </ul>-->
-
                     <select ng-model="typeData.typeId" ng-options="value.id as value.name for value in typeOpts" ng-change="getTypesId(typeData.typeId)"></select>
                 </div>
 
                 <div class="col-33 progress_record_navigation_all" style="text-align: center;padding-top: 2%">
-                    <!--<span class="recorded-nav-title progress-record-title progress-record-r" ng-click="sortByPrice($event)">价格</span>
-                    <ul class="down-list hide">
-                        <li class="down-item" ng-click="getPriceId(1)" ng-class="{active:priceId == 1}">收费</li>
-                        <li class="down-item" ng-click="getPriceId(0)" ng-class="{active:priceId == 0}">免费</li>
-                    </ul>-->
-
                     <select ng-model="priceData.priceId" ng-options="value.id as value.name for value in priceOpts" ng-change="getPricesId(priceData.priceId)"></select>
                 </div>
             </div>

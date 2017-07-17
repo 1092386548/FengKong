@@ -5,7 +5,7 @@
 .myself_active_progress_banner{top:0;left:0;}
 /*我的优惠券*/
 .themebgcolor>h3{color: white;font-size: 2.4rem;}
-.themebgcolor>a{margin-top: 0px;}
+/*.themebgcolor>a{margin-top: 0px;}*/
 .popup {
     border-radius: 8px;
     background-color: #eee;
